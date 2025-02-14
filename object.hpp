@@ -3,22 +3,23 @@
 
 #define ll long long
 
-struct point
+template<typename T> struct point
 {
-    long long x,y;
+    T x,y;
 };
 
 
 class Object
 {
     protected:
-        point p;
+        point<ll> p;
+        point<unsigned> size;
         bool initilised;
     public:
-        Object();
-        Object(ll x,ll y);
+        Object(ll x,ll y, unsigned x_size, unsigned y_size);
         void set_cord(ll x,ll y);
-        point get_cord();
+        point<ll> get_cord();
+        point<unsigned> get_size();
 };
 
 
