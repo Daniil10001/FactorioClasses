@@ -9,6 +9,7 @@ protected:
     unsigned capacity =64;
     unsigned id;
 public:
+    Material():quantity(0),id(0){};
     Material(unsigned quantity, unsigned id=0) {
         this->quantity = quantity;
         this->id=id;
@@ -25,6 +26,8 @@ public:
     Material& operator+=(const unsigned& rhs);
 
     Material& operator-=(const unsigned& rhs);
+
+    ActionResult ChangeId(unsigned id);
 
     unsigned get_quantity();
 

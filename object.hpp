@@ -18,6 +18,7 @@ class Object
     public:
         Object():initilised(0){};
         Object(ll x,ll y, unsigned x_size, unsigned y_size);
+        Object(unsigned id);
         void set_cord(ll x,ll y);
         point<ll> get_cord();
         point<unsigned> get_size();

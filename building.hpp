@@ -14,19 +14,20 @@ protected:
     // product if assigned to a factory
     Material* BuildingInventory;
 public:
-    building(unsigned id);
+    building();
+    building(unsigned id, point<ll> position);
 
     virtual State get_state();
 
     MaterialList get_requirments();
 
-    int get_material_quantity(unsigned id);
+    unsigned get_material_quantity(unsigned id);
 
-    int get_material_maxCapicy(unsigned id);
+    unsigned get_material_maxCapicy(unsigned id);
 
     virtual ActionResult put_material(Material *m);
     
-    virtual Material* get_material(int cell);
+    virtual Material* get_material(unsigned cell);
     
     virtual ActionResult action();
 };

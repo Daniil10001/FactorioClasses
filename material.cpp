@@ -28,9 +28,12 @@ unsigned Material::get_quantity()
 }
 
 bool Material::isFull() {
-    if (quantity >= capacity) {
-        quantity = capacity;
-        return true;
-    }
-    return false
+    return this->capacity==this->quantity;
+}
+
+ActionResult Material::ChangeId(unsigned id)
+{
+    if (this->quantity!=0) return ActionResult::BAD;
+    this->id=id;
+    return ActionResult::OK;
 }

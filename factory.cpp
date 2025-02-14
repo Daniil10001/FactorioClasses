@@ -1,28 +1,28 @@
 //
 // Created by  Владимир Малахов on 14.02.2025.
+// Done some reworks by Daniil on same date
 //
 
-#include "factory.h"
-#include "services.h"
-#include "json_communicate.h"
-#include "new"
+#include "factory.hpp"
+#include "material.hpp"
+#include "services.hpp"
+#include "object.hpp"
+#include "json_communicate.hpp"
+//#include "new" ????????
 
 
-factory::factory(unsigned int level, unsigned capacity, unsigned productId) {
+factory::factory(unsigned int level, unsigned id, point<ll> position):building(id, position) {
     this->level = level;
     bool is_producing = false;
 
 
+    this->requirments = json_communicate::getRequirmentsById(id);
+    this->BuildingInventory = new Material[this->requirments->count];
+    
+    for(int i;i<this->requirments->count;i++)
+        BuildingInventory->ChangeId(this->requirments->ids[i]);
 
-    this->BuildingInventory = new Material {0, productId};
-    this->requirments = json_communicate::getRequirmentsById(productId);
-
-    factoryMaterials = static_cast<Material*>(operator new[](requirments->count * sizeof(Material)));
-
-    for (int i = 0; i < requirments->count; i++)
-        new (&factoryMaterials[i]) Material(0, requirments->ids[i]);
-
-
+    this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
 
 State factory::get_state() {
@@ -32,7 +32,7 @@ State factory::get_state() {
 ActionResult factory::put_material(Material *m) {
     for (int i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
-            factoryMaterials[i] + *m;
+            BuildingInventory[i] + *m;
             return ActionResult::OK;
         }
     }
@@ -40,14 +40,12 @@ ActionResult factory::put_material(Material *m) {
 }
 
 Material* factory::get_material(int cell) {
-    if (cell == -1)
-        return BuildingInventory;
-
-    return &factoryMaterials[cell];
+    if (0<cell && requirments->count>cell)
+        return this->BuildingInventory+cell;
 }
 
-State factory::action() {
-    if (state == State::OK)
+ActionResult factory::action() {
+    /*if (state == State::OK) //wtf, guy, it is metod that use factory to do something
         if (BuildingInventory->isFull()) {
             state = State::Full;
             return state;
@@ -55,7 +53,7 @@ State factory::action() {
 
     if (state == State::NotEnoughMaterial) {
         
-    }
+    }*/
 }
 
 void factory::proceed() {
