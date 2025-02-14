@@ -13,7 +13,7 @@ private:
     
     Material* BuildingInventory;
 public:
-    building(int id);
+    building(unsigned id);
 
     virtual State get_state();
 

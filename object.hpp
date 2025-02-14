@@ -16,6 +16,7 @@ class Object
         point<unsigned> size;
         bool initilised;
     public:
+        Object():initilised(0){};
         Object(ll x,ll y, unsigned x_size, unsigned y_size);
         void set_cord(ll x,ll y);
         point<ll> get_cord();
