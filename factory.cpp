@@ -19,7 +19,7 @@ factory::factory(unsigned int level, unsigned id, point<ll> position):building(i
     this->requirments = json_communicate::getRequirmentsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
     
-    for(int i;i<this->requirments->count;i++)
+    for(int i=0;i<this->requirments->count;i++)
         BuildingInventory->ChangeId(this->requirments->ids[i]);
 
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
@@ -42,6 +42,7 @@ ActionResult factory::put_material(Material *m) {
 Material* factory::get_material(int cell) {
     if (0<cell && requirments->count>cell)
         return this->BuildingInventory+cell;
+    return nullptr;
 }
 
 ActionResult factory::action() {
@@ -54,6 +55,7 @@ ActionResult factory::action() {
     if (state == State::NotEnoughMaterial) {
         
     }*/
+   return ActionResult::OK;
 }
 
 void factory::proceed() {
