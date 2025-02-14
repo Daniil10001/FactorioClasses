@@ -1,7 +1,7 @@
 #include "material.hpp"
 
 ActionResult operator+(Material& lhs, Material& rhs){
-        if (lhs.id==rhs.id) return ActionResult::BAD;
+        if (lhs.id!=rhs.id) return ActionResult::BAD;
         unsigned q=min(lhs.capicy-lhs.quantity,rhs.quantity);
         lhs.quantity+=q;
         rhs.quantity-=q;
