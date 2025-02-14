@@ -7,10 +7,11 @@
 
 class building: public Object
 {
-private:
+protected:
     unsigned id;
-    MaterialList requirments;
-    
+    MaterialList* requirments;
+
+    // product if assigned to a factory
     Material* BuildingInventory;
 public:
     building(int id);
@@ -25,7 +26,7 @@ public:
 
     virtual ActionResult put_material(Material *m);
     
-    virtual Material get_material(int cell);
+    virtual Material* get_material(int cell);
     
     virtual ActionResult action();
 };

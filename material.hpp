@@ -6,13 +6,14 @@
 class Material {
 protected:
     unsigned quantity;
-    const unsigned capacity =64;
+    unsigned capacity =64;
     unsigned id;
 public:
     Material(unsigned quantity, unsigned id=0) {
         this->quantity = quantity;
         this->id=id;
     }
+
     /*
         Rules of adding it is working like move
         first if where it added and second is what added to first
@@ -27,10 +28,11 @@ public:
 
     unsigned get_quantity();
 
-    virtual void getInfo();
+    bool isFull();
 
-    virtual unsigned getId();
+    void getInfo();
 
+    unsigned getId();
 
 };
 #endif

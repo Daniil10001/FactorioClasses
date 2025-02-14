@@ -26,3 +26,11 @@ unsigned Material::get_quantity()
 {
     return this->quantity;
 }
+
+bool Material::isFull() {
+    if (quantity >= capacity) {
+        quantity = capacity;
+        return true;
+    }
+    return false
+}

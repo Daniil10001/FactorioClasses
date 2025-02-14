@@ -4,10 +4,16 @@
 
 #ifndef FACTORIO_JSON_COMMUNICATE_H
 #define FACTORIO_JSON_COMMUNICATE_H
-
+#define ll long long
+#include "interactioninterfaces.hpp"
 
 class json_communicate {
+public:
+    json_communicate();
+    ~json_communicate();
 
+    static MaterialList* getRequirmentsById(int id);
+    static ll getCraftTimeById(int id);
 };
 
 

@@ -10,7 +10,11 @@ target_compile_definitions(OBJ PUBLIC OBJ)
 
 add_library(INIF OBJECT interactioninterfaces.cpp
         factory.cpp
-        factory.h)
+        factory.h
+        json_communicate.cpp
+        json_communicate.h
+        services.cpp
+        services.h)
 target_compile_definitions(INIF PUBLIC INIF)
 
 

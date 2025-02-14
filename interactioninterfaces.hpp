@@ -1,11 +1,12 @@
 #ifndef interactioninterfaces_hpp__
 #define interactioninterfaces_hpp__
 
-enum State
+enum class State
 {
     OK,
     NotEnoughMaterial,
     Busy,
+    Full,
 };
 
 enum ActionResult
