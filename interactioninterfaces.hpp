@@ -19,7 +19,7 @@ class MaterialList
 private:
 public:
     int count;
-    int *ids;
+    unsigned *ids;
     MaterialList();
     MaterialList(int count);
     ~MaterialList();
@@ -33,12 +33,24 @@ MaterialList::MaterialList()
 MaterialList::MaterialList(int count)
 {
     this->count=count;
-    this->ids=new int[count];
+    this->ids=new unsigned[count];
 }
 
 MaterialList::~MaterialList()
 {
     delete [] ids;
+}
+
+template<class T>
+const T& min(const T& a, const T& b)
+{
+    return (b < a) ? b : a;
+}
+
+template<class T>
+const T& max(const T& a, const T& b)
+{
+    return (b > a) ? b : a;
 }
 
 #endif

@@ -1,12 +1,24 @@
-void Material::changeQuantity(int dQ) {
-    this->quantity += dQ
+#include "material.hpp"
+
+ActionResult operator+(Material& lhs, Material& rhs){
+        if (lhs.id==rhs.id) return ActionResult::BAD;
+        unsigned q=min(lhs.capicy-lhs.quantity,rhs.quantity);
+        lhs.quantity+=q;
+        rhs.quantity-=q;
+        return ActionResult::OK;
 }
 
-int Material::getQuantity() {
-    return this->quantity;
-}
+Material& Material::operator+=(const unsigned& rhs){
+    this->quantity+=min(this->capicy-this->quantity,rhs);
+    return *this;
+};
 
-int Material::getId() {
+Material& Material::operator-=(const unsigned& rhs){
+    this->quantity-=min(this->quantity,rhs);
+    return *this;
+};
+
+unsigned Material::getId() {
     return this->id;
 }
 
