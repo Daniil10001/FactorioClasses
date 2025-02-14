@@ -1,8 +1,8 @@
 #include"building.hpp"
 
 
-building::building(int id)
+building::building(unsigned id)
 {
-    this->id;
+    this->id=id;
 }
 

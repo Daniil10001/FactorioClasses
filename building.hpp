@@ -14,7 +14,7 @@ protected:
     // product if assigned to a factory
     Material* BuildingInventory;
 public:
-    building(int id);
+    building(unsigned id);
 
     virtual State get_state();
 
