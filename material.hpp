@@ -10,9 +10,9 @@ protected:
     const unsigned capicy =64;
     unsigned id;
 public:
-    Material(unsigned quantity) {
+    Material(unsigned quantity, unsigned id=0) {
         this->quantity = quantity;
-        this->id=0;
+        this->id=id;
     }
     /*
         Rules of adding it is working like move
