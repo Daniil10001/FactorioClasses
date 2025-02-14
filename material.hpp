@@ -7,7 +7,7 @@
 class Material {
 protected:
     unsigned quantity;
-    const unsigned capicy =64;
+    const unsigned capacity =64;
     unsigned id;
 public:
     Material(unsigned quantity, unsigned id=0) {
@@ -25,6 +25,8 @@ public:
     Material& operator+=(const unsigned& rhs);
 
     Material& operator-=(const unsigned& rhs);
+
+    unsigned get_quantity();
 
     virtual void getInfo() = 0;
 
