@@ -1,7 +1,7 @@
 #include"building.hpp"
 
 
-building::building(ll x,ll y,int id) : Object(x,y)
+building::building(int id)
 {
     this->id;
 }

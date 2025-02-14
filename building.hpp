@@ -8,21 +8,20 @@
 class building: public Object
 {
 private:
-    int id;
-    int level;
+    unsigned id;
     MaterialList requirments;
     
     Material* BuildingInventory;
 public:
-    building(ll x,ll y, int id, int level);
+    building(int id);
 
     virtual State get_state();
 
     MaterialList get_requirments();
 
-    int get_material_quantity(int id);
+    int get_material_quantity(unsigned id);
 
-    int get_material_maxCapicy(int id);
+    int get_material_maxCapicy(unsigned id);
 
     virtual ActionResult put_material(Material *m);
     

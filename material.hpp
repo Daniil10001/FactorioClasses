@@ -3,8 +3,6 @@
 
 #include "interactioninterfaces.hpp"
 
-#define a<-b move_material(a,b)
-
 class Material {
 protected:
     unsigned quantity;
@@ -21,7 +19,7 @@ public:
         for subtraction it is similar
         return OK if same id and bad otherwise
     */
-    friend ActionResult move_material(Material& lhs, Material& rhs);
+    friend ActionResult operator+(Material& lhs, Material& rhs);
 
     Material& operator+=(const unsigned& rhs);
 
@@ -29,9 +27,9 @@ public:
 
     unsigned get_quantity();
 
-    virtual void getInfo() = 0;
+    virtual void getInfo();
 
-    virtual unsigned getId() = 0;
+    virtual unsigned getId();
 
 
 };
