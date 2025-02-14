@@ -1,6 +1,6 @@
 #include "material.hpp"
 
-ActionResult operator+(Material& lhs, Material& rhs){
+ActionResult move_material(Material& lhs, Material& rhs){
         if (lhs.id!=rhs.id) return ActionResult::BAD;
         unsigned q=min(lhs.capacity-lhs.quantity,rhs.quantity);
         lhs.quantity+=q;

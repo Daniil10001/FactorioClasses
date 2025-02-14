@@ -3,6 +3,7 @@
 
 #include "interactioninterfaces.hpp"
 
+#define a<-b move_material(a,b)
 
 class Material {
 protected:
@@ -20,7 +21,7 @@ public:
         for subtraction it is similar
         return OK if same id and bad otherwise
     */
-    friend ActionResult operator+(Material& lhs, Material& rhs);
+    friend ActionResult move_material(Material& lhs, Material& rhs);
 
     Material& operator+=(const unsigned& rhs);
 
