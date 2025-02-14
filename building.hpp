@@ -9,7 +9,7 @@ class building: public Object
 {
 private:
     int id;
-    int level
+    int level;
     MaterialList requirments;
     
     Material* BuildingInventory;

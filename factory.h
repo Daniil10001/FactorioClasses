@@ -5,10 +5,14 @@
 #ifndef FACTORIO_FACTORY_H
 #define FACTORIO_FACTORY_H
 
+#include "building.hpp"
 
-class factory {
-
+class factory: building {
+private:
+    unsigned int level;
 };
+
+
 
 
 #endif //FACTORIO_FACTORY_H

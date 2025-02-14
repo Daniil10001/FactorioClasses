@@ -8,7 +8,9 @@ add_compile_options(-Wall -O2)
 add_library(OBJ OBJECT object.cpp)
 target_compile_definitions(OBJ PUBLIC OBJ)
 
-add_library(INIF OBJECT interactioninterfaces.cpp)
+add_library(INIF OBJECT interactioninterfaces.cpp
+        factory.cpp
+        factory.h)
 target_compile_definitions(INIF PUBLIC INIF)
 
 
