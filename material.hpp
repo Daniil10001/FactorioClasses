@@ -23,9 +23,9 @@ public:
     */
     friend ActionResult operator+(Material& lhs, Material& rhs);
 
-    Material& operator+=(const unsigned& rhs);
+    Material& operator+=(const int rhs);
 
-    Material& operator-=(const unsigned& rhs);
+    Material& operator-=(const int rhs);
 
     ActionResult ChangeId(unsigned id);
 

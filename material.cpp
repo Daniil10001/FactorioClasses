@@ -8,13 +8,15 @@ ActionResult operator+(Material& lhs, Material& rhs){
         return ActionResult::OK;
 }
 
-Material& Material::operator+=(const unsigned& rhs){
-    this->quantity+=min(this->capacity-this->quantity,rhs);
+Material& Material::operator+=(const int rhs){
+    if (rhs<0) return (*this)-=(-rhs);
+    this->quantity+=min(this->capacity-this->quantity,(unsigned)rhs);
     return *this;
 };
 
-Material& Material::operator-=(const unsigned& rhs){
-    this->quantity-=min(this->quantity,rhs);
+Material& Material::operator-=(const int rhs){
+    if (rhs<=0) return (*this)+=(-rhs);
+    this->quantity-=min(this->quantity,(unsigned)rhs);
     return *this;
 };
 

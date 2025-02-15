@@ -21,37 +21,16 @@ private:
 public:
     int count;
     unsigned *ids;
+    int *consumes;
     MaterialList();
     MaterialList(int count);
     ~MaterialList();
 };
 
-MaterialList::MaterialList()
-{
-    this->count=0;
-}
-
-MaterialList::MaterialList(int count)
-{
-    this->count=count;
-    this->ids=new unsigned[count];
-}
-
-MaterialList::~MaterialList()
-{
-    delete [] ids;
-}
+template<class T>
+const T& min(const T& a, const T& b){    return (b < a) ? b : a;    }
 
 template<class T>
-const T& min(const T& a, const T& b)
-{
-    return (b < a) ? b : a;
-}
-
-template<class T>
-const T& max(const T& a, const T& b)
-{
-    return (b > a) ? b : a;
-}
+const T& max(const T& a, const T& b){    return (b > a) ? b : a;    }
 
 #endif

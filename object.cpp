@@ -1,16 +1,24 @@
 
 #include"object.hpp"
+#include "json_communicate.hpp"
 
 Object::Object(ll x,ll y, unsigned x_size, unsigned y_size)
 {
-    this->initilised=false;
+    this->initilised=true;
     this->size.x=x_size;
     this->size.y=y_size;
     set_cord(x,y);
 }
 
+Object::Object(unsigned id)
+{                   //dummy thin neded to replaced by json
+    this->size.x=2;
+    this->size.y=2;
+};
+
 void Object::set_cord(ll x,ll y)
 {
+    this->initilised=true;
     this->p.x=x;
     this->p.y=y;
 }
