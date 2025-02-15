@@ -15,7 +15,7 @@ Material& Material::operator+=(const int rhs){
 };
 
 Material& Material::operator-=(const int rhs){
-    if (rhs<=0) return (*this)+=(-rhs);
+    if (rhs<0) return (*this)+=(-rhs);
     this->quantity-=min(this->quantity,(unsigned)rhs);
     return *this;
 };

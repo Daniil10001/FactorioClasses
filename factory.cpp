@@ -11,7 +11,7 @@
 //#include "new" ????????
 
 
-factory::factory(unsigned int level, unsigned id, point<ll> position):building(id, position) {
+Factory::Factory(unsigned int level, unsigned id, point<ll> position):Building(id, position) {
     this->level = level;
     bool is_producing = false;
 
@@ -25,11 +25,11 @@ factory::factory(unsigned int level, unsigned id, point<ll> position):building(i
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
 
-State factory::get_state() {
+State Factory::get_state() {
     return this->state;
 }
 
-ActionResult factory::put_material(Material *m) {
+ActionResult Factory::put_material(Material *m) {
     for (int i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
             BuildingInventory[i] + *m;
@@ -39,13 +39,13 @@ ActionResult factory::put_material(Material *m) {
     return ActionResult::BAD;
 }
 
-Material* factory::get_material(int cell) {
+Material* Factory::get_material(int cell) {
     if (0<cell && requirments->count>cell)
         return this->BuildingInventory+cell;
     return nullptr;
 }
 
-ActionResult factory::action() {
+ActionResult Factory::action() {
     /*if (state == State::OK) //wtf, guy, it is metod that use factory to do something
         if (BuildingInventory->isFull()) {
             state = State::Full;
@@ -58,6 +58,6 @@ ActionResult factory::action() {
    return ActionResult::OK;
 }
 
-void factory::proceed() {
+void Factory::proceed() {
 
 }

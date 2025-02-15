@@ -8,7 +8,7 @@
 
 #include "building.hpp"
 
-class factory: public building {
+class Factory: public Building {
 private:
     unsigned int level;
     State state;
@@ -16,7 +16,7 @@ private:
 
     ll processingTimeStart;
 public:
-    factory(unsigned int level, unsigned id, point<ll> position);
+    Factory(unsigned int level, unsigned id, point<ll> position);
 
     State get_state();
 

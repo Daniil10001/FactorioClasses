@@ -5,7 +5,7 @@
 #include "material.hpp"
 #include "interactioninterfaces.hpp"
 
-class building: public Object
+class Building: public Object
 {
 protected:
     unsigned id;
@@ -14,8 +14,8 @@ protected:
     // product if assigned to a factory
     Material* BuildingInventory;
 public:
-    building();
-    building(unsigned id, point<ll> position);
+    Building();
+    Building(unsigned id, point<ll> position);
 
     virtual State get_state();
 
