@@ -29,8 +29,8 @@ public:
 
     bool isEnoughIngridients();
 
-    // method launching after
-    void proceed();
+    // produce materials
+    void produce();
 };
 
 
