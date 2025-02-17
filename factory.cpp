@@ -15,7 +15,7 @@ Factory::Factory(unsigned int level, unsigned id, point<ll> position):Building(i
     this->level = level;
     bool is_producing = false;
 
-
+    FactoryProduct = new Material(0, id);
     this->requirments = json_communicate::getRequirmentsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
     
@@ -29,6 +29,15 @@ State Factory::get_state() {
     return this->state;
 }
 
+bool Factory::isEnoughIngridients() {
+    for (int i = 0; i < requirments->count; i++) {
+        if (requirments->consumes[i] > BuildingInventory[i].get_quantity()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 ActionResult Factory::put_material(Material *m) {
     for (int i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
@@ -40,21 +49,40 @@ ActionResult Factory::put_material(Material *m) {
 }
 
 Material* Factory::get_material(int cell) {
-    if (0<cell && requirments->count>cell)
+    if (0<cell && requirments->count > cell)
         return this->BuildingInventory+cell;
+    if (cell >= 0)
+        return this->FactoryProduct;
+
     return nullptr;
 }
 
 ActionResult Factory::action() {
-    /*if (state == State::OK) //wtf, guy, it is metod that use factory to do something
-        if (BuildingInventory->isFull()) {
+    switch (state) {
+        case State::NotEnoughMaterial:
+            if (!isEnoughIngridients())
+                break;
+            state = State::OK;
+
+        case State::
+    }
+    if (state == State::OK) {//wtf, guy, it is metod that use factory to do something
+        if (FactoryProduct->isFull()) {
             state = State::Full;
             return state;
         }
 
+        if (!isEnoughIngridients()) {
+            state = State::NotEnoughMaterial;
+            return state;
+        }
+
+
+    }
+
     if (state == State::NotEnoughMaterial) {
-        
-    }*/
+        for (int i = 0; i < factoryMaterialsStart)
+    }
    return ActionResult::OK;
 }
 

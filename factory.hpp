@@ -13,7 +13,7 @@ private:
     unsigned int level;
     State state;
     int factoryMaterialsStart;
-
+    Material* FactoryProduct;
     ll processingTimeStart;
 public:
     Factory(unsigned int level, unsigned id, point<ll> position);
@@ -26,6 +26,8 @@ public:
     Material* get_material(int cell);
 
     ActionResult action();
+
+    bool isEnoughIngridients();
 
     // method launching after
     void proceed();
