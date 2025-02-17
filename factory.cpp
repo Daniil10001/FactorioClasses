@@ -30,32 +30,15 @@ State Factory::get_state() {
 }
 
 bool Factory::isEnoughIngridients() {
-    for (int i = 0; i < requirments->count; i++) {
-        if (requirments->consumes[i] > BuildingInventory[i].get_quantity()) {
+    for (unsigned i = 0; i < requirments->count; i++) {
+        if ((unsigned)requirments->consumes[i] > BuildingInventory[i].get_quantity()) {
             return false;
         }
     }
     return true;
 }
 
-ActionResult Factory::put_material(Material *m) {
-    for (unsigned i = 0; i < requirments->count; i++) {
-        if (requirments->ids[i] == m->getId()) {
-            BuildingInventory[i] + *m;
-            return ActionResult::OK;
-        }
-    }
-    return ActionResult::BAD;
-}
 
-Material* Factory::get_material(unsigned cell) {
-    if (0<cell && requirments->count>cell)
-        return this->BuildingInventory+cell;
-    if (cell >= 0)
-        return this->FactoryProduct;
-
-    return nullptr;
-}
 
 ActionResult Factory::action() {
     switch (state) {
@@ -80,7 +63,7 @@ ActionResult Factory::action() {
     }
 
     if (state == State::NotEnoughMaterial) {
-        for (int i = 0; i < factoryMaterialsStart; i++);
+        for (unsigned i = 0; i < factoryMaterialsStart; i++);
     }
    return ActionResult::OK;
 }

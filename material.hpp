@@ -31,6 +31,8 @@ public:
 
     unsigned get_quantity();
 
+    unsigned get_maxquantity();
+
     bool isFull();
 
     void getInfo();

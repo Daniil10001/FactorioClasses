@@ -29,6 +29,11 @@ unsigned Material::get_quantity()
     return this->quantity;
 }
 
+unsigned Material::get_maxquantity()
+{
+    return this->capacity;
+}
+
 bool Material::isFull() {
     return this->capacity==this->quantity;
 }

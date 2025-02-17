@@ -20,10 +20,10 @@ public:
 
     State get_state();
 
-    ActionResult put_material(Material *m);
+    //ActionResult put_material(Material *m);
 
     // -1 is product
-    Material* get_material(unsigned cell);
+    //Material* get_material(unsigned cell);
 
     ActionResult action();
 
