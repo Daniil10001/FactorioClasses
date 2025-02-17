@@ -9,16 +9,18 @@ class Building: public Object
 {
 protected:
     unsigned id;
- public:
+
     MaterialList* requirments;
 
     // product if assigned to a factory
     Material* BuildingInventory;
-
+ public:
     Building();
     Building(unsigned id, point<ll> position);
     ~Building();
-
+#if DLEVEL==0
+    void printInventory();
+#endif
     virtual State get_state();
 
     MaterialList get_requirments();

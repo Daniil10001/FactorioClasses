@@ -46,3 +46,12 @@ ActionResult Building::action()
 {
     return ActionResult::OK;
 }
+
+#if DLEVEL==0
+    #include "iostream"
+    void Building::printInventory()
+    {
+        for (unsigned i = 0; i < requirments->count; i++)
+        std::cout<<BuildingInventory[i].getId()<<' '<<BuildingInventory[i].get_quantity()<<'\n';
+    }
+#endif

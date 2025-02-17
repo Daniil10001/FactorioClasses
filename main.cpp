@@ -19,13 +19,15 @@ int main()
     p.x=0;
     p.y=0;
     Factory f(1,1001,p);
-    for (unsigned i = 0; i < f.requirments->count; i++)
-        cout<<f.BuildingInventory[i].getId()<<' '<<f.BuildingInventory[i].get_quantity()<<'\n';
+    #if DLEVEL==0
+        f.printInventory();
+    #endif
     f.produce();
     f.produce();
     f.produce();
-    for (unsigned i = 0; i < f.requirments->count; i++)
-        cout<<f.BuildingInventory[i].getId()<<' '<<f.BuildingInventory[i].get_quantity()<<'\n';
+    #if DLEVEL==0
+        f.printInventory();
+    #endif
     cout<<f.get_material_quantity(1)<<'\n';
     return 0;
 }

@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 project( Factorio )
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-Wall -O2)
+if (NOT DLEVEL)
+    set(DLEVEL 10)
+endif()
+
+add_compile_options(-Wall -O2 -DDLEVEL=${DLEVEL})
 
 
 add_library(INIF STATIC interactioninterfaces.cpp)
