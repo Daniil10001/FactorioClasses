@@ -38,11 +38,6 @@ bool Factory::isEnoughIngridients() {
 }
 
 ActionResult Factory::action() {
-
-    if(FactoryProduct->isFull()) {
-        state = State::Full;
-        return ActionResult::BAD;
-    }
     if (!isEnoughIngridients()) {
         state = State::NotEnoughMaterial;
         return ActionResult::BAD;

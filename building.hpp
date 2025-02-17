@@ -9,11 +9,12 @@ class Building: public Object
 {
 protected:
     unsigned id;
+ public:
     MaterialList* requirments;
 
     // product if assigned to a factory
     Material* BuildingInventory;
-public:
+
     Building();
     Building(unsigned id, point<ll> position);
     ~Building();

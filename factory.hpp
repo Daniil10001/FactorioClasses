@@ -13,7 +13,6 @@ private:
     unsigned int level;
     State state=State::OK;
     unsigned factoryMaterialsStart;
-    Material* FactoryProduct;
     ll processingTimeStart;
 public:
     Factory(unsigned int level, unsigned id, point<ll> position);
