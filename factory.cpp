@@ -7,7 +7,7 @@
 #include "material.hpp"
 #include "services.hpp"
 #include "object.hpp"
-#include "json_communicate.hpp"
+#include "jsoncommunicate.hpp"
 //#include "new" ????????
 
 
@@ -19,8 +19,8 @@ Factory::Factory(unsigned int level, unsigned id, point<ll> position):Building(i
     this->requirments = json_communicate::getRequirmentsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
     
-    for(int i=0;i<this->requirments->count;i++)
-        BuildingInventory->ChangeId(this->requirments->ids[i]);
+    for(unsigned i=0;i<this->requirments->count;i++)
+        (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
 
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
@@ -30,7 +30,7 @@ State Factory::get_state() {
 }
 
 ActionResult Factory::put_material(Material *m) {
-    for (int i = 0; i < requirments->count; i++) {
+    for (unsigned i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
             BuildingInventory[i] + *m;
             return ActionResult::OK;
@@ -39,7 +39,7 @@ ActionResult Factory::put_material(Material *m) {
     return ActionResult::BAD;
 }
 
-Material* Factory::get_material(int cell) {
+Material* Factory::get_material(unsigned cell) {
     if (0<cell && requirments->count>cell)
         return this->BuildingInventory+cell;
     return nullptr;
@@ -59,5 +59,6 @@ ActionResult Factory::action() {
 }
 
 void Factory::proceed() {
-
+    for (unsigned i=0;i<requirments->count;i++)
+        BuildingInventory[i]-=requirments->consumes[i];
 }

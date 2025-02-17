@@ -16,6 +16,7 @@ protected:
 public:
     Building();
     Building(unsigned id, point<ll> position);
+    ~Building();
 
     virtual State get_state();
 

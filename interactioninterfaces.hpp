@@ -19,7 +19,7 @@ class MaterialList
 {
 private:
 public:
-    int count;
+    unsigned count;
     unsigned *ids;
     int *consumes;
     MaterialList();

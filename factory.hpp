@@ -3,15 +3,15 @@
 // Done some reworks by Daniil on same date
 //
 
-#ifndef FACTORIO_FACTORY__
-#define FACTORIO_FACTORY__
+#ifndef factory_hpp__
+#define factory_hpp__
 
 #include "building.hpp"
 
 class Factory: public Building {
 private:
     unsigned int level;
-    State state;
+    State state=State::OK;
     int factoryMaterialsStart;
 
     ll processingTimeStart;
@@ -23,7 +23,7 @@ public:
     ActionResult put_material(Material *m);
 
     // -1 is product
-    Material* get_material(int cell);
+    Material* get_material(unsigned cell);
 
     ActionResult action();
 
