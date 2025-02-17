@@ -12,8 +12,8 @@ class Factory: public Building {
 private:
     unsigned int level;
     State state=State::OK;
-    int factoryMaterialsStart;
-
+    unsigned factoryMaterialsStart;
+    Material* FactoryProduct;
     ll processingTimeStart;
 public:
     Factory(unsigned int level, unsigned id, point<ll> position);
@@ -26,6 +26,8 @@ public:
     Material* get_material(unsigned cell);
 
     ActionResult action();
+
+    bool isEnoughIngridients();
 
     // method launching after
     void proceed();
