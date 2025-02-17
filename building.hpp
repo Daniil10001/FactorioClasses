@@ -34,6 +34,10 @@ protected:
     virtual Material* get_material(unsigned cell);
     
     virtual ActionResult action();
+
+    bool isFull();
+
+    bool isFull(int ceil);
 };
 
 
