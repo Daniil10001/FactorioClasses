@@ -60,7 +60,7 @@ bool Building::isFull(unsigned ceil) {
         if (BuildingInventory[i].isFull())
             return true;
 
-    return false;
+    return false
 }
 
 #if DLEVEL==0
