@@ -28,7 +28,7 @@ State Factory::get_state() {
     return this->state;
 }
 
-bool Factory::isEnoughIngridients() {
+bool Factory::isEnoughIngridients() const{
     for (unsigned i = 0; i < requirments->count; i++) {
         if ((unsigned)requirments->consumes[i] > BuildingInventory[i].get_quantity()) {
             return false;

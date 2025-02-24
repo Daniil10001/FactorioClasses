@@ -29,15 +29,15 @@ public:
 
     ActionResult ChangeId(unsigned id);
 
-    unsigned get_quantity();
+    unsigned get_quantity() const;
 
-    unsigned get_maxquantity();
+    unsigned get_maxquantity() const;
 
-    bool isFull();
+    bool isFull() const;
 
-    void getInfo();
+    void getInfo() const;
 
-    unsigned getId();
+    unsigned getId() const;
 
 };
 #endif

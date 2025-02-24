@@ -26,7 +26,7 @@ public:
 
     ActionResult action();
 
-    bool isEnoughIngridients();
+    bool isEnoughIngridients() const;
 
     // produce materials
     void produce();

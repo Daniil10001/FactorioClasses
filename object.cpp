@@ -14,6 +14,7 @@ Object::Object(unsigned id)
 {                   //dummy thin neded to replaced by json
     this->size.x=2;
     this->size.y=2;
+    this->initilised=true;
 };
 
 void Object::set_cord(ll x,ll y)
@@ -31,4 +32,9 @@ point<ll> Object::get_cord()
 point<unsigned> Object::get_size()
 {
     return this->size;
+}
+
+Object::~Object()
+{
+    
 }

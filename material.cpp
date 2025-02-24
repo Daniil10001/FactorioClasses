@@ -20,21 +20,22 @@ Material& Material::operator-=(const int rhs){
     return *this;
 };
 
-unsigned Material::getId() {
+unsigned Material::getId() const
+{
     return this->id;
 }
 
-unsigned Material::get_quantity()
+unsigned Material::get_quantity() const
 {
     return this->quantity;
 }
 
-unsigned Material::get_maxquantity()
+unsigned Material::get_maxquantity() const
 {
     return this->capacity;
 }
 
-bool Material::isFull() {
+bool Material::isFull() const{
     return this->capacity==this->quantity;
 }
 

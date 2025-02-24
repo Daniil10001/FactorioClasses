@@ -13,7 +13,7 @@ Building::~Building()
     delete requirments; 
 }
 
-unsigned Building::get_material_quantity(unsigned id)
+unsigned Building::get_material_quantity(unsigned id) const
 {
     for (unsigned i=0;i<requirments->count;i++)
         if(requirments->ids[i]==id)
@@ -21,7 +21,7 @@ unsigned Building::get_material_quantity(unsigned id)
     return 0;
 }
 
-State Building::get_state()
+State Building::get_state() const
 {
     return State::OK;
 }
@@ -55,3 +55,14 @@ ActionResult Building::action()
         std::cout<<BuildingInventory[i].getId()<<' '<<BuildingInventory[i].get_quantity()<<'\n';
     }
 #endif
+
+Connection::Connection()
+{
+    to=nullptr;
+    from=std::vector<Building*>(0);
+}
+
+const Connection* Building::get_Connection()
+{
+    return &this->con;
+}

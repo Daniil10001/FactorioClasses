@@ -6,7 +6,7 @@ if (NOT DLEVEL)
     set(DLEVEL 10)
 endif()
 
-add_compile_options(-Wall -O2 -DDLEVEL=${DLEVEL})
+add_compile_options(-Wall -Wextra -Wpedantic -O2 -DDLEVEL=${DLEVEL})
 
 
 add_library(INIF STATIC interactioninterfaces.cpp)
