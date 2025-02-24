@@ -57,7 +57,7 @@ protected:
 
     bool isFull();
 
-    bool isFull(int ceil);
+    bool isFull(unsigned ceil);
 };
 
 

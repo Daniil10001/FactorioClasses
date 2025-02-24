@@ -1,9 +1,5 @@
 #include"building.hpp"
 
-unsigned min(unsigned a, unsigned b) {
-    if (a > b) return b;
-    return a;
-}
 
 Building::Building(unsigned id, point<ll> position):Object(id)
 {
@@ -59,7 +55,7 @@ bool Building::isFull() {
     return false;
 }
 
-bool Building::isFull(int ceil) {
+bool Building::isFull(unsigned ceil) {
     for (unsigned i = 0; i < min(requirments->count, ceil); i++)
         if (BuildingInventory[i].isFull())
             return true;
