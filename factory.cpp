@@ -13,7 +13,6 @@
 
 Factory::Factory(unsigned int level, unsigned id, point<ll> position):Building(id, position) {
     this->level = level;
-    bool is_producing = false;
 
     this->requirments = json_communicate::getRequirmentsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
