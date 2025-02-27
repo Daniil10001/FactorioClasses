@@ -7,12 +7,19 @@
 #define ll long long
 #include "interactioninterfaces.hpp"
 
+
+
 class json_communicate {
 public:
     json_communicate();
     ~json_communicate();
 
-    static MaterialList* getRequirmentsById(int id);
+    // stuff for initialization
+    // check if explicitly typed ids are corresponding to item's array index
+    static void checkItemsIntegrity();
+
+    static MaterialList* getRequirementsById(int id);
+
     static ll getCraftTimeById(int id);
 };
 

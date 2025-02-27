@@ -5,7 +5,7 @@
 #include "jsoncommunicate.hpp"
 
 
-MaterialList* json_communicate::getRequirmentsById(int id)
+MaterialList* json_communicate::getRequirementsById(int id)
 {
     MaterialList* ml;
     switch (id)
