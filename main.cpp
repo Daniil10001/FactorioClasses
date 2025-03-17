@@ -2,7 +2,8 @@
 #include "material.hpp"
 #include "interactioninterfaces.hpp"
 #include "factory.hpp"
-using std::cout;
+#include "jsoncommunicate.hpp"
+using std::cout, std::endl;
 
 int main()
 {
@@ -15,19 +16,27 @@ int main()
     cout<<ActionResult::BAD<<" "<<ActionResult::OK<<'\n';
     cout<<m1+m2<<" "<<m1+m3<<'\n';
     cout<<m1.get_quantity()<<' '<<m2.get_quantity()<<' '<<m3.get_quantity()<<'\n';
-    point<ll> p;
-    p.x=0;
-    p.y=0;
-    Factory f(1,1001,p);
+    //point<ll> p;
+    //p.x=0;
+    //p.y=0;
+   // Factory f(1,1001,p);
     #if DLEVEL==0
-        f.printInventory();
+    //    f.printInventory();
     #endif
-    f.produce();
-    f.produce();
-    f.produce();
+//    f.produce();
+//    f.produce();
+//    f.produce();
     #if DLEVEL==0
-        f.printInventory();
+//        f.printInventory();
     #endif
-    cout<<f.get_material_quantity(1)<<'\n';
+//    cout<<f.get_material_quantity(1)<<'\n';
+
+//
+   cout<< "checking if json works" << endl;
+//
+    cout << json_communicate::getNameById(0)<<endl;
+    //cout << json_communicate::getNameById(0);
+
+
     return 0;
 }

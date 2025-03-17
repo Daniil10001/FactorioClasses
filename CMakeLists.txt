@@ -34,4 +34,9 @@ target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 
 add_executable( main main.cpp)
-target_link_libraries(main MATERIAL FACTORY)
+target_link_libraries(main JSON MATERIAL FACTORY)
+
+add_custom_command(TARGET main POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:main>/resources)
+

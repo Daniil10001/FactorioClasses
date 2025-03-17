@@ -1,25 +1,8 @@
-
 {
   "items": [
     {
       "id": 0,
-      "name": "Air",
-      "description": "If you've got this message, an error occurred",
-
-      "has_level": false,
-      "level": 0,
-
-      "durable": false,
-      "durability": 0,
-
-      "has_inventory": false,
-
-      "producing": false,
-      "craftable": false,
-      "requirements": [],
-      "consumes": [],
-
-      "placable": false
+      "url": "items/Air/"
     }
   ]
 }
