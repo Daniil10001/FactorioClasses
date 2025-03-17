@@ -8,6 +8,7 @@
 #include "interactioninterfaces.hpp"
 #include "include/rapidjson/document.h"
 #include <fstream>
+#include <vector>
 #include <iostream>
 
 using namespace rapidjson;
