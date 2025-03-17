@@ -24,6 +24,13 @@ public:
     const std::vector<Building* const> GetConnectionFrom(); 
 };
 
+/* user
+ * user 100 дерева
+ * юзер конвейер - акшн - 10 дерева
+ * юзер может использовать?
+ * может - 10
+ * не может - ошибка
+*/
 
 class Building: public Object
 {

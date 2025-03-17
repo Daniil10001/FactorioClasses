@@ -1,0 +1,16 @@
+{
+  "id": 0,
+  "name": "air",
+  "has_level": false,
+  "level": 0,
+
+  "durable": false,
+  "durability": 0,
+
+  "has_inventory": false,
+
+  "producing": false,
+  "craftable": false,
+
+  "placable": false
+}
