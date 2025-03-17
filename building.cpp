@@ -26,6 +26,11 @@ State Building::get_state() const
     return State::OK;
 }
 
+const MaterialList* const Building::get_requirments()
+{
+    return this->requirments;
+}
+
 ActionResult Building::put_material(Material *m) {
     for (unsigned i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
@@ -71,13 +76,22 @@ bool Building::isFull(unsigned ceil) {
     }
 #endif
 
-Connection::Connection()
+const Connection* Building::get_Connection()
+{
+    return &this->con;
+}
+
+Connection::Connection():maxfromcount(1)
 {
     to=nullptr;
     from=std::vector<Building*>(0);
 }
 
-const Connection* Building::get_Connection()
+
+ActionResult Connection::AddConnectionTo(Building* to)
 {
-    return &this->con;
+    if (this->to!=nullptr) return ActionResult::BAD;
+    this->to=to;
+    return ActionResult::OK;
 }
+

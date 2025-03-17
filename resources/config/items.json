@@ -11,6 +11,7 @@
 
       "durable": false,
       "durability": 0,
+      "path":"../factories/assember.json",
 
       "has_inventory": false,
 
@@ -18,6 +19,7 @@
       "craftable": false,
       "requirements": [],
       "consumes": [],
+      "resepies":[],
 
       "placable": false
     }

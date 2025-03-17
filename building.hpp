@@ -10,14 +10,18 @@ class Building;
 class Connection
 {
 private:
+    unsigned maxfromcount;
     Building* to;
     std::vector<Building*> from;
 public:
     Connection();
-    void AddConnectionTo();
-    void AddConnectionFrom();
-    void DeleteConnectionTo();
-    void DeleteConnectionFrom();
+    Connection(unsigned mxfmcnt);
+    ActionResult AddConnectionTo(Building* to);
+    ActionResult AddConnectionFrom(Building* from);
+    ActionResult DeleteConnectionTo();
+    ActionResult DeleteConnectionFrom(Building* from);
+    Building * const GetConnectionTo();
+    const std::vector<Building* const> GetConnectionFrom(); 
 };
 
 
@@ -41,7 +45,7 @@ protected:
 #endif
     virtual State get_state() const;
 
-    MaterialList get_requirments();
+    const MaterialList* const get_requirments();
 
     unsigned get_material_quantity (unsigned id) const;
 
