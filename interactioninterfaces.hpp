@@ -1,6 +1,11 @@
 #ifndef interactioninterfaces_hpp__
 #define interactioninterfaces_hpp__
 
+template<typename T> struct point
+{
+    T x,y;
+};
+
 enum class State
 {
     OK,

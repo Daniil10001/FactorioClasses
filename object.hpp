@@ -3,11 +3,7 @@
 
 #define ll long long
 
-template<typename T> struct point
-{
-    T x,y;
-};
-
+#include"interactioninterfaces.hpp"
 
 class Object
 {
