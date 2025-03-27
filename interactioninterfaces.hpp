@@ -1,9 +1,16 @@
 #ifndef interactioninterfaces_hpp__
 #define interactioninterfaces_hpp__
 
-template<typename T> struct point
+template<typename T> class point
 {
+    public:
     T x,y;
+    point(T x, T y):x(x),y(y){};
+    point():x(0),y(0){};
+    void set(T x,T y){
+        this->x=x;
+        this->y=y;
+    }
 };
 
 enum class State
@@ -18,6 +25,12 @@ enum ActionResult
 {
     OK,
     BAD,
+};
+
+enum Connections
+{
+    Standart,
+    Chain
 };
 
 class MaterialList

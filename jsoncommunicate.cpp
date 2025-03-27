@@ -71,31 +71,31 @@ void json_handling::closeJsonDocumnet(std::string filepath)
 
 
 
-//MaterialList* json_communicate::getRequirementsById(int id)
-//{
-//    MaterialList* ml;
-//    switch (id)
-//    {
-//    case 1001:
-//        ml=new MaterialList(3);
-//        ml->ids[0]=0;
-//        ml->ids[1]=0;
-//        ml->ids[2]=1;
-//        ml->consumes[0]=0;
-//        ml->consumes[1]=0;
-//        ml->consumes[2]=-1;
-//        break;
-//
-//    default:
-//        nullptr;
-//        break;
-//    }
-//    return ml;
-//}
+MaterialList* json_communicate::getRequirementsById(unsigned id)
+{
+   MaterialList* ml;
+   switch (id)
+   {
+   case 1001:
+       ml=new MaterialList(3);
+       ml->ids[0]=0;
+       ml->ids[1]=0;
+       ml->ids[2]=1;
+       ml->consumes[0]=0;
+       ml->consumes[1]=0;
+       ml->consumes[2]=-1;
+       break;
 
-MaterialList* json_communicate::getRequirementsById(unsigned id) {
-    
+   default:
+       nullptr;
+       break;
+   }
+    return ml;
 }
+
+/*MaterialList* json_communicate::getRequirementsById(unsigned id) {
+    
+}*/
 
 std::string json_communicate::getNameById(unsigned id) {
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");

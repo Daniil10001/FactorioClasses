@@ -2,26 +2,39 @@
 #define building_hpp__
 
 #include <vector> //we need to use std here to make code smaller
+#include <set>
+#include <map>
 #include "object.hpp"
 #include "material.hpp"
 #include "interactioninterfaces.hpp"
 
+
+
 class Building;
+ActionResult MakeConnection(Building* from, Building* to, int p);
+
 class Connection
 {
 private:
-    unsigned maxfromcount;
-    Building* to;
-    std::vector<Building*> from;
+    Building* me;
+    unsigned maxToCount=255;
+    unsigned maxFromCount=255;
+    std::set<Building*> to;
+    std::set<Building*> from;
 public:
-    Connection();
-    Connection(unsigned mxfmcnt);
+    //Connection();
+    Connection(Building* me);
     ActionResult AddConnectionTo(Building* to);
     ActionResult AddConnectionFrom(Building* from);
-    ActionResult DeleteConnectionTo();
+    ActionResult DeleteConnectionTo(Building* to);
     ActionResult DeleteConnectionFrom(Building* from);
-    Building * const GetConnectionTo();
-    const std::vector<Building* const> GetConnectionFrom(); 
+    const std::set<Building*>& GetConnectionsTo();
+    const std::set<Building*>& GetConnectionsFrom();
+    
+    friend ActionResult MakeConnection(Connection* from, Connection* to);
+    friend ActionResult MakeConnection(Building* from, Building* to, int p);
+    
+    ~Connection(); //Works only with standart connections. Chain connection do not apply
 };
 
 /* user
@@ -35,14 +48,13 @@ public:
 class Building: public Object
 {
 protected:
-    unsigned id;
-
-    Connection con;
+    std::map<int,Connection> con;
 
     MaterialList* requirments;
 
     //requirments and product if assigned to a factory
     Material* BuildingInventory;
+
  public:
     Building();
     Building(unsigned id, point<ll> position);
@@ -52,13 +64,13 @@ protected:
 #endif
     virtual State get_state() const;
 
-    const MaterialList* const get_requirments();
+    MaterialList const* get_requirments();
 
     unsigned get_material_quantity (unsigned id) const;
 
     unsigned get_material_maxCapicy(unsigned id) const;
 
-    const Connection* get_Connection();
+    Connection * get_Connection(int p);
 
     virtual ActionResult put_material(Material *m);
     
