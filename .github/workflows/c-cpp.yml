@@ -19,3 +19,11 @@ jobs:
           cmake ..
           make
           echo "All is OK. Build verified."
+    - name: test
+      run: |  
+          mkdir build && cd build
+          cmake .. &>/dev/null
+          make &>/dev/null
+          ./main
+          echo "Test runed."
+    
