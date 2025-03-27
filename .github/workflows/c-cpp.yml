@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest debian-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -21,9 +21,7 @@ jobs:
           echo "All is OK. Build verified."
     - name: test
       run: |  
-          mkdir build && cd build
-          cmake .. &>/dev/null
-          make &>/dev/null
+          cd build
           ./main
           echo "Test runed."
     
