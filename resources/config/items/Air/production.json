@@ -1,7 +1,9 @@
 {
   "recipes": [
     {
-      "requirments": [],
+      "count": 0,
+      "time": 0,
+      "requirements": [],
       "consumes": []
     }
   ]

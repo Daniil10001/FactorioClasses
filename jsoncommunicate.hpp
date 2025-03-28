@@ -60,7 +60,7 @@ public:
     // returns -1 if target not found
     static int findByPath(std::string targetpath);
 
-    static void closeJsonDocumnet(std::string filepath);
+    static void closeJsonDocument(std::string filepath);
 
     // check if any failure loading is present
     static void checkItemsIntegrity();
@@ -72,11 +72,20 @@ public:
     json_communicate();
     ~json_communicate();
 
-    static MaterialList* getRequirementsById(unsigned id);
+    static std::string getNameById(unsigned id);
+
+    static std::string getUrlById(unsigned id);
+
+    // returns first recipe by default
+    static MaterialList* getRequirementsById(unsigned id) {
+        return getRequirementsById(id, 0);
+    }
+
+    static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
 
     static ll getCraftTimeById(unsigned id);
 
-    static std::string getNameById(unsigned id);
+
 };
 
 

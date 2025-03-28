@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
     - name: build test
@@ -19,3 +17,9 @@ jobs:
           cmake ..
           make
           echo "All is OK. Build verified."
+    - name: test
+      run: |  
+          cd build
+          ./main
+          echo "Test runed."
+    

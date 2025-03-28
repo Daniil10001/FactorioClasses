@@ -59,7 +59,7 @@ void json_handling::checkItemsIntegrity()
 
 }
 
-void json_handling::closeJsonDocumnet(std::string filepath)
+void json_handling::closeJsonDocument(std::string filepath)
 {
     int target = findByPath(filepath);
 
@@ -71,37 +71,58 @@ void json_handling::closeJsonDocumnet(std::string filepath)
 
 
 
-MaterialList* json_communicate::getRequirementsById(unsigned id)
-{
-   MaterialList* ml;
-   switch (id)
-   {
-   case 1001:
-       ml=new MaterialList(3);
-       ml->ids[0]=0;
-       ml->ids[1]=0;
-       ml->ids[2]=1;
-       ml->consumes[0]=0;
-       ml->consumes[1]=0;
-       ml->consumes[2]=-1;
-       break;
+//MaterialList* json_communicate::getRequirementsById(int id)
+//{
+//    MaterialList* ml;
+//    switch (id)
+//    {
+//    case 1001:
+//        ml=new MaterialList(3);
+//        ml->ids[0]=0;
+//        ml->ids[1]=0;
+//        ml->ids[2]=1;
+//        ml->consumes[0]=0;
+//        ml->consumes[1]=0;
+//        ml->consumes[2]=-1;
+//        break;
+//
+//    default:
+//        nullptr;
+//        break;
+//    }
+//    return ml;
+//}
 
-   default:
-       nullptr;
-       break;
-   }
-    return ml;
+std::string json_communicate::getUrlById(unsigned id) {
+    auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
+    return (std::string)(*itemsDoc)["items"][id]["url"].GetString();
 }
 
-/*MaterialList* json_communicate::getRequirementsById(unsigned id) {
-    
-}*/
+
+MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe_id) {
+    auto prodLists = json_handling::getJsonDocument(
+            "./resources/config/items/" + json_communicate::getUrlById(id) + "production.json"
+            );
+
+    unsigned count = (*prodLists)["recipes"][recipe_id]["count"].GetInt();
+
+    auto reqList = new MaterialList(count);
+    reqList->time = (*prodLists)["recipes"][recipe_id]["time"].GetFloat();
+
+    for (unsigned i = 0; i < count; i++) {
+        reqList->consumes[i] = (*prodLists)["recipes"][recipe_id]["consumes"][i].GetInt();
+        reqList->ids[i] = (unsigned)(*prodLists)["recipes"][recipe_id]["requirements"][i].GetInt();
+    }
+
+    return reqList;
+}
 
 std::string json_communicate::getNameById(unsigned id) {
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
     return (*json_handling::getJsonDocument(
-            "./resources/config/" + (std::string)(*itemsDoc)["items"][id]["url"].GetString() + "main.json"
+
+            "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"
+
             ))["name"].GetString();
-//    return (*targetDoc)["items"][id]["url"].GetString();
 }
 

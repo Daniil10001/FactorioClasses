@@ -105,8 +105,9 @@ public:
     unsigned count;
     unsigned *ids;
     int *consumes;
+    float time; // may be crafting time
     MaterialList();
-    MaterialList(int count);
+    MaterialList(unsigned count);
     ~MaterialList();
 };
 
