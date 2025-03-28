@@ -77,11 +77,11 @@ public:
     static std::string getUrlById(unsigned id);
 
     // returns first recipe by default
-    static MaterialList& getRequirementsById(unsigned id) {
-        getRequirementsById(id, 0);
+    static MaterialList* getRequirementsById(unsigned id) {
+        return getRequirementsById(id, 0);
     }
 
-    static MaterialList& getRequirementsById(unsigned id, unsigned recipe_id);
+    static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
 
     static ll getCraftTimeById(unsigned id);
 

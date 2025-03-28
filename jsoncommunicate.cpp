@@ -93,25 +93,25 @@ void json_handling::closeJsonDocument(std::string filepath)
 //    return ml;
 //}
 
-std::string getUrlById(unsigned id) {
+std::string json_communicate::getUrlById(unsigned id) {
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
     return (std::string)(*itemsDoc)["items"][id]["url"].GetString();
 }
 
 
-MaterialList& json_communicate::getRequirementsById(unsigned id, unsigned recipe_id) {
+MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe_id) {
     auto prodLists = json_handling::getJsonDocument(
             "./resources/config/items/" + json_communicate::getUrlById(id) + "production.json"
             );
 
     unsigned count = (*prodLists)["recipes"][recipe_id]["count"].GetInt();
 
-    auto reqList = MaterialList(count);
-    reqList.time = (*prodLists)["recipes"][recipe_id]["time"].GetFloat();
+    auto reqList = new MaterialList(count);
+    reqList->time = (*prodLists)["recipes"][recipe_id]["time"].GetFloat();
 
     for (unsigned i = 0; i < count; i++) {
-        reqList.consumes[i] = (*prodLists)["recipes"][recipe_id]["consumes"][i].GetInt();
-        reqList.ids[i] = (unsigned)(*prodLists)["recipes"][recipe_id]["requirements"][i].GetInt();
+        reqList->consumes[i] = (*prodLists)["recipes"][recipe_id]["consumes"][i].GetInt();
+        reqList->ids[i] = (unsigned)(*prodLists)["recipes"][recipe_id]["requirements"][i].GetInt();
     }
 
     return reqList;
