@@ -1,22 +1,22 @@
 #include"building.hpp"
 
-
-Building::Building()
+/*Building::Building()
 {
-    con.insert(std::make_pair(Connections::Standart,Connection(this)));
-}
+}*/
 
-Building::Building(unsigned id, point<ll> position):Object(id)
+Building::Building(unsigned id, point<ll> position, Direrctions d):Object(id), direction(d)
 {
     set_cord(position.x,position.y);
-    con.insert(std::make_pair(Connections::Standart,Connection(this)));
     this->id=id;
+    for (Connection*& cn:this->con)  cn=new Connection(this);
 }
 
 Building::~Building()
 {
     delete[] BuildingInventory;
-    delete requirments; 
+    delete requirments;
+    for (Connection* c:this->con)  delete c;
+
 }
 
 unsigned Building::get_material_quantity(unsigned id) const
@@ -82,17 +82,15 @@ bool Building::isFull(unsigned ceil) {
     }
 #endif
 
-Connection * Building::get_Connection(int p)
+Connection * Building::get_Connection(Connections p)
 {
-    if (this->con.find(p)==this->con.end()) return nullptr;
-    return &this->con.at(p);
+    if (p>=Connections::Count) return nullptr;
+    return this->con[p];
 }
 
 //connection segment
 
 Connection::Connection(Building* me):me(me){}
-
-//Connection::Connection():Connection(nullptr,0,0){}
 
 ActionResult Connection::AddConnectionTo(Building* to)
 {
@@ -151,7 +149,7 @@ const std::set<Building*>& Connection::GetConnectionsFrom()
     return this->from;
 }
 
-ActionResult MakeConnection(Building* from, Building* to, int p)
+ActionResult MakeConnection(Building* from, Building* to, Connections p)
 {
     return MakeConnection(from->get_Connection(p),to->get_Connection(p));
 }

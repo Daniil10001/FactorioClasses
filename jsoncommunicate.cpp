@@ -99,7 +99,6 @@ MaterialList* json_communicate::getRequirementsById(unsigned id)
 
 std::string json_communicate::getNameById(unsigned id) {
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
-    std::cout<<"1\n";
     return (*json_handling::getJsonDocument(
             "./resources/config/" + (std::string)(*itemsDoc)["items"][id]["url"].GetString() + "main.json"
             ))["name"].GetString();

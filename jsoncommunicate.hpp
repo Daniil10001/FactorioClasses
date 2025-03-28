@@ -25,8 +25,8 @@ public:
         path(path),IsLoaded(isLoaded), file(doc) {};
 
     ~loadingUnit() {
-        std::cout<<path<<'\n';
-        std::cout<<"deleted\n";
+        //std::cout<<path<<'\n';
+        //std::cout<<"deleted\n";
     }
 
     Document* getFileInstance() {

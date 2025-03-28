@@ -3,7 +3,7 @@
 
 #include <vector> //we need to use std here to make code smaller
 #include <set>
-#include <map>
+#include <array>
 #include "object.hpp"
 #include "material.hpp"
 #include "interactioninterfaces.hpp"
@@ -11,7 +11,7 @@
 
 
 class Building;
-ActionResult MakeConnection(Building* from, Building* to, int p);
+ActionResult MakeConnection(Building* from, Building* to, Connections p);
 
 class Connection
 {
@@ -32,7 +32,7 @@ public:
     const std::set<Building*>& GetConnectionsFrom();
     
     friend ActionResult MakeConnection(Connection* from, Connection* to);
-    friend ActionResult MakeConnection(Building* from, Building* to, int p);
+    friend ActionResult MakeConnection(Building* from, Building* to, Connections p);
     
     ~Connection(); //Works only with standart connections. Chain connection do not apply
 };
@@ -48,16 +48,18 @@ public:
 class Building: public Object
 {
 protected:
-    std::map<int,Connection> con;
+    std::array<Connection*,Connections::Count> con;
 
     MaterialList* requirments;
 
     //requirments and product if assigned to a factory
     Material* BuildingInventory;
 
+    Direction direction;
+
  public:
-    Building();
-    Building(unsigned id, point<ll> position);
+    //Building();
+    Building(unsigned id, point<ll> position, Direrctions d);
     ~Building();
 #if DLEVEL==0
     void printInventory();
@@ -70,7 +72,7 @@ protected:
 
     unsigned get_material_maxCapicy(unsigned id) const;
 
-    Connection * get_Connection(int p);
+    Connection * get_Connection(Connections p);
 
     virtual ActionResult put_material(Material *m);
     

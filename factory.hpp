@@ -15,7 +15,7 @@ private:
     unsigned factoryMaterialsStart;
     ll processingTimeStart;
 public:
-    Factory(unsigned int level, unsigned id, point<ll> position);
+    Factory(unsigned id, point<ll> position,  Direrctions d);
 
     State get_state();
 

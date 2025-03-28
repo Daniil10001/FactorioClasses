@@ -11,8 +11,8 @@
 //#include "new" ????????
 
 
-Factory::Factory(unsigned int level, unsigned id, point<ll> position):Building(id, position) {
-    this->level = level;
+Factory::Factory(unsigned id, point<ll> position, Direrctions d):Building(id, position,d) {
+    this->level = 1;//get from json
 
     this->requirments = json_communicate::getRequirementsById(id);
     this->BuildingInventory = new Material[this->requirments->count];

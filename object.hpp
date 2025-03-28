@@ -1,8 +1,6 @@
 #ifndef object_hpp__
 #define object_hpp__
 
-#define ll long long
-
 #include"interactioninterfaces.hpp"
 
 class Object

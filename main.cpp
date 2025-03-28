@@ -19,7 +19,7 @@ int main()
     cout<<m1.get_quantity()<<' '<<m2.get_quantity()<<' '<<m3.get_quantity()<<'\n';
     cout<<"test fabric produce\n";
     point<ll> p;
-    Factory f(1,1001,p);
+    Factory f(1001,p,Direrctions::UP);
     #if DLEVEL==0
         f.printInventory();
     #endif
@@ -31,9 +31,9 @@ int main()
     #endif
     cout<<f.get_material_quantity(1)<<'\n';
 
-    Factory f2(1,1001,p);
-    Factory f3(1,1001,p);
-    Factory f4(1,1001,p);
+    Factory f2(1001,p,Direrctions::UP);
+    Factory f3(1001,p,Direrctions::UP);
+    Factory f4(1001,p,Direrctions::UP);
 
     cout<<"test connections\n";
     MakeConnection(&f,&f2, Connections::Standart);
