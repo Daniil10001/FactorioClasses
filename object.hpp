@@ -8,6 +8,7 @@
 class Object
 {
     protected:
+        unsigned id;
         point<ll> p;
         point<unsigned> size;
         bool initilised;
@@ -17,8 +18,8 @@ class Object
         Object(unsigned id);
         virtual ~Object();
         void set_cord(ll x,ll y);
-        point<ll> get_cord();
-        point<unsigned> get_size();
+        const point<ll>& get_cord();
+        const point<unsigned>& get_size();
 };
 
 

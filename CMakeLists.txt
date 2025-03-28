@@ -6,7 +6,7 @@ if (NOT DLEVEL)
     set(DLEVEL 10)
 endif()
 
-add_compile_options(-Wall -Wextra -Wpedantic -O2 -DDLEVEL=${DLEVEL})
+add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
 
 
 add_library(INIF STATIC interactioninterfaces.cpp)
@@ -34,7 +34,7 @@ target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 
 add_executable( main main.cpp)
-target_link_libraries(main JSON MATERIAL FACTORY)
+target_link_libraries(main JSON MATERIAL FACTORY BUILDING)
 
 add_custom_command(TARGET main POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
