@@ -17,7 +17,14 @@ int main()
     cout<<ActionResult::BAD<<" "<<ActionResult::OK<<'\n';
     cout<<m1+m2<<" "<<m1+m3<<'\n';
     cout<<m1.get_quantity()<<' '<<m2.get_quantity()<<' '<<m3.get_quantity()<<'\n';
-    cout<<"test fabric produce\n";
+    
+    
+    cout<< "checking if json works" << endl;
+    //
+        cout << json_communicate::getNameById(0)<<endl;
+        cout << json_communicate::getNameById(1001)<<endl;
+        cout<<"test fabric produce\n";
+
     point<ll> p;
     Factory f(1001,p,Direrctions::UP);
     #if DLEVEL==0
@@ -47,10 +54,6 @@ int main()
     cout<<"Check connection:\n need to be 2 0 :";
     cout<<f2.get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<' '<<f2.get_Connection(Connections::Standart)->GetConnectionsTo().size()<<'\n';
     
-
-   cout<< "checking if json works" << endl;
-//
-    cout << json_communicate::getNameById(0)<<endl;
     //cout << json_communicate::getNameById(0);
 
 

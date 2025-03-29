@@ -93,7 +93,7 @@ enum ActionResult: short
 
 enum Connections: short
 {
-    Standart,
+    Standart,// base do not remove
     Chain,
     Count // Duumy element to count connection types
 };
