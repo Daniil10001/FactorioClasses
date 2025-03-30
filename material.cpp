@@ -12,13 +12,13 @@ Material& Material::operator+=(const int rhs){
     if (rhs<0) return (*this)-=(-rhs);
     this->quantity+=min(this->capacity-this->quantity,(unsigned)rhs);
     return *this;
-};
+}
 
 Material& Material::operator-=(const int rhs){
     if (rhs<0) return (*this)+=(-rhs);
     this->quantity-=min(this->quantity,(unsigned)rhs);
     return *this;
-};
+}
 
 unsigned Material::getId() const
 {

@@ -15,7 +15,7 @@ Object::Object(unsigned id)
     this->size.x=json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id);
     this->size.x=json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id);
     this->initilised=true;
-};
+}
 
 void Object::set_cord(ll x,ll y)
 {

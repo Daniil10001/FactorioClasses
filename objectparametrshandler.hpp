@@ -57,7 +57,7 @@ enum Types{
 using Spec::Types;
 
 template<class T>
-constexpr const Types type_id(){
+constexpr Types type_id(){
     if (std::is_same<T,Object>())
         return Types::Object;
     if (std::is_same<T,Building>())
@@ -162,7 +162,7 @@ constexpr Carrier<N1, N2> make_carrier(const pair<Types,sarr> (&cup)[N1], const 
     for (std::size_t i=0;i<N1;i++) cupa[i]=cup[i];
     for (std::size_t i=0;i<N2;i++) nsa[i]=ns[i];
     return Carrier<N1,N2>(cupa,nsa);
-};
+}
 
 
 static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x","size_y"}},{Types::Factory,{"level","cooldown"}}}; //возможные параметры объекта
