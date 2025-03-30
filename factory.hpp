@@ -13,7 +13,7 @@ private:
     unsigned int level;
     State state=State::OK;
     unsigned factoryMaterialsStart;
-    ll processingTimeStart;
+    double cooldpown;
 public:
     Factory(unsigned id, point<ll> position,  Direrctions d);
 

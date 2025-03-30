@@ -11,7 +11,9 @@
 
 
 class Building;
-ActionResult MakeConnection(Building* from, Building* to, Connections p);
+ActionResult MakeConnStrait(Building* from, Building* to, Connections p);
+ActionResult MakeConnForward(Building* from, Building* to, Connections p);
+ActionResult MakeConnFull(Building* from, Building* to, Connections p);
 
 class Connection
 {
@@ -31,8 +33,11 @@ public:
     const std::set<Building*>& GetConnectionsTo();
     const std::set<Building*>& GetConnectionsFrom();
     
-    friend ActionResult MakeConnection(Connection* from, Connection* to);
-    friend ActionResult MakeConnection(Building* from, Building* to, Connections p);
+    friend ActionResult MakeConnStrait(Connection* from, Connection* to);
+    friend ActionResult MakeConnForward(Connection* from, Connection* to);
+    friend ActionResult MakeConnStrait(Building* from, Building* to, Connections p);
+    friend ActionResult MakeConnForward(Building* from, Building* to, Connections p);
+    friend ActionResult MakeConnFull(Building* from, Building* to, Connections p);
     
     ~Connection(); //Works only with standart connections. Chain connection do not apply
 };

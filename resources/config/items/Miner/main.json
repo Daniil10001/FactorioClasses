@@ -1,0 +1,11 @@
+{
+  "id": 1001,
+  "name": "Шахта",
+
+  "level": 1,
+
+  "recipes_count": 2,
+  "size_x":2,
+  "size_y":2,
+  "cooldown": 1.0
+}

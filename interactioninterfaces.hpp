@@ -3,6 +3,10 @@
 
 #define ll long long
 
+class Object;
+class Building;
+class Factory;
+
 template<typename T> class point
 {
     public:
@@ -98,6 +102,7 @@ enum Connections: short
     Count // Duumy element to count connection types
 };
 
+
 class MaterialList
 {
 private:
@@ -112,9 +117,9 @@ public:
 };
 
 template<class T>
-const T& min(const T& a, const T& b){    return (b < a) ? b : a;    }
+constexpr const T& min(const T& a, const T& b){    return (b < a) ? b : a;    }
 
 template<class T>
-const T& max(const T& a, const T& b){    return (b > a) ? b : a;    }
+constexpr const T& max(const T& a, const T& b){    return (b > a) ? b : a;    }
 
 #endif
