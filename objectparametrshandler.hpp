@@ -52,7 +52,7 @@ enum Types{
     Factory,
     Count,
 };
-};
+}
 
 using Spec::Types;
 
@@ -66,7 +66,7 @@ constexpr const Types type_id(){
         return Types::Factory;
     throw "Not defined type";
     return  Types::Count;
-};
+}
 
 template <typename  Key, typename Value, std::size_t Size>
 class Map {
@@ -171,19 +171,6 @@ static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x",
 static constexpr inline pair<Types, Types> const ns[]={{Types::Building,Types::Object}, {Types::Factory,Types::Building}}; 
 
 static constexpr inline auto Propeties=make_carrier(cup,ns);
-};
-
-template<std::size_t N>
-struct w_str
-{
-    const char dat[N];
-};
-
-template<std::size_t N>
-constexpr w_str<N> warper(const char (&c)[N])
-{
-    w_str<N> s=c;
-    return s;
 }
 
 static_assert(Checking::Propeties.check<Factory>("size_x"));
