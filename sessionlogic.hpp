@@ -15,12 +15,6 @@ enum ObjectTypes
     Count
 };
 
-class SessionHandler
-{
-    public:
-    std::array<std::set<Object>,ObjectTypes::Count> obj;
-};
-
 class TimersHandler
 {
     private:
@@ -49,5 +43,11 @@ class TimersHandler
     }
 };
 
+class SessionHandler
+{
+    public:
+    std::array<std::set<Object*>,ObjectTypes::Count> obj;
+    TimersHandler tims;
+};
 
 #endif
