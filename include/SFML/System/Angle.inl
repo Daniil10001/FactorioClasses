@@ -28,6 +28,7 @@
 #include <SFML/System/Angle.hpp> // NOLINT(misc-header-include-cycle)
 
 #include <cassert>
+#include "Vector2.hpp"
 
 
 namespace sf
@@ -171,7 +172,7 @@ constexpr Angle& operator-=(Angle& left, Angle right)
 
 
 ////////////////////////////////////////////////////////////
-constexpr Angle operator*(Angle left, float right)
+constexpr Angle operator*(sf::Vector2<float> left, float right)
 {
     return radians(left.asRadians() * right);
 }

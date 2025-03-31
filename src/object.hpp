@@ -11,8 +11,12 @@ protected:
     unsigned id;
     point<ll> p;
     point<unsigned> size;
+
+
     bool initilised;
 public:
+    bool isGhost = false; // needed while placing new objects
+
     //Object():initilised(0){};
     Object(unsigned x_size, unsigned y_size);
 
