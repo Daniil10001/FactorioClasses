@@ -31,7 +31,8 @@ jobs:
 
     - name: Configure
       run:  
-            cmake -B build ${{matrix.platform.flags}}
+            mkdir build && cd build
+            cmake ${{matrix.platform.flags}} ..
 
     - name: Build
       run: make -j
