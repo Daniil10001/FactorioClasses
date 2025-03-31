@@ -34,4 +34,4 @@ jobs:
             mkdir build && cd build && cmake ${{matrix.platform.flags}} ..
 
     - name: Build
-      run: make -j
+      run: cd build && make -j
