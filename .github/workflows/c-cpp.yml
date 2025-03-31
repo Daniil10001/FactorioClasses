@@ -1,25 +1,37 @@
-name: C/C++ CI
+name: CI
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
+    runs-on: ${{ matrix.platform.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+        #- { name: Windows VS2019, os: windows-2019  }
+        #- { name: Windows VS2022, os: windows-2022  }
+        - { name: Linux GCC,      os: ubuntu-latest }
+        - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+        - { name: macOS,          os: macos-latest  }
+
     steps:
-    - uses: actions/checkout@v4
-    - name: build test
-      run: |  
-          mkdir build && cd build
-          cmake ..
-          make
-          echo "All is OK. Build verified."
-    - name: test
-      run: |  
-          cd build
-          ./main
-          echo "Test runed."
-    
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure
+      run:  
+            mkdir build && cd build && cmake ${{matrix.platform.flags}} ..
+
+    - name: Build
+      run: cd build && make -j

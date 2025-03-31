@@ -1,25 +1,31 @@
 cmake_minimum_required(VERSION 3.5)
-project( Factorio )
-set(CMAKE_CXX_STANDARD 17)
+project( Factorio  LANGUAGES CXX)
 
 if (NOT DLEVEL)
     set(DLEVEL 10)
 endif()
 
-add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
-include_directories(./include)
+
 
 # SFML
 # ----------------------------------------------
-# It works on MacOs, don't break it!
-if (APPLE)
-    set(SFML_DIR "/opt/homebrew/Cellar/sfml/3.0.0_1/lib/cmake/SFML")
-endif (APPLE)
+include(FetchContent)
+FetchContent_Declare(SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 3.0.0
+    GIT_SHALLOW ON
+    SYSTEM
+    FIND_PACKAGE_ARGS)
+FetchContent_MakeAvailable(SFML)
 
-find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Audio)
+
+# Set standarts
 # ----------------------------------------------
+set(CMAKE_CXX_STANDARD 17)
+add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
+include_directories(./include)
 
-# Linking local libraries
+# Build local libraries
 # ----------------------------------------------
 add_library(INIF STATIC interactioninterfaces.cpp)
 target_compile_definitions(INIF PUBLIC INIF)
@@ -27,12 +33,6 @@ target_compile_definitions(INIF PUBLIC INIF)
 add_library(JSON STATIC jsoncommunicate.cpp)
 target_compile_definitions(JSON PUBLIC JSON)
 target_link_libraries(JSON PUBLIC INIF)
-
-# ////
-add_library(WINDOW STATIC window.cpp)
-target_compile_definitions(WINDOW PUBLIC WINDOW)
-target_link_libraries(WINDOW PUBLIC Graphics)
-# ////
 
 add_library(MATERIAL STATIC material.cpp)
 target_compile_definitions(MATERIAL PUBLIC MATERIAL)
@@ -51,18 +51,15 @@ target_compile_definitions(FACTORY PUBLIC FACTORY)
 target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 
+# main
+# ----------------------------------------------
 add_executable( main main.cpp)
-# ----------------------------------------------
-
-
-# Linking
-# ----------------------------------------------
 target_link_libraries(
         main
-        JSON MATERIAL FACTORY BUILDING WINDOW
-        SFML::Graphics SFML::Audio
-)
+        JSON MATERIAL FACTORY BUILDING
+        SFML::Graphics SFML::Audio)
 # ----------------------------------------------
+
 
 
 # Adding directories to build
