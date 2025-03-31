@@ -63,8 +63,9 @@ protected:
     Direction direction;
 
  public:
+    constexpr static Types const type=Types::Building; 
     //Building();
-    Building(unsigned id, point<ll> position, Direrctions d);
+    Building(unsigned id, point<ll> position, Direction d);
     ~Building();
 #if DLEVEL==0
     void printInventory();
@@ -84,6 +85,8 @@ protected:
     virtual Material* get_material(unsigned cell);
     
     virtual ActionResult action();
+
+    virtual ActionResult action_move(); //move items
 
     bool isFull();
 

@@ -45,17 +45,6 @@ struct sarr
 
 };
 
-namespace Spec{
-enum Types{
-    Object,
-    Building,
-    Factory,
-    Count,
-};
-}
-
-using Spec::Types;
-
 template<class T>
 constexpr Types type_id(){
     if (std::is_same<T,Object>())
@@ -151,6 +140,37 @@ public:
         }
         return false;
     }
+
+    template<Types T, const std::size_t N>
+    constexpr bool check(const char (&C)[N]) const
+    {
+        if (sarr::lenght<N) throw "Too long property";
+        bool b=0;
+        Types Tt = T;
+        size_t it=nasl.find(Tt);
+        for (;;)
+        {
+            if(prop.find(Tt)!=N1)
+            {
+                const sarr* sr=prop.at(Tt);
+                for (unsigned i=0;i<sarr::prop_c;i++)
+                {
+                    b=0;
+                    for (std::size_t s=0;s<min(sarr::lenght,N);s++)
+                     if (sr->d[i][s]!=C[s])
+                        {
+                            b=1;
+                            break;
+                     }
+                if (!b) return true;
+                }
+            }
+            if (it==N2) break;
+            Tt=*nasl.at_index(it);
+            it=nasl.find(Tt);
+        }
+        return false;
+    }
 };
 
 
@@ -165,7 +185,7 @@ constexpr Carrier<N1, N2> make_carrier(const pair<Types,sarr> (&cup)[N1], const 
 }
 
 
-static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x","size_y"}},{Types::Factory,{"level","cooldown"}}}; //возможные параметры объекта
+static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x","size_y","image"}},{Types::Factory,{"level","cooldown"}}}; //возможные параметры объекта
 
 //связь наслелования элемент 1 - потомок, 2 - предок, поддерживаются только деревья с одним предком у каждой вершины
 static constexpr inline pair<Types, Types> const ns[]={{Types::Building,Types::Object}, {Types::Factory,Types::Building}}; 

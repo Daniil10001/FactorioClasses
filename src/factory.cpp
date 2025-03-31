@@ -7,6 +7,7 @@
 #include "material.hpp"
 #include "services.hpp"
 #include "object.hpp"
+#
 #include "jsoncommunicate.hpp"
 //#include "new" ????????
 
@@ -14,7 +15,7 @@
 constexpr const char lvl[]="level";
 constexpr const char cldn[]="cooldown";
 
-Factory::Factory(unsigned id, point<ll> position, Direrctions d):Building(id, position,d) {
+Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, position,d) {
     this->level =json_communicate::get_property<unsigned,Factory,Checking::size_a(lvl),lvl>(id);//get from json
 
     this->requirments = json_communicate::getRequirementsById(id);

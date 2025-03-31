@@ -25,8 +25,9 @@ int main()
         cout << json_communicate::getNameById(1001)<<endl;
         cout<<"test fabric produce\n";
 
-    point<ll> p;
-    Factory f(1001,p,Direrctions::UP);
+    point<ll> p(0,0);
+    Direction d=Direction(Directions::UP);
+    Factory f(1001,p,d);
     #if DLEVEL==0
         f.printInventory();
     #endif
@@ -38,9 +39,9 @@ int main()
     #endif
     cout<<f.get_material_quantity(1)<<'\n';
 
-    Factory f2(1001,p,Direrctions::UP);
-    Factory f3(1001,p,Direrctions::UP);
-    Factory f4(1001,p,Direrctions::UP);
+    Factory f2(1001,p,d);
+    Factory f3(1001,p,d);
+    Factory f4(1001,p,d);
 
     cout<<"test connections\n";
     MakeConnFull(&f,&f2, Connections::Standart);

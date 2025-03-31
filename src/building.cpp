@@ -5,7 +5,7 @@
 {
 }*/
 
-Building::Building(unsigned id, point<ll> position, Direrctions d) :
+Building::Building(unsigned id, point<ll> position, Direction d) :
     Object(id), direction(d)
 {
    // std::cout<<"init "<<this<<std::endl;
@@ -57,6 +57,11 @@ Material* Building::get_material(unsigned cell) {
 }
 
 ActionResult Building::action()
+{
+    return ActionResult::OK;
+}
+
+ActionResult Building::action_move()
 {
     return ActionResult::OK;
 }
