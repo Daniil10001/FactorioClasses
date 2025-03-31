@@ -40,7 +40,7 @@ target_link_libraries(MATERIAL PUBLIC INIF)
 
 add_library(OBJ STATIC object.cpp)
 target_compile_definitions(OBJ PUBLIC OBJ)
-target_link_libraries(OBJ PUBLIC JSON INIF)
+target_link_libraries(OBJ PUBLIC JSON INIF SFML::Graphics)
 
 add_library(BUILDING STATIC building.cpp)
 target_compile_definitions(BUILDING PUBLIC BUILDING)

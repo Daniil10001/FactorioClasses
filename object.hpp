@@ -29,7 +29,7 @@ public:
     void setPosition(point<ll> pos);
 
     // position relative to window and stored in SFML's sf::Sprite
-    const sf::Vector2<float>& getWindowPosition();
+    const sf::Vector2<float> getWindowPosition();
 
     // position in tiles and stored in game's map
     const point<ll>& getGridPosition();

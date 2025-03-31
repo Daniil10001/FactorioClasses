@@ -12,11 +12,10 @@ Object::Object(unsigned x_size, unsigned y_size, sf::Texture& texture) :
 }
 
 Object::Object(unsigned id) :
-    sprite(json_communicate::getTextureById(id)),
     size(
             json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id),
             json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id)
-            )
+            ),sprite(json_communicate::getTextureById(id))
 {                   //dummy thin neded to replaced by json
     this->initilised=true;
 }
@@ -48,6 +47,6 @@ const point<long long> &Object::getGridPosition() {
     return p;
 }
 
-const sf::Vector2<float> &Object::getWindowPosition() {
+const sf::Vector2<float> Object::getWindowPosition() {
     return sprite.getPosition();
 }

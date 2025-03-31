@@ -5,10 +5,11 @@
 #include "jsoncommunicate.hpp"
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
-#include "include/rapidjson/stringbuffer.h"
-#include "include/rapidjson/encodings.h"
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/encodings.h>
 
 #include <iostream>
+#include <fstream>
 
 
 std::vector<loadingUnit> json_handling::items={};
@@ -227,7 +228,10 @@ std::string json_communicate::getNameById(unsigned id) {
 }
 
 sf::Texture& json_communicate::getTextureById (unsigned id) {
-    auto texture = sf::Texture("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
-    return texture;
+    auto ihandler = json_handling::getJsonDocument(
+        "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
+    std::string path="./resources/includes/"+getNameById(id)+'/'+(std::string)((*ihandler)["image"].GetString());
+    std::shared_ptr<sf::Texture> texteure(new sf::Texture());
+    return *texteure;
 }
 
