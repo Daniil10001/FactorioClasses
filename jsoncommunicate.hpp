@@ -7,6 +7,7 @@
 #define ll long long
 #include "interactioninterfaces.hpp"
 #include <rapidjson/document.h>
+#include"objectparametrshandler.hpp"
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -80,6 +81,34 @@ public:
     static MaterialList* getRequirementsById(unsigned id) {
         return getRequirementsById(id, 0);
     }
+
+    template<typename T,class For,std::size_t N,const char (&C)[N]>
+    static inline typename std::enable_if<std::is_same<T, unsigned>::value, T>::type
+    get_property(unsigned id){
+        static_assert(Checking::Propeties.check<For>(C));
+        return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetUint();
+    }
+
+    template<typename T,class For,std::size_t N,const char (&C)[N]>
+    static inline typename std::enable_if<std::is_same<T, int>::value, T>::type
+    get_property(unsigned id){
+        static_assert(Checking::Propeties.check<For>(C));
+        return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetInt();
+    }
+
+    template<typename T,class For,std::size_t N,const char (&C)[N]>
+    static inline typename std::enable_if<std::is_same<T, float>::value, T>::type
+    get_property(unsigned id){
+        static_assert(Checking::Propeties.check<For>(C));
+        return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetFloat();
+    }
+
+    /*template<typename T,class For,std::size_t N,const char (&C)[N]>
+    static inline typename std::enable_if<std::is_same<T, double>::value, T>::type
+    get_property(unsigned id){
+        static_assert(Checking::Propeties.check<For>(C));
+        return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetDouble();
+    }*/// needed to be tested
 
     static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
 

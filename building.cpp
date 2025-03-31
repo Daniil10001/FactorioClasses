@@ -1,11 +1,13 @@
 #include"building.hpp"
-
+#include <assert.h>
+//#include"iostream"
 /*Building::Building()
 {
 }*/
 
 Building::Building(unsigned id, point<ll> position, Direrctions d):Object(id), direction(d)
 {
+   // std::cout<<"init "<<this<<std::endl;
     set_cord(position.x,position.y);
     this->id=id;
     for (Connection*& cn:this->con)  cn=new Connection(this);
@@ -101,6 +103,7 @@ ActionResult Connection::AddConnectionTo(Building* to)
 
 ActionResult Connection::DeleteConnectionTo(Building* to)
 {
+    if (this->to.size()==0) return ActionResult::BAD;
     if (this->to.find(to)==this->to.end()) return ActionResult::BAD;
     this->to.erase(to);
     return ActionResult::OK;
@@ -115,6 +118,7 @@ ActionResult Connection::AddConnectionFrom(Building* from)
 
 ActionResult Connection::DeleteConnectionFrom(Building* from)
 {
+    if (this->from.size()==0) return ActionResult::BAD;
     if (this->from.find(from)==this->from.end()) return ActionResult::BAD;
     this->from.erase(from);
     return ActionResult::OK;
@@ -124,19 +128,17 @@ ActionResult Connection::DeleteConnectionFrom(Building* from)
 
 Connection::~Connection()
 {
+    //std::cout<<"dell "<<this->me<<std::endl;
     for (Building* b:this->to)
-        b->get_Connection(Connections::Standart)->DeleteConnectionFrom(this->me);
+        for (short c=0;c!=Connections::Count;c++)
+        {
+            //std::cout<<c<<' '<<b<<std::endl;
+            b->get_Connection((Connections)c)->DeleteConnectionFrom(this->me);
+        }
     for (Building* b:this->from)
-        b->get_Connection(Connections::Standart)->DeleteConnectionTo(this->me);
-}
-
-ActionResult MakeConnection(Connection* from, Connection* to)
-{
-    if (to->from.size()==to->maxFromCount) return ActionResult::BAD;
-    if (from->to.size()==from->maxToCount) return ActionResult::BAD;
-    to->AddConnectionFrom(from->me);
-    from->AddConnectionTo(to->me);
-    return  ActionResult::OK;
+        for (short c=0;c!=Connections::Count;c++)
+            b->get_Connection((Connections)c)->DeleteConnectionTo(this->me);
+    //std::cout<<"comletle"<<std::endl;
 }
 
 const std::set<Building*>& Connection::GetConnectionsTo()
@@ -149,7 +151,43 @@ const std::set<Building*>& Connection::GetConnectionsFrom()
     return this->from;
 }
 
-ActionResult MakeConnection(Building* from, Building* to, Connections p)
+ActionResult MakeConnStrait(Connection* from, Connection* to)
 {
-    return MakeConnection(from->get_Connection(p),to->get_Connection(p));
+    if (from->to.size()==from->maxToCount) return ActionResult::BAD;
+    from->AddConnectionTo(to->me);
+    return  ActionResult::OK;
+}
+
+ActionResult MakeConnForward(Connection* from, Connection* to)
+{
+    if (to->from.size()==to->maxFromCount) return ActionResult::BAD;
+    to->AddConnectionFrom(from->me);
+    return  ActionResult::OK;
+}
+
+ActionResult MakeConnStrait(Building* from, Building* to, Connections p)
+{
+    assert(p!=Connections::Standart);
+    assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
+    return MakeConnStrait(from->get_Connection(p),to->get_Connection(p));
+}
+
+ActionResult MakeConnForward(Building* from, Building* to, Connections p)
+{
+    assert(p!=Connections::Standart);
+    assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
+    return MakeConnForward(from->get_Connection(p),to->get_Connection(p));
+}
+
+ActionResult MakeConnFull(Building* from, Building* to, Connections p)
+{
+    if(MakeConnStrait(from->get_Connection(p),to->get_Connection(p))==ActionResult::OK)
+    {
+        if (MakeConnForward(from->get_Connection(p),to->get_Connection(p))==ActionResult::BAD)
+        {
+            from->get_Connection(p)->DeleteConnectionTo(to->get_Connection(p)->me);
+            return ActionResult::BAD;
+        }
+    }
+    return ActionResult::OK;
 }

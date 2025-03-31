@@ -11,8 +11,11 @@
 //#include "new" ????????
 
 
+constexpr const char lvl[]="level";
+constexpr const char cldn[]="cooldown";
+
 Factory::Factory(unsigned id, point<ll> position, Direrctions d):Building(id, position,d) {
-    this->level = 1;//get from json
+    this->level =json_communicate::get_property<unsigned,Factory,Checking::size_a(lvl),lvl>(id);//get from json
 
     this->requirments = json_communicate::getRequirementsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
@@ -20,6 +23,7 @@ Factory::Factory(unsigned id, point<ll> position, Direrctions d):Building(id, po
     for(unsigned i=0;i<this->requirments->count;i++)
         (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
 
+    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id);
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
 

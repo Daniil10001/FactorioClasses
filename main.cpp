@@ -43,9 +43,10 @@ int main()
     Factory f4(1001,p,Direrctions::UP);
 
     cout<<"test connections\n";
-    MakeConnection(&f,&f2, Connections::Standart);
-    MakeConnection(&f4,&f3, Connections::Standart);
-    MakeConnection(&f3,&f2, Connections::Standart);
+    MakeConnFull(&f,&f2, Connections::Standart);
+    MakeConnFull(&f4,&f3, Connections::Standart);
+    MakeConnFull(&f3,&f2, Connections::Standart);
+    MakeConnStrait(&f,&f2, Connections::Chain);
 
     cout<<"Check connection:\n need to be 0 1 :";
     cout<<f.get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<' '<<f.get_Connection(Connections::Standart)->GetConnectionsTo().size()<<'\n';

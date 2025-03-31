@@ -114,7 +114,8 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (unsigned)it->value.GetUint();
         }
     }
-};
+    throw "Not found";
+}
 
 template<class T,bool B>
 inline typename std::enable_if<std::is_same<T, int>::value, T>::type
@@ -132,10 +133,11 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (int)it->value.GetInt();
         }
     }
-};
+    throw "Not found";
+}
 
 template<class T,bool B>
-inline typename std::enable_if<std::is_same<T, float>::value, float>::type
+inline typename std::enable_if<std::is_same<T, float>::value, T>::type
 getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const char *c)
 {
     rapidjson::Value::ConstMemberIterator it;
@@ -150,7 +152,8 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (float)it->value.GetFloat();
         }
     }
-};
+    throw "Not found";
+}
 
 template<class T ,bool B>
 inline typename std::enable_if<std::is_same<T, std::string>::value, T>::type
@@ -167,8 +170,10 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             assert (it!=elem->MemberEnd());
             return (std::string)it->value.GetString();
         }
+    
     }
-};
+    throw "Not found";
+}
 
 template<class T ,bool B>
 inline typename std::enable_if<std::is_same<T, rapidjson::GenericArray<true, rapidjson::Value>>::value, T>::type
@@ -186,7 +191,9 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (rapidjson::GenericArray<true, rapidjson::Value>)it->value.GetArray();
         }
     }
-};
+    throw "Not found";
+}
+
 
 std::string json_communicate::getUrlById(unsigned id) {
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
@@ -197,14 +204,15 @@ MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe
     auto prodLists = json_handling::getJsonDocument(
             "./resources/config/items/" + json_communicate::getUrlById(id) + "production.json"
             );
+    auto arr=(*prodLists)["recipes"].GetArray();
 
-    unsigned count = getValueById<unsigned>((*prodLists)["recipes"].GetArray(),recipe_id,"count");;
+    unsigned count = getValueById<unsigned>(arr,recipe_id,"count");;
 
     auto reqList = new MaterialList(count);
-    reqList->time = getValueById<float>((*prodLists)["recipes"].GetArray(),recipe_id,"time");
+    reqList->time = getValueById<float>(arr,recipe_id,"time");
 
-    auto cons=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>((*prodLists)["recipes"].GetArray(),recipe_id,"consumes");
-    auto req=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>((*prodLists)["recipes"].GetArray(),recipe_id,"requirements");
+    auto cons=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"consumes");
+    auto req=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"requirements");
 
     for (unsigned i = 0; i < count; i++) {
         reqList->consumes[i] = cons[i].GetInt();
@@ -215,10 +223,6 @@ MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe
 }
 
 std::string json_communicate::getNameById(unsigned id) {
-    return (*json_handling::getJsonDocument(
-
-            "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"
-
-            ))["name"].GetString();
+    return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))["name"].GetString();
 }
 

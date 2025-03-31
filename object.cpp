@@ -2,17 +2,20 @@
 #include"object.hpp"
 #include "jsoncommunicate.hpp"
 
-Object::Object(ll x,ll y, unsigned x_size, unsigned y_size):
-    p(x,y),size(x_size,y_size)
+constexpr const char xs[]="size_x";
+constexpr const char ys[]="size_y";
+
+Object::Object(ll x,ll y, unsigned x_size, unsigned y_size):p(x,y),size(x_size,y_size)
 {
     this->initilised=true;
 }
 
 Object::Object(unsigned id)
 {                   //dummy thin neded to replaced by json
-    this->size.set(2,2);
+    this->size.x=json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id);
+    this->size.x=json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id);
     this->initilised=true;
-};
+}
 
 void Object::set_cord(ll x,ll y)
 {

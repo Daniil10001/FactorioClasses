@@ -12,7 +12,7 @@ Material* inserter::get_material(unsigned cell)
 
 ActionResult inserter::set_cellfrom(unsigned cell)
 {
-    for (Building* const cn :con.GetConnectionFrom())
+    for (Building* const cn :con.GetConnectionsFrom())
     {
         if (cn->get_requirments()->count<=cell)
             return ActionResult::BAD;
