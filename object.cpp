@@ -1,6 +1,7 @@
 
 #include"object.hpp"
 #include "jsoncommunicate.hpp"
+#include "window.hpp"
 
 constexpr const char xs[]="size_x";
 constexpr const char ys[]="size_y";
@@ -41,13 +42,12 @@ Object::~Object()
 
 void Object::setPosition(point<long long> pos) {
     p = pos;
-//    sprite.setPosition({pos.x / })
 }
 
-const point<long long> &Object::getGridPosition() {
+const point<long long> &Object::getPosition() {
     return p;
 }
 
-const sf::Vector2<float> &Object::getWindowPosition() {
-    return sprite.getPosition();
+unsigned int Object::getId() {
+    return id;
 }

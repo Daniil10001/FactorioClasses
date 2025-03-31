@@ -3,6 +3,8 @@
 //
 
 #include "window.hpp"
+#include "object.hpp"
+#include "jsoncommunicate.hpp"
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
     dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), pixels_per_tile(5),
@@ -30,6 +32,13 @@ const point<long long> Window::Grid2Window(sf::Vector2f grid) {
     return point<ll>(grid.x * pixels_per_tile * upscale,
                      grid.y * pixels_per_tile * upscale);
 }
+
+
+void Window::createSprite(Object* obj) {
+    objs.emplace(obj, json_communicate::getTextureById(obj->getId()));
+}
+
+
 
 //void Window::drawTiled(Object *obj, point<long long> position) {
 //    obj->

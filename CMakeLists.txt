@@ -14,8 +14,7 @@ FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 3.0.0
     GIT_SHALLOW ON
-    SYSTEM
-    FIND_PACKAGE_ARGS)
+    SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
 

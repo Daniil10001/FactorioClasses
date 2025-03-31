@@ -6,6 +6,7 @@
 #define FACTORIO_WINDOW_HPP__
 
 #include <iostream>
+#include <map>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "interactioninterfaces.hpp"
@@ -25,7 +26,7 @@ private:
     float upscale=1;
 
     // visualization stuff
-    std::stack<sf::Sprite> sprites;
+    std::map<Object*, sf::Sprite> objs;
 public:
     Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen);
 
@@ -41,6 +42,10 @@ public:
     const point<ll> Grid2Window(sf::Vector2f grid);
 
     void drawTiled(Object* obj, point<ll> position);
+
+    void createSprite(Object* obj);
+
+    void deleteSprite(Object* obj);
 };
 
 
