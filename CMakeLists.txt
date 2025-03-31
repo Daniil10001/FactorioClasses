@@ -1,15 +1,31 @@
 cmake_minimum_required(VERSION 3.5)
-project( Factorio )
-set(CMAKE_CXX_STANDARD 17)
+project( Factorio  LANGUAGES CXX)
 
 if (NOT DLEVEL)
     set(DLEVEL 10)
 endif()
 
+
+
+# SFML
+# ----------------------------------------------
+include(FetchContent)
+FetchContent_Declare(SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 3.0.0
+    GIT_SHALLOW ON
+    SYSTEM
+    FIND_PACKAGE_ARGS NAME Graphics Audio)
+FetchContent_MakeAvailable(SFML)
+
+
+# Set standarts
+# ----------------------------------------------
+set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
 include_directories(./include)
 
-# Linking local libraries
+# Build local libraries
 # ----------------------------------------------
 add_library(INIF STATIC interactioninterfaces.cpp)
 target_compile_definitions(INIF PUBLIC INIF)
@@ -35,30 +51,15 @@ target_compile_definitions(FACTORY PUBLIC FACTORY)
 target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 
+# main
+# ----------------------------------------------
 add_executable( main main.cpp)
-# ----------------------------------------------
-
-
-# SFML
-# ----------------------------------------------
-# It works on MacOs
-# Get it compiled on Windows with caution
-if (APPLE)
-    set(SFML_DIR "/opt/homebrew/Cellar/sfml/3.0.0_1/lib/cmake/SFML")
-endif (APPLE)
-
-find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Audio)
-# ----------------------------------------------
-
-
-# Linking
-# ----------------------------------------------
 target_link_libraries(
         main
         JSON MATERIAL FACTORY BUILDING
-        SFML::Graphics SFML::Audio
-)
+        SFML::Graphics SFML::Audio)
 # ----------------------------------------------
+
 
 
 # Adding directories to build
