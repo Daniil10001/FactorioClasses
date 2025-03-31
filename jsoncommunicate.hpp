@@ -6,7 +6,7 @@
 #define jsoncommunicate_hpp__
 #define ll long long
 #include "interactioninterfaces.hpp"
-#include "include/rapidjson/document.h"
+#include <rapidjson/document.h>
 #include <fstream>
 #include <vector>
 #include <iostream>

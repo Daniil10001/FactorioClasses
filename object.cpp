@@ -2,7 +2,8 @@
 #include"object.hpp"
 #include "jsoncommunicate.hpp"
 
-Object::Object(ll x,ll y, unsigned x_size, unsigned y_size):p(x,y),size(x_size,y_size)
+Object::Object(ll x,ll y, unsigned x_size, unsigned y_size):
+    p(x,y),size(x_size,y_size)
 {
     this->initilised=true;
 }

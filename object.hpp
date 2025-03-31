@@ -1,6 +1,8 @@
 #ifndef object_hpp__
 #define object_hpp__
 
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 #include"interactioninterfaces.hpp"
 
 class Object
@@ -10,6 +12,7 @@ class Object
         point<ll> p;
         point<unsigned> size;
         bool initilised;
+        //sf::Sprite sprie;
     public:
         Object():initilised(0){};
         Object(ll x,ll y, unsigned x_size, unsigned y_size);

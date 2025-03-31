@@ -12,6 +12,9 @@
 2) Все статусы возвращают Status 
 
 
+ToDo for sfml:
+1) with setcolor make buildings' ghosts
+
 ID for Elements
 
 0        : dummy elements

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project( Factorio )
 set(CMAKE_CXX_STANDARD 17)
 
@@ -7,8 +7,10 @@ if (NOT DLEVEL)
 endif()
 
 add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
+include_directories(./include)
 
-
+# Linking local libraries
+# ----------------------------------------------
 add_library(INIF STATIC interactioninterfaces.cpp)
 target_compile_definitions(INIF PUBLIC INIF)
 
@@ -34,9 +36,34 @@ target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 
 add_executable( main main.cpp)
-target_link_libraries(main JSON MATERIAL FACTORY BUILDING)
+# ----------------------------------------------
 
+
+# SFML
+# ----------------------------------------------
+# It works on MacOs
+# Get it compiled on Windows with caution
+if (APPLE)
+    set(SFML_DIR "/opt/homebrew/Cellar/sfml/3.0.0_1/lib/cmake/SFML")
+endif (APPLE)
+
+find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Audio)
+# ----------------------------------------------
+
+
+# Linking
+# ----------------------------------------------
+target_link_libraries(
+        main
+        JSON MATERIAL FACTORY BUILDING
+        SFML::Graphics SFML::Audio
+)
+# ----------------------------------------------
+
+
+# Adding directories to build
+# ----------------------------------------------
 add_custom_command(TARGET main POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:main>/resources)
-
+# ----------------------------------------------
