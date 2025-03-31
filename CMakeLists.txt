@@ -5,7 +5,7 @@ if (NOT DLEVEL)
     set(DLEVEL 10)
 endif()
 
-
+set(BUILD_SHARED_LIBS FALSE)
 
 # SFML
 # ----------------------------------------------
