@@ -121,8 +121,6 @@ public:
 
     static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
 
-    static ll getCraftTimeById(unsigned id);
-
     static sf::Texture& getTextureById (unsigned id);
 };
 

@@ -13,7 +13,6 @@ Object::Object(unsigned x_size, unsigned y_size, sf::Texture& texture) :
 }
 
 Object::Object(unsigned id) :
-    sprite(json_communicate::getTextureById(id)),
     size(
             json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id),
             json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id)
@@ -42,6 +41,7 @@ Object::~Object()
 
 void Object::setPosition(point<long long> pos) {
     p = pos;
+//    sprite.setPosition({pos.x / })
 }
 
 const point<long long> &Object::getPosition() {

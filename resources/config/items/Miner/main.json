@@ -3,7 +3,7 @@
   "name": "Шахта",
 
   "level": 1,
-  
+  "image": "miner.png",
   "recipes_count": 2,
   "size_x":2,
   "size_y":2,

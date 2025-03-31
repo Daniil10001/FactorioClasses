@@ -78,17 +78,17 @@ class Map {
 
     
 
-  [[nodiscard]] constexpr Value at_index(const std::size_t &key) const {
+  [[nodiscard]] constexpr const Value* at_index(const std::size_t &key) const {
     if (key < Size) {
-      return data.at(key).second;
+      return &(data.at(key).second);
     } else {
       throw "Not Found element" ;
     }
   }
 
-  [[nodiscard]] constexpr Value at_index(std::size_t &key) const {
+  [[nodiscard]] constexpr const Value* at_index(std::size_t &key) const {
     if (key < Size) {
-      return data.at(key).second;
+      return &(data.at(key).second);
     } else {
       throw "Not Found element" ;
     }
@@ -102,7 +102,7 @@ class Map {
     return it-data.begin();
   }
 
-  [[nodiscard]] constexpr Value at(Key &key) const {return this->at_index(this->find(key));}
+  [[nodiscard]] constexpr const Value* at(Key &key) const {return this->at_index(this->find(key));}
 
 };
 
@@ -132,12 +132,12 @@ public:
         {
             if(prop.find(Tt)!=N1)
             {
-                sarr sr=prop.at(Tt);
+                const sarr* sr=prop.at(Tt);
                 for (unsigned i=0;i<sarr::prop_c;i++)
                 {
                     b=0;
                     for (std::size_t s=0;s<min(sarr::lenght,N);s++)
-                     if (sr.d[i][s]!=C[s])
+                     if (sr->d[i][s]!=C[s])
                         {
                             b=1;
                             break;
@@ -146,7 +146,7 @@ public:
                 }
             }
             if (it==N2) break;
-            Tt=nasl.at_index(it);
+            Tt=*nasl.at_index(it);
             it=nasl.find(Tt);
         }
         return false;
