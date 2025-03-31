@@ -230,8 +230,8 @@ std::string json_communicate::getNameById(unsigned id) {
 sf::Texture& json_communicate::getTextureById (unsigned id) {
     auto ihandler = json_handling::getJsonDocument(
         "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
-    std::string path="./resources/includes/"+getNameById(id)+'/'+(std::string)((*ihandler)["image"].GetString());
-    std::shared_ptr<sf::Texture> texteure(new sf::Texture());
+    std::string path="./resources/includes/"+json_communicate::getUrlById(id)+(std::string)((*ihandler)["image"].GetString());
+    std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
     return *texteure;
 }
 
