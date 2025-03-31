@@ -10,6 +10,7 @@
 #include"objectparametrshandler.hpp"
 #include <fstream>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -122,6 +123,13 @@ public:
     static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
 
     static sf::Texture& getTextureById (unsigned id);
+};
+
+
+class texture_handler
+{
+    public:
+    static std::map<unsigned, std::shared_ptr<sf::Texture>> textures;
 };
 
 

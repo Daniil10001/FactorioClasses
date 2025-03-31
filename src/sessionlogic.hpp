@@ -12,7 +12,6 @@ enum ObjectTypes
 {
     Map,
     Buildings,
-    Resources,
     Count
 };
 
@@ -38,7 +37,7 @@ class TimersHandler
         Timers.emplace(std::make_pair(o,std::chrono::system_clock::now()));
     }
 
-    ActionResult register_timer(Object* o)
+    ActionResult unregister_timer(Object* o)
     {
         Timers.erase(o);
     }
@@ -47,16 +46,30 @@ class TimersHandler
 class SessionHandler
 {
     private:
-    std::array<std::set<Object*>,ObjectTypes::Count> obj;
+    std::array<std::set<Object*>,ObjectTypes::Count> objs;
+    std::map<Object *,std::vector<point<ll>>> interesting_points;
     TimersHandler tims;
     public:
     SessionHandler()
     {
-        obj[ObjectTypes::Buildings].emplace(new Object(1,2));
-        obj[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
-    } 
+        objs[ObjectTypes::Map].emplace(new Object(100,100));
+        objs[ObjectTypes::Buildings].emplace(new Object(1,2));
+        objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
+    };
+
+    std::set<Object *> const get_layer(ObjectTypes lr) const;
+
+    template<Types T>
+    ActionResult addToLayerB(unsigned id, point<ll> p, Direction dir);
+
+    ActionResult delFromLayerB(Object * obj);
+
+    ActionResult delFromLayerB(Object * const obj);
 
     ~SessionHandler(){};
 };
+
+
+
 
 #endif

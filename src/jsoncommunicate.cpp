@@ -14,6 +14,8 @@
 
 std::vector<loadingUnit> json_handling::items={};
 
+std::map<unsigned, std::shared_ptr<sf::Texture>> texture_handler::textures;
+
 Document* json_handling::loadJsonDocument(std::string filepath) {
     //using namespace std;
 
@@ -228,10 +230,12 @@ std::string json_communicate::getNameById(unsigned id) {
 }
 
 sf::Texture& json_communicate::getTextureById (unsigned id) {
-    auto ihandler = json_handling::getJsonDocument(
+    if (texture_handler::textures.count(id)) return *texture_handler::textures.at(id);
+    auto ihandler = json_handling::getJsonDocument( // it's revolution, johny
         "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
     std::string path="./resources/includes/"+json_communicate::getUrlById(id)+(std::string)((*ihandler)["image"].GetString());
     std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
+    texture_handler::textures.emplace(id,texteure);
     return *texteure;
 }
 
