@@ -13,7 +13,6 @@ protected:
     point<ll> p;
     point<unsigned> size;
     bool initilised;
-    sf::Sprite sprite;
 public:
     //Object():initilised(0){};
     Object(unsigned x_size, unsigned y_size, sf::Texture& texture);
