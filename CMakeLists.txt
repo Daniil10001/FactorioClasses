@@ -25,42 +25,10 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
 include_directories(./include)
 
-# Build local libraries
-# ----------------------------------------------
-add_library(INIF STATIC interactioninterfaces.cpp)
-target_compile_definitions(INIF PUBLIC INIF)
+add_custom_target( build )
 
-add_library(JSON STATIC jsoncommunicate.cpp)
-target_compile_definitions(JSON PUBLIC JSON)
-target_link_libraries(JSON PUBLIC INIF)
-
-add_library(MATERIAL STATIC material.cpp)
-target_compile_definitions(MATERIAL PUBLIC MATERIAL)
-target_link_libraries(MATERIAL PUBLIC INIF)
-
-add_library(OBJ STATIC object.cpp)
-target_compile_definitions(OBJ PUBLIC OBJ)
-target_link_libraries(OBJ PUBLIC JSON INIF SFML::Graphics)
-
-add_library(BUILDING STATIC building.cpp)
-target_compile_definitions(BUILDING PUBLIC BUILDING)
-target_link_libraries(BUILDING PUBLIC OBJ INIF MATERIAL JSON)
-
-add_library(FACTORY STATIC factory.cpp)
-target_compile_definitions(FACTORY PUBLIC FACTORY)
-target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
-
-
-# main
-# ----------------------------------------------
-add_executable( main main.cpp)
-target_link_libraries(
-        main
-        JSON MATERIAL FACTORY BUILDING
-        SFML::Graphics SFML::Audio)
-# ----------------------------------------------
-
-
+# got to the code stuff
+include(./src/CMakeLists.txt)
 
 # Adding directories to build
 # ----------------------------------------------
