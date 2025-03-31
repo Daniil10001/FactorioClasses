@@ -5,10 +5,11 @@
 {
 }*/
 
-Building::Building(unsigned id, point<ll> position, Direrctions d):Object(id), direction(d)
+Building::Building(unsigned id, point<ll> position, Direrctions d) :
+    Object(id), direction(d)
 {
    // std::cout<<"init "<<this<<std::endl;
-    set_cord(position.x,position.y);
+    setPosition(position);
     this->id=id;
     for (Connection*& cn:this->con)  cn=new Connection(this);
 }

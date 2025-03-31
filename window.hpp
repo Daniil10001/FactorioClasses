@@ -8,6 +8,7 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "interactioninterfaces.hpp"
 
 class Window {
 private:
@@ -19,24 +20,27 @@ private:
     int fps;
     bool isFullScreen;
 
+    point<ll> window_start;
+    const uint64_t pixels_per_tile=100;
+    float upscale=1;
+
     // visualization stuff
     std::stack<sf::Sprite> sprites;
 public:
-    Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
-        dims(dims), title(title), fps(fps), isFullScreen(isFullScreen),
-        window(dims, title, sf::Style::Resize)
-    {
-        window.setFramerateLimit(fps);
-    }
+    Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen);
 
-    Window(sf::VideoMode dims, int fps, bool isFullScreen) :
-        Window(dims, "Title holder", fps, isFullScreen) {};
+    Window(sf::VideoMode dims, int fps, bool isFullScreen);
 
     ~Window();
 
-    // sprites handling
+    // render handling
+    bool isOpen();
 
+    const sf::Vector2f Window2Grid(point<ll> p);
 
+    const point<ll> Grid2Window(sf::Vector2f grid);
+
+    void drawTiled(Object* obj, point<ll> position);
 };
 
 

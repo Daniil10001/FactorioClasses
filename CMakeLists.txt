@@ -9,6 +9,16 @@ endif()
 add_compile_options(-Wall -Wextra -Wpedantic -g -DDLEVEL=${DLEVEL})
 include_directories(./include)
 
+# SFML
+# ----------------------------------------------
+# It works on MacOs, don't break it!
+if (APPLE)
+    set(SFML_DIR "/opt/homebrew/Cellar/sfml/3.0.0_1/lib/cmake/SFML")
+endif (APPLE)
+
+find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Audio)
+# ----------------------------------------------
+
 # Linking local libraries
 # ----------------------------------------------
 add_library(INIF STATIC interactioninterfaces.cpp)
@@ -17,6 +27,12 @@ target_compile_definitions(INIF PUBLIC INIF)
 add_library(JSON STATIC jsoncommunicate.cpp)
 target_compile_definitions(JSON PUBLIC JSON)
 target_link_libraries(JSON PUBLIC INIF)
+
+# ////
+add_library(WINDOW STATIC window.cpp)
+target_compile_definitions(WINDOW PUBLIC WINDOW)
+target_link_libraries(WINDOW PUBLIC Graphics)
+# ////
 
 add_library(MATERIAL STATIC material.cpp)
 target_compile_definitions(MATERIAL PUBLIC MATERIAL)
@@ -39,23 +55,11 @@ add_executable( main main.cpp)
 # ----------------------------------------------
 
 
-# SFML
-# ----------------------------------------------
-# It works on MacOs
-# Get it compiled on Windows with caution
-if (APPLE)
-    set(SFML_DIR "/opt/homebrew/Cellar/sfml/3.0.0_1/lib/cmake/SFML")
-endif (APPLE)
-
-find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Audio)
-# ----------------------------------------------
-
-
 # Linking
 # ----------------------------------------------
 target_link_libraries(
         main
-        JSON MATERIAL FACTORY BUILDING
+        JSON MATERIAL FACTORY BUILDING WINDOW
         SFML::Graphics SFML::Audio
 )
 # ----------------------------------------------

@@ -226,3 +226,8 @@ std::string json_communicate::getNameById(unsigned id) {
     return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))["name"].GetString();
 }
 
+sf::Texture& json_communicate::getTextureById (unsigned id) {
+    auto texture = sf::Texture("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
+    return texture;
+}
+

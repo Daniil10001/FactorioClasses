@@ -11,6 +11,8 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 using namespace rapidjson;
 
@@ -103,6 +105,13 @@ public:
         return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetFloat();
     }
 
+    template<typename T,class For,std::size_t N,const char (&C)[N]>
+    static inline typename std::enable_if<std::is_same<T, std::string>::value, T>::type
+    get_property(unsigned id){
+        static_assert(Checking::Propeties.check<For>(C));
+        return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetString();
+    }
+
     /*template<typename T,class For,std::size_t N,const char (&C)[N]>
     static inline typename std::enable_if<std::is_same<T, double>::value, T>::type
     get_property(unsigned id){
@@ -114,7 +123,7 @@ public:
 
     static ll getCraftTimeById(unsigned id);
 
-
+    static sf::Texture& getTextureById (unsigned id);
 };
 
 
