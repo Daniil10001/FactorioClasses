@@ -4,7 +4,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "interactioninterfaces.hpp"
-#include "window.hpp"
 
 class Object
 {
@@ -13,10 +12,9 @@ protected:
     point<ll> p;
     point<unsigned> size;
     bool initilised;
-    sf::Sprite sprite;
 public:
     //Object():initilised(0){};
-    Object(unsigned x_size, unsigned y_size, sf::Texture& texture);
+    Object(unsigned x_size, unsigned y_size);
 
     Object(unsigned id);
 

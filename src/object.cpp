@@ -1,13 +1,13 @@
 
 #include"object.hpp"
 #include "jsoncommunicate.hpp"
-#include "window.hpp"
+
 
 constexpr const char xs[]="size_x";
 constexpr const char ys[]="size_y";
 
-Object::Object(unsigned x_size, unsigned y_size, sf::Texture& texture) :
-    p(0,0),size(x_size,y_size), sprite(texture)
+Object::Object(unsigned x_size, unsigned y_size) :
+    p(0,0),size(x_size,y_size)
 {
     this->initilised=true;
 }
