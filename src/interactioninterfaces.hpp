@@ -7,6 +7,18 @@ class Object;
 class Building;
 class Factory;
 
+namespace Types_nps{
+enum Types{
+    Object,
+    Building,
+    Factory,
+    Count,
+};
+}
+
+using Types_nps::Types;
+
+
 template<typename T> class point
 {
     public:
@@ -54,7 +66,7 @@ template<typename T> class point
     }
 };
 
-enum Direrctions: short
+enum Directions: short
     {
         RIGHT,
         UP,
@@ -74,7 +86,7 @@ class Direction
     static inline const point<ll> LEFT=point<ll>(-1,0);
     static inline const point<ll> RIGHT=point<ll>(1,0);
     static inline const point<ll> UD=point<ll>(0,0);
-    Direction(Direrctions d);
+    Direction(Directions d);
     Direction& operator++();
     Direction& operator--();
     void mirror();
@@ -95,12 +107,16 @@ enum ActionResult: short
     BAD,
 };
 
+namespace Connections_nps{
 enum Connections: short
 {
     Standart,// base do not remove
     Chain,
     Count // Duumy element to count connection types
 };
+};
+
+using Connections_nps::Connections;
 
 
 class MaterialList

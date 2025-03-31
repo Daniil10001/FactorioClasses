@@ -13,6 +13,7 @@ protected:
     point<unsigned> size;
     bool initilised;
 public:
+    constexpr static Types const type=Types::Object; 
     //Object():initilised(0){};
     Object(unsigned x_size, unsigned y_size);
 

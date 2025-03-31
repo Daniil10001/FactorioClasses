@@ -1,7 +1,8 @@
 #ifndef sessionlogic_hpp__
 #define sessionlogic_hpp__
 
-#include "object.hpp"
+
+#include "factory.hpp"
 #include <array>
 #include <set>
 #include <map>
@@ -45,9 +46,17 @@ class TimersHandler
 
 class SessionHandler
 {
-    public:
+    private:
     std::array<std::set<Object*>,ObjectTypes::Count> obj;
     TimersHandler tims;
+    public:
+    SessionHandler()
+    {
+        obj[ObjectTypes::Buildings].emplace(new Object(1,2));
+        obj[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
+    } 
+
+    ~SessionHandler(){};
 };
 
 #endif

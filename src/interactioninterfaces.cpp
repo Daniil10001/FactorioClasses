@@ -24,16 +24,16 @@ void Direction::update()
 {
     switch (d)
     {
-    case Direrctions::UP:
+    case Directions::UP:
         this->direction=Direction::UP;
         break;
-    case Direrctions::DOWN:
+    case Directions::DOWN:
         this->direction=Direction::DOWN;
         break;
-    case Direrctions::LEFT:
+    case Directions::LEFT:
         this->direction=Direction::LEFT;
         break;
-    case Direrctions::RIGHT:
+    case Directions::RIGHT:
         this->direction=Direction::RIGHT;
         break;
     default:
@@ -43,7 +43,7 @@ void Direction::update()
     assert(this->direction!=Direction::UD);
 }
 
-Direction::Direction(Direrctions d):d(d),direction(Direction::UD)
+Direction::Direction(Directions d):d(d),direction(Direction::UD)
 {
     update();
 }
