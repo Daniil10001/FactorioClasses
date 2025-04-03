@@ -25,8 +25,6 @@
 #pragma once
 
 
-#include "Vector2.hpp"
-
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -330,7 +328,7 @@ constexpr Angle& operator-=(Angle& left, Angle right);
 /// \return `left` multiplied by `right`
 ///
 ////////////////////////////////////////////////////////////
-[[nodiscard]] constexpr Angle operator*(sf::Vector2<float> left, float right);
+[[nodiscard]] constexpr Angle operator*(Angle left, float right);
 
 ////////////////////////////////////////////////////////////
 /// \relates Angle
