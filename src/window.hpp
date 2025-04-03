@@ -21,9 +21,11 @@ private:
     int fps;
     bool isFullScreen;
 
-    point<ll> window_start;
+    sf::Vector2f window_start;
     const uint64_t pixels_per_tile=100;
     float upscale=1;
+
+    Object* currGhost;
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
@@ -46,6 +48,22 @@ public:
     void createSprite(Object* obj);
 
     void deleteSprite(Object* obj);
+
+    // Position is calculated in session logic and written in Object
+    // Here it is simply being transferred to sf::Sprite
+    // not safe because obj key presence not being checked
+    void updatePosition(Object *obj);
+
+    void updatePositionAll();
+
+    // includes updatePosition
+    void draw(Object *obj);
+
+    void drawAll();
+
+    void placeGhost();
+
+    void frame();
 };
 
 

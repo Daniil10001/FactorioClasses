@@ -36,9 +36,61 @@ const point<long long> Window::Grid2Window(sf::Vector2f grid) {
 
 void Window::createSprite(Object* obj) {
     objs.emplace(obj, json_communicate::getTextureById(obj->getId()));
+
+    if (obj->isGhost) {
+        objs.at(obj).setColor(sf::Color(0, 0, 255));
+        currGhost = obj;
+    }
 }
 
+void Window::deleteSprite(Object *obj) {
+    objs.erase(obj);
+}
 
+void Window::updatePosition(Object* obj) {
+    auto temp = obj->getPosition();
+
+    if (obj->isGhost) {
+        auto currMouse = sf::Mouse::getPosition(window);
+
+        // may cause an error
+        objs.at(obj).setPosition({
+            (float)((uint64_t)currMouse.x / pixels_per_tile) * upscale,
+            (float)((uint64_t)currMouse.y / pixels_per_tile) * upscale
+        });
+
+        return;
+    }
+
+    objs.at(obj).setPosition(Window2Grid(temp) * (float)pixels_per_tile * (float)upscale + window_start);
+
+}
+
+void Window::updatePositionAll() {
+    for (auto x: objs)
+        updatePosition(x.first);
+}
+
+void Window::draw(Object *obj) {
+    updatePosition(obj);
+    window.draw(objs.at(obj));
+}
+
+void Window::drawAll() {
+    for (auto x: objs)
+        Window::draw(x.first);
+}
+
+void Window::placeGhost() {
+    
+}
+
+void Window::frame() {
+    window.clear(sf::Color::Black);
+    drawAll();
+
+    window.display();
+}
 
 //void Window::drawTiled(Object *obj, point<long long> position) {
 //    obj->
