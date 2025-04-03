@@ -10,7 +10,7 @@ target_compile_definitions(INIF PUBLIC INIF)
 
 add_library(JSON STATIC ${CMAKE_CURRENT_SOURCE_DIR}/jsoncommunicate.cpp)
 target_compile_definitions(JSON PUBLIC JSON)
-target_link_libraries(JSON PUBLIC INIF)
+target_link_libraries(JSON PUBLIC INIF SFML::Graphics)
 
 add_library(MATERIAL STATIC ${CMAKE_CURRENT_SOURCE_DIR}/material.cpp)
 target_compile_definitions(MATERIAL PUBLIC MATERIAL)
@@ -18,7 +18,7 @@ target_link_libraries(MATERIAL PUBLIC INIF)
 
 add_library(OBJ STATIC ${CMAKE_CURRENT_SOURCE_DIR}/object.cpp)
 target_compile_definitions(OBJ PUBLIC OBJ)
-target_link_libraries(OBJ PUBLIC JSON INIF SFML::Graphics)
+target_link_libraries(OBJ PUBLIC JSON INIF)
 
 add_library(BUILDING STATIC ${CMAKE_CURRENT_SOURCE_DIR}/building.cpp)
 target_compile_definitions(BUILDING PUBLIC BUILDING)
@@ -28,6 +28,9 @@ add_library(FACTORY STATIC ${CMAKE_CURRENT_SOURCE_DIR}/factory.cpp)
 target_compile_definitions(FACTORY PUBLIC FACTORY)
 target_link_libraries(FACTORY PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
+add_library(INSERTER STATIC ${CMAKE_CURRENT_SOURCE_DIR}/inserter.cpp)
+target_compile_definitions(INSERTER PUBLIC INSERTER)
+target_link_libraries(INSERTER PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
 # main
 # ----------------------------------------------

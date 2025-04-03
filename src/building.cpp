@@ -6,7 +6,7 @@
 }*/
 
 Building::Building(unsigned id, point<ll> position, Direction d) :
-    Object(id), direction(d)
+    Object(id),requirments(nullptr),  BuildingInventory(nullptr), direction(d)
 {
    // std::cout<<"init "<<this<<std::endl;
     setPosition(position);
@@ -16,8 +16,8 @@ Building::Building(unsigned id, point<ll> position, Direction d) :
 
 Building::~Building()
 {
-    delete[] BuildingInventory;
-    delete requirments;
+    if (BuildingInventory!=nullptr) delete[] BuildingInventory;
+    if (requirments!=nullptr) delete requirments;
     for (Connection* c:this->con)  delete c;
 
 }
@@ -30,7 +30,16 @@ unsigned Building::get_material_quantity(unsigned id) const
     return 0;
 }
 
-State Building::get_state() const
+unsigned Building::get_material_maxCapicy(unsigned id) const
+{
+    for (unsigned i=0;i<requirments->count;i++)
+        if(requirments->ids[i]==id)
+            return BuildingInventory[i].get_maxquantity();
+    return 0;
+}
+
+
+State Building::get_state()
 {
     return State::OK;
 }
@@ -50,9 +59,16 @@ ActionResult Building::put_material(Material *m) {
     return ActionResult::BAD;
 }
 
-Material* Building::get_material(unsigned cell) {
-    if (0<cell && requirments->count>cell)
-        return this->BuildingInventory+cell;
+Material* Building::get_material(unsigned id) {
+    if (id==0) return get_material();
+    for (unsigned cell=0;cell<this->requirments->count;cell++)
+        if (this->BuildingInventory[cell].getId()==id) return this->BuildingInventory+cell;
+    return nullptr;
+}
+
+Material* Building::get_material() {
+    for (unsigned cell=0;cell<this->requirments->count;cell++)
+        if (this->BuildingInventory[cell].get_quantity()>0) return this->BuildingInventory+cell;
     return nullptr;
 }
 
@@ -97,6 +113,7 @@ Connection * Building::get_Connection(Connections p)
 }
 
 //connection segment
+//---------------------------------------------------------------
 
 Connection::Connection(Building* me):me(me){}
 
@@ -196,4 +213,42 @@ ActionResult MakeConnFull(Building* from, Building* to, Connections p)
         }
     }
     return ActionResult::OK;
+}
+
+
+// dummy class sthings
+//---------------------------------------------------------------
+
+Connection * Dummy::get_Connection(Connections p)
+{
+    if (p>=Connections::Count) return nullptr;
+    return this->con[p];
+}
+
+State Dummy::get_state() const
+{
+    if (m.get_quantity()==m.get_maxquantity()) return State::Full;
+    return State::OK;
+}
+
+ActionResult Dummy::put_material(Material *m) {
+    return this->m + *m;
+}
+
+Material* Dummy::get_material() {
+    return &this->m;
+}
+
+unsigned Dummy::get_material_quantity(unsigned id) const
+{
+    if(m.getId()==id)
+        return m.get_quantity();
+    return 0;
+}
+
+unsigned Dummy::get_material_maxCapicy(unsigned id) const
+{
+    if(m.getId()==id)
+        return m.get_maxquantity();
+    return 0;
 }

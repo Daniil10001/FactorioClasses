@@ -1,6 +1,8 @@
 #include "material.hpp"
 
 ActionResult operator+(Material& lhs, Material& rhs){
+        if (lhs.id == 0 && rhs.id==0)   return ActionResult::BAD;
+        if (lhs.id == 0)    lhs.ChangeId(rhs.id);
         if (lhs.id!=rhs.id) return ActionResult::BAD;
         unsigned q=min(lhs.capacity-lhs.quantity,rhs.quantity);
         lhs.quantity+=q;
@@ -9,34 +11,17 @@ ActionResult operator+(Material& lhs, Material& rhs){
 }
 
 Material& Material::operator+=(const int rhs){
+    if (this-> id==0) throw "Can not add nothing to nothing";
     if (rhs<0) return (*this)-=(-rhs);
     this->quantity+=min(this->capacity-this->quantity,(unsigned)rhs);
     return *this;
 }
 
 Material& Material::operator-=(const int rhs){
+    if (this-> id==0) throw "Can not add nothing to nothing";
     if (rhs<0) return (*this)+=(-rhs);
     this->quantity-=min(this->quantity,(unsigned)rhs);
     return *this;
-}
-
-unsigned Material::getId() const
-{
-    return this->id;
-}
-
-unsigned Material::get_quantity() const
-{
-    return this->quantity;
-}
-
-unsigned Material::get_maxquantity() const
-{
-    return this->capacity;
-}
-
-bool Material::isFull() const{
-    return this->capacity==this->quantity;
 }
 
 ActionResult Material::ChangeId(unsigned id)

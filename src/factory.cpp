@@ -29,12 +29,28 @@ Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, posi
 }
 
 State Factory::get_state() {
+    if (!isEnoughIngridients()) {
+        state = State::NotEnoughMaterial;
+        return this->state;
+    }
+    for (unsigned cell=0;cell<this->requirments->count;cell++)
+        if ((long int)(BuildingInventory[cell].get_maxquantity()-BuildingInventory[cell].get_quantity())<(long int)requirments->consumes[cell])
+        {
+            state=State::Full;
+            return this->state;
+        }
+    state = State::OK;
     return this->state;
+}
+
+bool fbf(int f)
+{
+    return !(f&(1<<(sizeof(unsigned)*8-1)));
 }
 
 bool Factory::isEnoughIngridients() const{
     for (unsigned i = 0; i < requirments->count; i++) {
-        if ((unsigned)requirments->consumes[i] > BuildingInventory[i].get_quantity()) {
+        if ((unsigned)(requirments->consumes[i])*fbf(requirments->consumes[i]) > BuildingInventory[i].get_quantity()) {
             return false;
         }
     }
@@ -42,16 +58,8 @@ bool Factory::isEnoughIngridients() const{
 }
 
 ActionResult Factory::action() {
-    if (!isEnoughIngridients()) {
-        state = State::NotEnoughMaterial;
-        return ActionResult::BAD;
-    }
-
-    // if () state = State::Busy
-    state = State::OK;
-
-
-   return ActionResult::OK;
+    produce();
+    return ActionResult::OK;
 }
 
 void Factory::produce() {
@@ -59,5 +67,4 @@ void Factory::produce() {
         for (unsigned i = 0; i < requirments->count; i++)
             BuildingInventory[i] -= requirments->consumes[i];
     }
-
 }

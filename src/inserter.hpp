@@ -2,21 +2,26 @@
 #define inserter_hpp__
 #include "building.hpp"
 
-class inserter: public Building
+class Inserter: public Building
 {
 protected:
-    unsigned id;
-    Connection con;
-    unsigned cellfrom;
+    unsigned idfilt;
+    Direction hand_dir;
 public:
-    inserter(unsigned int level, unsigned id, point<ll> position);
-    
-    ActionResult put_material(Material *m) final;
-    Material* get_material(unsigned cell) final;
+    Inserter(unsigned id, point<ll> position, Direction d);
 
-    ~inserter();
+    ActionResult put_material(Material *m) final {throw "bad function for sinserter";};
+    Material* get_material(unsigned cell) final {throw "bad function for sinserter";};
 
-    ActionResult set_cellfrom(unsigned cell);
+    ~Inserter();
+
+    ActionResult set_materialFilt(unsigned id);
+
+    ActionResult action() final;
+    ActionResult action_move() final;
+
+    void rotate();
+    const Direction& get_handDir();
 };
 
 

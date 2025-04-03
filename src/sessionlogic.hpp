@@ -12,6 +12,7 @@ enum ObjectTypes
 {
     Map,
     Buildings,
+    SpecialPoints,
     Count
 };
 

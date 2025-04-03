@@ -18,7 +18,7 @@ public:
     constexpr static Types const type=Types::Factory; 
     Factory(unsigned id, point<ll> position,  Direction d);
 
-    State get_state();
+    State get_state() final;
 
     //ActionResult put_material(Material *m);
 

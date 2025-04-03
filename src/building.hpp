@@ -50,6 +50,7 @@ public:
  * не может - ошибка
 */
 
+
 class Building: public Object
 {
 protected:
@@ -66,11 +67,11 @@ protected:
     constexpr static Types const type=Types::Building; 
     //Building();
     Building(unsigned id, point<ll> position, Direction d);
-    ~Building();
+    virtual ~Building();
 #if DLEVEL==0
     void printInventory();
 #endif
-    virtual State get_state() const;
+    virtual State get_state();
 
     MaterialList const* get_requirments();
 
@@ -82,7 +83,9 @@ protected:
 
     virtual ActionResult put_material(Material *m);
     
-    virtual Material* get_material(unsigned cell);
+    virtual Material* get_material(unsigned id);
+
+    Material* get_material();
     
     virtual ActionResult action();
 
@@ -93,6 +96,28 @@ protected:
     bool isFull(unsigned ceil);
 };
 
+
+class Dummy:public Object {
+    protected:
+        std::array<Connection*,Connections::Count> con;
+        Material m;
+    public:
+    constexpr static Types const type=Types::Dummy;
+
+    Dummy(point<ll> p):Object(1,1){setPosition(p);}
+
+    Connection * get_Connection(Connections p);
+
+    ActionResult put_material(Material *m);
+    
+    Material* get_material();
+
+    unsigned get_material_quantity (unsigned id) const;
+
+    unsigned get_material_maxCapicy(unsigned id) const;
+
+    State get_state() const;
+};
 
 
 #endif

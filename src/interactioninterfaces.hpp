@@ -6,11 +6,14 @@
 class Object;
 class Building;
 class Factory;
+class Dummy;
+class Inserter;
 
 namespace Types_nps{
 enum Types{
     Object,
     Building,
+    Dummy,
     Factory,
     Count,
 };
@@ -93,6 +96,7 @@ class Direction
     const point<ll>& get();
 };
 
+namespace States_nps{
 enum class State: short
 {
     OK,
@@ -100,12 +104,17 @@ enum class State: short
     Busy,
     Full,
 };
+};
+using States_nps::State;
 
+namespace ActionResult_nps{
 enum ActionResult: short
 {
     OK,
     BAD,
 };
+};
+using ActionResult_nps::ActionResult;
 
 namespace Connections_nps{
 enum Connections: short
@@ -115,7 +124,6 @@ enum Connections: short
     Count // Duumy element to count connection types
 };
 };
-
 using Connections_nps::Connections;
 
 

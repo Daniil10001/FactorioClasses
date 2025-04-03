@@ -76,27 +76,7 @@ void json_handling::closeJsonDocument(std::string filepath)
 
 
 
-/*MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe_id)
-{
-   MaterialList* ml;
-   switch (id)
-   {
-   case 1001:
-       ml=new MaterialList(3);
-       ml->ids[0]=0;
-       ml->ids[1]=0;
-       ml->ids[2]=1;
-       ml->consumes[0]=0;
-       ml->consumes[1]=0;
-       ml->consumes[2]=-1;
-       break;
 
-   default:
-       nullptr;
-       break;
-   }
-   return ml;
-}*/
 
 //template<class T, bool B>
 //T getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr, unsigned id,std::string c);
