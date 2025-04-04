@@ -60,8 +60,7 @@ void json_handling::checkItemsIntegrity()
     for (unsigned i = 0; i < items.size(); i++)
         if (items[i].getPath() == "" || items[i].getFileInstance() == nullptr ||
                 !items[i].isLoaded())
-            throw "File in-memory storing failure: " + items[i].getPath();
-
+    throw std::runtime_error("File in-memory storing failure: " + items[i].getPath());
 }
 
 void json_handling::closeJsonDocument(std::string filepath)
@@ -97,7 +96,7 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (unsigned)it->value.GetUint();
         }
     }
-    throw "Not found";
+    throw std::runtime_error((std::string)"Not found '"+ c + "' in "+std::to_string(id));
 }
 
 template<class T,bool B>
@@ -116,7 +115,7 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (int)it->value.GetInt();
         }
     }
-    throw "Not found";
+    throw std::runtime_error((std::string)"Not found '"+ c + "' in "+std::to_string(id));
 }
 
 template<class T,bool B>
@@ -135,7 +134,7 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (float)it->value.GetFloat();
         }
     }
-    throw "Not found";
+    throw std::runtime_error((std::string)"Not found '"+ c + "' in "+std::to_string(id));
 }
 
 template<class T ,bool B>
@@ -155,7 +154,7 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
         }
     
     }
-    throw "Not found";
+    throw std::runtime_error((std::string)"Not found '"+ c + "' in "+std::to_string(id));
 }
 
 template<class T ,bool B>
@@ -174,7 +173,7 @@ getValueById(rapidjson::GenericArray<B, rapidjson::Value> arr,unsigned id,const 
             return (rapidjson::GenericArray<true, rapidjson::Value>)it->value.GetArray();
         }
     }
-    throw "Not found";
+    throw std::runtime_error((std::string)"Not found '"+ c + "' in "+std::to_string(id));
 }
 
 

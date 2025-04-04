@@ -3,18 +3,18 @@
     {
       "id":0,
       "Name":"Железная руда",
-      "count": 2,
+      "count": 1,
       "time": 0,
-      "requirements": [0,1],
-      "consumes": [0,-1]
+      "requirements": [1],
+      "consumes": [-1]
     },
     {
       "id":1,
       "Name":"Уголь",
-      "count": 2,
+      "count": 1,
       "time": 0,
-      "requirements": [0,1],
-      "consumes": [0,-1]
+      "requirements": [1],
+      "consumes": [-1]
     }
   ]
 }

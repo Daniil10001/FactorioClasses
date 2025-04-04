@@ -2,6 +2,7 @@
 #include "material.hpp"
 #include "interactioninterfaces.hpp"
 #include "factory.hpp"
+#include "inserter.hpp"
 #include "jsoncommunicate.hpp"
 using std::cout, std::endl;
 
@@ -56,8 +57,21 @@ int main()
     cout<<"Check connection:\n need to be 2 0 :";
     cout<<f2.get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<' '<<f2.get_Connection(Connections::Standart)->GetConnectionsTo().size()<<'\n';
     
-    //cout << json_communicate::getNameById(0);
-
-
+    //dummy and insertion tests
+    cout<<"Checking inserters and dummy\n";
+    Dummy d1(p), d2(p);
+    Inserter ins(1002,p,d);
+    cout<<"first ";
+    cout<<MakeConnFull(&d1,&ins, Connections::Standart);
+    cout<<" "<<MakeConnForward(&d1,&ins, Connections::Chain);
+    cout<<"\nsecond"; cout.flush();
+    cout<<" "<<MakeConnFull(&ins,&d2, Connections::Standart);
+    cout<<" "<<MakeConnStrait(&ins,&d2, Connections::Chain);
+    cout<<endl;
+    
+    d1.put_material(&m2);
+    cout<<" "<<ins.action()<<endl;
+    ins.action_move();
+    cout<<"Result must be 10:"<<d2.get_material_quantity(m2.getId())<<'\n';
     return 0;
 }

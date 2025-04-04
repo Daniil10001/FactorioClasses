@@ -31,7 +31,8 @@ include(./src/CMakeLists.txt)
 
 # Adding directories to build
 # ----------------------------------------------
-add_custom_command(TARGET main POST_BUILD
+add_custom_target(copy_resourses ALL)
+add_custom_command(TARGET copy_resourses
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:main>/resources)
 # ----------------------------------------------

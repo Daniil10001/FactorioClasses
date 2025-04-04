@@ -11,15 +11,12 @@ Building::Building(unsigned id, point<ll> position, Direction d) :
    // std::cout<<"init "<<this<<std::endl;
     setPosition(position);
     this->id=id;
-    for (Connection*& cn:this->con)  cn=new Connection(this);
 }
 
 Building::~Building()
 {
     if (BuildingInventory!=nullptr) delete[] BuildingInventory;
     if (requirments!=nullptr) delete requirments;
-    for (Connection* c:this->con)  delete c;
-
 }
 
 unsigned Building::get_material_quantity(unsigned id) const
@@ -106,25 +103,20 @@ bool Building::isFull(unsigned ceil) {
     }
 #endif
 
-Connection * Building::get_Connection(Connections p)
-{
-    if (p>=Connections::Count) return nullptr;
-    return this->con[p];
-}
 
 //connection segment
 //---------------------------------------------------------------
 
-Connection::Connection(Building* me):me(me){}
+Connection::Connection(ICarryObj* me):me(me){}
 
-ActionResult Connection::AddConnectionTo(Building* to)
+ActionResult Connection::AddConnectionTo(ICarryObj* to)
 {
     if (this->to.size()==this->maxToCount) return ActionResult::BAD;
     this->to.insert(to);
     return ActionResult::OK;
 }
 
-ActionResult Connection::DeleteConnectionTo(Building* to)
+ActionResult Connection::DeleteConnectionTo(ICarryObj* to)
 {
     if (this->to.size()==0) return ActionResult::BAD;
     if (this->to.find(to)==this->to.end()) return ActionResult::BAD;
@@ -132,14 +124,14 @@ ActionResult Connection::DeleteConnectionTo(Building* to)
     return ActionResult::OK;
 }
 
-ActionResult Connection::AddConnectionFrom(Building* from)
+ActionResult Connection::AddConnectionFrom(ICarryObj* from)
 {
     if (this->from.size()==this->maxFromCount) return ActionResult::BAD;
     this->from.insert(from);
     return ActionResult::OK;
 }
 
-ActionResult Connection::DeleteConnectionFrom(Building* from)
+ActionResult Connection::DeleteConnectionFrom(ICarryObj* from)
 {
     if (this->from.size()==0) return ActionResult::BAD;
     if (this->from.find(from)==this->from.end()) return ActionResult::BAD;
@@ -152,24 +144,24 @@ ActionResult Connection::DeleteConnectionFrom(Building* from)
 Connection::~Connection()
 {
     //std::cout<<"dell "<<this->me<<std::endl;
-    for (Building* b:this->to)
+    for (ICarryObj* b:this->to)
         for (short c=0;c!=Connections::Count;c++)
         {
             //std::cout<<c<<' '<<b<<std::endl;
             b->get_Connection((Connections)c)->DeleteConnectionFrom(this->me);
         }
-    for (Building* b:this->from)
+    for (ICarryObj* b:this->from)
         for (short c=0;c!=Connections::Count;c++)
             b->get_Connection((Connections)c)->DeleteConnectionTo(this->me);
     //std::cout<<"comletle"<<std::endl;
 }
 
-const std::set<Building*>& Connection::GetConnectionsTo()
+const std::set<ICarryObj*>& Connection::GetConnectionsTo()
 {
     return this->to;
 }
 
-const std::set<Building*>& Connection::GetConnectionsFrom()
+const std::set<ICarryObj*>& Connection::GetConnectionsFrom()
 {
     return this->from;
 }
@@ -188,21 +180,21 @@ ActionResult MakeConnForward(Connection* from, Connection* to)
     return  ActionResult::OK;
 }
 
-ActionResult MakeConnStrait(Building* from, Building* to, Connections p)
+ActionResult MakeConnStrait(ICarryObj* from, ICarryObj* to, Connections p)
 {
     assert(p!=Connections::Standart);
     assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
     return MakeConnStrait(from->get_Connection(p),to->get_Connection(p));
 }
 
-ActionResult MakeConnForward(Building* from, Building* to, Connections p)
+ActionResult MakeConnForward(ICarryObj* from, ICarryObj* to, Connections p)
 {
     assert(p!=Connections::Standart);
     assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
     return MakeConnForward(from->get_Connection(p),to->get_Connection(p));
 }
 
-ActionResult MakeConnFull(Building* from, Building* to, Connections p)
+ActionResult MakeConnFull(ICarryObj* from, ICarryObj* to, Connections p)
 {
     if(MakeConnStrait(from->get_Connection(p),to->get_Connection(p))==ActionResult::OK)
     {
@@ -219,13 +211,7 @@ ActionResult MakeConnFull(Building* from, Building* to, Connections p)
 // dummy class sthings
 //---------------------------------------------------------------
 
-Connection * Dummy::get_Connection(Connections p)
-{
-    if (p>=Connections::Count) return nullptr;
-    return this->con[p];
-}
-
-State Dummy::get_state() const
+State Dummy::get_state()
 {
     if (m.get_quantity()==m.get_maxquantity()) return State::Full;
     return State::OK;
@@ -237,6 +223,12 @@ ActionResult Dummy::put_material(Material *m) {
 
 Material* Dummy::get_material() {
     return &this->m;
+}
+
+Material* Dummy::get_material(unsigned id) {
+    if (id==this->m.getId() || id==0)
+        return &this->m;
+    return nullptr;
 }
 
 unsigned Dummy::get_material_quantity(unsigned id) const

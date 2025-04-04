@@ -2,8 +2,10 @@
 
 Inserter::Inserter(unsigned id, point<ll> position, Direction d):Building(id, position, d), idfilt(0), hand_dir(d)
 {
-    BuildingInventory = new Material;
+    BuildingInventory = new Material[1];
 }
+
+Inserter::~Inserter(){}
 
 ActionResult Inserter::set_materialFilt(unsigned cell)
 {
@@ -11,19 +13,22 @@ ActionResult Inserter::set_materialFilt(unsigned cell)
     return ActionResult::OK;
 }
 
+//#include<iostream>
 ActionResult Inserter::action()
 {
     if (BuildingInventory->get_quantity()!=0) return ActionResult::BAD;
-    *BuildingInventory + *(*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material(idfilt);
-    return ActionResult::OK;
+    //std::cout<<con[Connections::Chain]->GetConnectionsFrom().size()<<std::endl;
+    Material *it = (*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material(idfilt);
+    //fast check
+    //std::cout<<" "<<(it!=nullptr)<<" "<<it<<" ";
+    return (it!=nullptr?*BuildingInventory + *it:ActionResult::BAD);
 }
 
 ActionResult Inserter::action_move()
 {
     if (BuildingInventory==nullptr) return ActionResult::BAD;
     (*con[Connections::Chain]->GetConnectionsTo().begin())->put_material(BuildingInventory);
-    if (BuildingInventory->get_quantity()==0) BuildingInventory->ChangeId(0);
-    if (BuildingInventory->get_quantity()==0) return ActionResult::BAD;
+    if (BuildingInventory->get_quantity()!=0) return ActionResult::BAD;
     return ActionResult::OK;
 }
 

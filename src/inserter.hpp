@@ -10,8 +10,9 @@ protected:
 public:
     Inserter(unsigned id, point<ll> position, Direction d);
 
-    ActionResult put_material(Material *m) final {throw "bad function for sinserter";};
-    Material* get_material(unsigned cell) final {throw "bad function for sinserter";};
+    ActionResult put_material(Material *) final {throw "bad function for sinserter";};
+    Material* get_material(unsigned) final {throw "bad function for sinserter";};
+    Material* get_material() final {throw "bad function for sinserter";};
 
     ~Inserter();
 

@@ -11,33 +11,35 @@
 
 
 class Building;
-ActionResult MakeConnStrait(Building* from, Building* to, Connections p);
-ActionResult MakeConnForward(Building* from, Building* to, Connections p);
-ActionResult MakeConnFull(Building* from, Building* to, Connections p);
+class ICarryObj;
+
+ActionResult MakeConnStrait(ICarryObj* from, ICarryObj* to, Connections p);
+ActionResult MakeConnForward(ICarryObj* from, ICarryObj* to, Connections p);
+ActionResult MakeConnFull(ICarryObj* from, ICarryObj* to, Connections p);
 
 class Connection
 {
 private:
-    Building* me;
+    ICarryObj* me;
     unsigned maxToCount=255;
     unsigned maxFromCount=255;
-    std::set<Building*> to;
-    std::set<Building*> from;
+    std::set<ICarryObj*> to;
+    std::set<ICarryObj*> from;
 public:
     //Connection();
-    Connection(Building* me);
-    ActionResult AddConnectionTo(Building* to);
-    ActionResult AddConnectionFrom(Building* from);
-    ActionResult DeleteConnectionTo(Building* to);
-    ActionResult DeleteConnectionFrom(Building* from);
-    const std::set<Building*>& GetConnectionsTo();
-    const std::set<Building*>& GetConnectionsFrom();
+    Connection(ICarryObj* me);
+    ActionResult AddConnectionTo(ICarryObj* to);
+    ActionResult AddConnectionFrom(ICarryObj* from);
+    ActionResult DeleteConnectionTo(ICarryObj* to);
+    ActionResult DeleteConnectionFrom(ICarryObj* from);
+    const std::set<ICarryObj*>& GetConnectionsTo();
+    const std::set<ICarryObj*>& GetConnectionsFrom();
     
     friend ActionResult MakeConnStrait(Connection* from, Connection* to);
     friend ActionResult MakeConnForward(Connection* from, Connection* to);
-    friend ActionResult MakeConnStrait(Building* from, Building* to, Connections p);
-    friend ActionResult MakeConnForward(Building* from, Building* to, Connections p);
-    friend ActionResult MakeConnFull(Building* from, Building* to, Connections p);
+    friend ActionResult MakeConnStrait(ICarryObj* from, ICarryObj* to, Connections p);
+    friend ActionResult MakeConnForward(ICarryObj* from, ICarryObj* to, Connections p);
+    friend ActionResult MakeConnFull(ICarryObj* from, ICarryObj* to, Connections p);
     
     ~Connection(); //Works only with standart connections. Chain connection do not apply
 };
@@ -50,11 +52,36 @@ public:
  * не может - ошибка
 */
 
+class ICarryObj
+{
+    protected:
+        std::array<Connection*,Connections::Count> con;
+    public:
+    Connection * get_Connection(Connections p)
+    {
+        if (p>=Connections::Count) assert(false);
+        return this->con[p];
+    };
 
-class Building: public Object
+    ICarryObj(){for (Connection*& cn:this->con)  cn=new Connection(this);}
+    ~ICarryObj(){for (Connection* c:this->con)  delete c;}
+
+    virtual ActionResult put_material(Material *m)=0;
+    
+    virtual Material* get_material()=0;
+
+    virtual Material* get_material(unsigned id) = 0;
+
+    virtual unsigned get_material_quantity (unsigned id) const=0;
+
+    virtual unsigned get_material_maxCapicy(unsigned id) const=0;
+
+    virtual State get_state()=0;
+};
+
+class Building: public Object, public ICarryObj
 {
 protected:
-    std::array<Connection*,Connections::Count> con;
 
     MaterialList* requirments;
 
@@ -75,17 +102,15 @@ protected:
 
     MaterialList const* get_requirments();
 
-    unsigned get_material_quantity (unsigned id) const;
+    unsigned get_material_quantity (unsigned id) const final;
 
-    unsigned get_material_maxCapicy(unsigned id) const;
-
-    Connection * get_Connection(Connections p);
+    unsigned get_material_maxCapicy(unsigned id) const final;
 
     virtual ActionResult put_material(Material *m);
     
     virtual Material* get_material(unsigned id);
 
-    Material* get_material();
+    virtual Material* get_material();
     
     virtual ActionResult action();
 
@@ -97,26 +122,25 @@ protected:
 };
 
 
-class Dummy:public Object {
+class Dummy:public Object, public ICarryObj {
     protected:
-        std::array<Connection*,Connections::Count> con;
         Material m;
     public:
     constexpr static Types const type=Types::Dummy;
 
     Dummy(point<ll> p):Object(1,1){setPosition(p);}
-
-    Connection * get_Connection(Connections p);
-
-    ActionResult put_material(Material *m);
     
-    Material* get_material();
+    ActionResult put_material(Material *m) final;
+    
+    Material* get_material() final;
 
-    unsigned get_material_quantity (unsigned id) const;
+    Material* get_material(unsigned id) final;
 
-    unsigned get_material_maxCapicy(unsigned id) const;
+    unsigned get_material_quantity (unsigned id) const final;
 
-    State get_state() const;
+    unsigned get_material_maxCapicy(unsigned id) const final;
+
+    State get_state() final;    
 };
 
 

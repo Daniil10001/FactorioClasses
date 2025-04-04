@@ -37,7 +37,7 @@ target_link_libraries(INSERTER PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 add_executable( main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 target_link_libraries(
         main
-        JSON MATERIAL FACTORY BUILDING
+        JSON MATERIAL FACTORY BUILDING INSERTER
         SFML::Graphics SFML::Audio)
 # ----------------------------------------------
 
