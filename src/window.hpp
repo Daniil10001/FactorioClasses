@@ -25,7 +25,7 @@ private:
     const uint64_t pixels_per_tile=100;
     float upscale=1;
 
-    Object* currGhost;
+    Object* currGhost; // for the time being it's left single
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
@@ -37,6 +37,7 @@ public:
     ~Window();
 
     // render handling
+
     bool isOpen();
 
     const sf::Vector2f Window2Grid(point<ll> p);
@@ -51,7 +52,7 @@ public:
 
     // Position is calculated in session logic and written in Object
     // Here it is simply being transferred to sf::Sprite
-    // not safe because obj key presence not being checked
+    // obj key presence will not be checked
     void updatePosition(Object *obj);
 
     void updatePositionAll();
@@ -61,9 +62,15 @@ public:
 
     void drawAll();
 
+    // Adds a single ghost leaving a pointer mark in currGhost
+    // Places previous ghost
+    void addGhost(Object* obj);
+
     void placeGhost();
 
-    void frame();
+    bool isGhost(); // if ghost is present
+
+    std::optional<sf::Event> frame();
 };
 
 
