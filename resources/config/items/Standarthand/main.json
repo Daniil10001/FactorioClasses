@@ -1,0 +1,10 @@
+{
+  "id": 1002,
+  "name": "Рука",
+
+  "level": 1,
+  "image": "robohand.png",
+  "size_x":2,
+  "size_y":2,
+  "cooldown": 1.0
+}
