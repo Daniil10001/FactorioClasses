@@ -10,7 +10,7 @@ MaterialList::MaterialList(unsigned count)
 {
     this->count=count;
     this->time = 0;
-    this->ids=new unsigned[count];
+    this->ids=new ID<>[count];
     this->consumes=new int[count];
 }
 
@@ -66,6 +66,13 @@ void Direction::mirror()
 {
     d=(d+2)&4;
     update();
+}
+
+Direction Direction::mirrored()
+{
+    Direction d2((Directions)this->d);
+    d2.mirror();
+    return d2;
 }
 
 const point<ll>& Direction::get()

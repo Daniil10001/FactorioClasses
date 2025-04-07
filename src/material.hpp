@@ -7,10 +7,14 @@ class Material {
 protected:
     unsigned quantity;
     unsigned capacity =64;
-    unsigned id;
+    ID<> id;
 public:
     Material():quantity(0),id(0){};
     Material(unsigned quantity, unsigned id=0) {
+        this->quantity = quantity;
+        this->id=id;
+    }
+    Material(unsigned quantity, ID<> id=0) {
         this->quantity = quantity;
         this->id=id;
     }
@@ -27,9 +31,9 @@ public:
 
     Material& operator-=(const int rhs);
 
-    ActionResult ChangeId(unsigned id);
+    ActionResult ChangeId(ID<> id);
 
-    inline unsigned getId() const {return this->id;}
+    inline ID<> getId() const {return this->id;}
 
     inline unsigned get_quantity() const {return this->quantity;}
     

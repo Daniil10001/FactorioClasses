@@ -1,13 +1,17 @@
 #ifndef interactioninterfaces_hpp__
 #define interactioninterfaces_hpp__
 
+#include<cstdint>
+#include<cassert>
 #define ll long long
+
 
 class Object;
 class Building;
 class Factory;
 class Dummy;
 class Inserter;
+class Conveyer;
 
 namespace Types_nps{
 enum Types{
@@ -15,6 +19,8 @@ enum Types{
     Building,
     Dummy,
     Factory,
+    Inserter,
+    Conveyer,
     Count,
 };
 }
@@ -93,6 +99,7 @@ class Direction
     Direction& operator++();
     Direction& operator--();
     void mirror();
+    Direction mirrored();
     const point<ll>& get();
 };
 
@@ -126,13 +133,32 @@ enum Connections: short
 };
 using Connections_nps::Connections;
 
+template<class T=uint32_t>
+class ID
+{
+    public:
+    T id;
+    constexpr ID(T id):id(id){}
+    ID(ID &id):id(id.id){}
+    ID(const ID& id):id(id.id){}
+    ID():id(0){}
+    inline ID& operator=(ID id){this->id=id.id;return *this;}
+    inline ID& operator=(T id){this->id=id;return *this;}
+    //inline constexpr friend bool operator==(const ID<> lhs,const ID<> rhs){return (!(lhs.id==0 && rhs.id==0))&&(lhs.id==rhs.id);}
+    inline constexpr friend bool operator==(const ID<>& lhs,const ID<>& rhs){return (!(lhs.id==0 && rhs.id==0))&&(lhs.id==rhs.id);}
+    //inline constexpr friend bool operator!=(const ID<> lhs,const ID<> rhs){return !(lhs==rhs);}
+    inline constexpr friend bool operator!=(const ID<>& lhs,const ID<>& rhs){return !(lhs==rhs);}
+
+    inline constexpr friend bool operator==(const ID<>& lhs,T rhs){assert(rhs==0);return lhs==ID(0);}
+
+};
 
 class MaterialList
 {
 private:
 public:
     unsigned count;
-    unsigned *ids;
+    ID<> *ids;
     int *consumes;
     float time; // may be crafting time
     MaterialList();

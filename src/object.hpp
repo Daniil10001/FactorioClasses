@@ -8,7 +8,7 @@
 class Object
 {
 protected:
-    unsigned id;
+    ID<> id;
     point<ll> p;
     point<unsigned> size;
 
@@ -21,14 +21,14 @@ public:
     //Object():initilised(0){};
     Object(unsigned x_size, unsigned y_size);
 
-    Object(unsigned id);
+    Object(ID<> id);
 
     virtual ~Object();
 
 
     //void setPosition(float x, float y, float pixels_per_tile);
 
-    unsigned getId();
+    const ID<>& getId();
 
     void setPosition(point<ll> pos);
 

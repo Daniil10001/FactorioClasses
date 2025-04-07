@@ -71,6 +71,8 @@ int main()
     
     d1.put_material(&m2);
     cout<<" "<<ins.action()<<endl;
+    ins.setFilt(m3.getId());
+    ins.canDoAction();
     ins.action_move();
     cout<<"Result must be 10:"<<d2.get_material_quantity(m2.getId())<<'\n';
     return 0;

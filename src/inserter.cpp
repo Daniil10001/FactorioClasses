@@ -37,6 +37,18 @@ void Inserter::rotate()
     hand_dir.mirror();
 }
 
+void Inserter::setFilt(ID<> id)
+{
+    this->idfilt = id;
+}
+
+bool Inserter::canDoAction()
+{
+    if (idfilt==0) throw std::invalid_argument("In inserter there filter set to none!");
+    return ((*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material_quantity(idfilt)>0) 
+        && ((*con[Connections::Chain]->GetConnectionsTo().begin())->get_material_quantity(idfilt)<(*con[Connections::Chain]->GetConnectionsTo().begin())->get_material_maxCapicy(idfilt));
+}
+
 const Direction& Inserter::get_handDir()
 {
     return hand_dir;
