@@ -32,6 +32,20 @@ add_library(INSERTER STATIC ${CMAKE_CURRENT_SOURCE_DIR}/inserter.cpp)
 target_compile_definitions(INSERTER PUBLIC INSERTER)
 target_link_libraries(INSERTER PUBLIC OBJ INIF MATERIAL BUILDING JSON)
 
+add_library(CONVEYER STATIC ${CMAKE_CURRENT_SOURCE_DIR}/conveyer.cpp)
+target_compile_definitions(CONVEYER PUBLIC CONVEYER)
+target_link_libraries(CONVEYER PUBLIC OBJ INIF MATERIAL BUILDING JSON)
+
+add_library(SESLOGIC STATIC ${CMAKE_CURRENT_SOURCE_DIR}/sessionlogic.cpp)
+target_compile_definitions(SESLOGIC PUBLIC SESLOGIC)
+target_link_libraries(SESLOGIC PUBLIC CONVEYER INSERTER FACTORY OBJ INIF MATERIAL BUILDING JSON)
+
+
+add_executable( test ${CMAKE_CURRENT_SOURCE_DIR}/testl.cpp)
+target_link_libraries(
+        test
+        JSON MATERIAL FACTORY BUILDING INSERTER)
+
 # main
 # ----------------------------------------------
 add_executable( main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

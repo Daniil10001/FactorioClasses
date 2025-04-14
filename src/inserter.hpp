@@ -8,7 +8,7 @@ protected:
     ID<> idfilt;
     Direction hand_dir;
 public:
-    constexpr static Types const type=Types::Inserter; 
+    virtual Types type() const {return Types::Inserter;}
     Inserter(unsigned id, point<ll> position, Direction d);
 
     ActionResult put_material(Material *) final {throw "bad function for sinserter";};

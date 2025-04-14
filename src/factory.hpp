@@ -15,7 +15,7 @@ private:
     unsigned factoryMaterialsStart;
     double cooldpown;
 public:
-    constexpr static Types const type=Types::Factory; 
+    virtual Types type() const {return Types::Factory;}
     Factory(unsigned id, point<ll> position,  Direction d);
 
     State get_state() final;

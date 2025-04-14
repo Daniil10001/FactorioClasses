@@ -8,7 +8,7 @@ class Conveyer: public Building
 {
     public:
 
-    constexpr static Types const type=Types::Conveyer; 
+    virtual Types type() const {return Types::Conveyer;}
 
     Conveyer(unsigned id, point<ll> position, Direction d);
 

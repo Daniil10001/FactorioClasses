@@ -128,7 +128,7 @@ class Dummy:public Object, public ICarryObj {
     protected:
         Material m;
     public:
-    constexpr static Types const type=Types::Dummy;
+    virtual Types type() const {return Types::Dummy;}
 
     Dummy(point<ll> p):Object(1,1){setPosition(p);}
     
