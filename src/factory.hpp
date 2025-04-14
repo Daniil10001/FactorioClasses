@@ -27,7 +27,7 @@ public:
 
     ActionResult action();
 
-    bool canDoAction() final;
+    //bool canDoAction() final;
 
     bool isEnoughIngridients() const;
 

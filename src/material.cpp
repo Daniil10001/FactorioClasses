@@ -1,10 +1,12 @@
 #include "material.hpp"
 #include <stdexcept>
 
+
 ActionResult operator+(Material& lhs, Material& rhs){
         if (lhs.id == 0 && rhs.id==0)   throw std::invalid_argument("Can not add nothing to nothing");
         if (rhs.id == 0) throw std::invalid_argument("Can not add nothing to something");;
-        if (lhs.id == 0)    lhs.ChangeId(rhs.id);
+        if (lhs.id != 0)    lhs.ChangeId(rhs.id);
+        //std::cout<<"|id "<<lhs.id.id<<' '<<rhs.id.id<<'|';
         if (lhs.id!=rhs.id) return ActionResult::BAD;
         unsigned q=min(lhs.capacity-lhs.quantity,rhs.quantity);
         lhs.quantity+=q;

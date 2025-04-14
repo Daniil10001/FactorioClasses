@@ -48,7 +48,7 @@ class SessionHandler
 {
     private:
     std::array<std::set<Object*>,ObjectTypes::Count> objs;
-    std::map<Object *,std::vector<point<ll>>> interesting_points;
+    std::map<Object *,std::vector<std::pair<point<ll>,std::pair<bool,Object*>>>> interesting_points;
     TimersHandler tims;
     public:
     SessionHandler()

@@ -57,10 +57,10 @@ bool Factory::isEnoughIngridients() const{
 }
 
 
-bool Factory::canDoAction()
+/*bool Factory::canDoAction()
 {
     return get_state()==State::OK;
-}
+}*/
 
 ActionResult Factory::action() {
     produce();

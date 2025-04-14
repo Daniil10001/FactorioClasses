@@ -73,7 +73,7 @@ ActionResult Building::action()
     return ActionResult::OK;
 }
 
-ActionResult Building::action_move()
+ActionResult Building::actionMove()
 {
     return ActionResult::OK;
 }

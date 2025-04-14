@@ -8,6 +8,7 @@ using std::cout, std::endl;
 
 int main()
 {
+    cout<<Object::type<<" "<<Factory::type<<endl;
     cout<<"test Materials\n";
     Material m1=Material(40,1);
     Material m2=Material(10,2);
@@ -61,7 +62,7 @@ int main()
     cout<<"Checking inserters and dummy\n";
     Dummy d1(p), d2(p);
     Inserter ins(1002,p,d);
-    cout<<"first ";
+    cout<<"first";
     cout<<MakeConnFull(&d1,&ins, Connections::Standart);
     cout<<" "<<MakeConnForward(&d1,&ins, Connections::Chain);
     cout<<"\nsecond"; cout.flush();
@@ -69,11 +70,25 @@ int main()
     cout<<" "<<MakeConnStrait(&ins,&d2, Connections::Chain);
     cout<<endl;
     
-    d1.put_material(&m2);
-    cout<<" "<<ins.action()<<endl;
-    ins.setFilt(m3.getId());
-    ins.canDoAction();
-    ins.action_move();
-    cout<<"Result must be 10:"<<d2.get_material_quantity(m2.getId())<<'\n';
+    cout<<"put to dummy "<<d1.put_material(&m2)<<endl;
+    ins.setFilt(m2.getId());
+    //ins.canDoAction();
+    cout<<" "<<ins.action()<<" "<<ins.actionMove()<<endl;
+    cout<<"Result must be 1:"<<d2.get_material_quantity(m2.getId())<<'\n';
+    cout<<" "<<ins.action()<<" "<<ins.actionMove()<<endl;
+    cout<<"Result must be 2:"<<d2.get_material_quantity(m2.getId())<<'\n';
+    cout<<" "<<ins.action()<<" "<<ins.actionMove()<<endl;
+    cout<<"Result must be 3:"<<d2.get_material_quantity(m2.getId())<<'\n';
+
+    Inserter ins2(1002,p,d);
+    MakeConnFull(&d2,&ins2, Connections::Standart);
+    MakeConnFull(&ins2,&f2, Connections::Standart);
+
+    MakeConnForward(&d2,&ins2, Connections::Chain);
+    MakeConnStrait(&ins2,&f2, Connections::Chain);
+
+    ins2.setFilt(d2.get_material()->getId());
+    //ins2.canDoAction();
+    cout<<"Must be 0 1 2:"<<ins2.action()<<" "<<ins2.actionMove()<<" "<<d2.get_material()->get_quantity()<<endl;
     return 0;
 }

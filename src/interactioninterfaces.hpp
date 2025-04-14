@@ -2,6 +2,7 @@
 #define interactioninterfaces_hpp__
 
 #include<cstdint>
+#include<stdexcept>
 #include<cassert>
 #define ll long long
 
@@ -101,6 +102,7 @@ class Direction
     void mirror();
     Direction mirrored();
     const point<ll>& get();
+    inline Directions dir(){return (Directions)this->d;}
 };
 
 namespace States_nps{

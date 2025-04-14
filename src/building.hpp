@@ -112,11 +112,11 @@ protected:
 
     virtual Material* get_material();
 
-    virtual bool canDoAction()=0;
+    //virtual bool canDoAction()=0;
 
     virtual ActionResult action();
 
-    virtual ActionResult action_move(); //move items to another
+    virtual ActionResult actionMove(); //move items to another
 
     bool isFull();
 

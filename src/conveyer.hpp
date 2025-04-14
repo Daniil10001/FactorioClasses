@@ -2,11 +2,10 @@
 #define conveyer_hpp__
 
 #include "building.hpp"
+#include <set>
 
 class Conveyer: public Building
 {
-    private:
-        Direction from;
     public:
 
     constexpr static Types const type=Types::Conveyer; 
@@ -21,11 +20,13 @@ class Conveyer: public Building
 
     Material* get_material() final;
 
-    bool canDoAction();
+   // bool canDoAction();
 
-    ActionResult action();
+    ActionResult action() final;
 
-    ActionResult action_move(); //move items to another
+    ActionResult actionMove() final; //move items to another
+
+    ActionResult put_material(short row, Material *m, Conveyer* prev);
 };
 
 
