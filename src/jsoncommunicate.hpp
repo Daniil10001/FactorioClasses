@@ -125,8 +125,17 @@ public:
     static sf::Texture& getTextureById (unsigned id);
 };
 
+class TypesHandler
+{
+    private:
+    static std::map<unsigned,Types> generate();
+    static std::map<unsigned,Types> tps;
+    public:
+    Types getTypeById(unsigned id);
+    Types getTypeById(ID<> id);
+};
 
-class texture_handler
+class TextureHandler
 {
     public:
     static std::map<unsigned, std::shared_ptr<sf::Texture>> textures;

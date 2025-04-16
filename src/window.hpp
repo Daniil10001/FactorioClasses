@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <array>
+#include <functional>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "interactioninterfaces.hpp"

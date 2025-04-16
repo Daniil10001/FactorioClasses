@@ -28,6 +28,7 @@ Material* Conveyer::get_material() {
         if (this->BuildingInventory[cell].get_quantity()>0) return this->BuildingInventory+cell;
     return nullptr;
 }
+
 /*bool Conveyer::canDoAction()
 {
     if (con[Connections::Chain]->GetConnectionsTo().size()==0 &&
@@ -59,9 +60,16 @@ ActionResult Conveyer::put_material(short row, Material *m, Conveyer* prev)
     return ActionResult::BAD;
 }
 
+ActionResult Conveyer::action()
+{
+    return ActionResult::OK;
+}
+
 ActionResult Conveyer::actionMove()
 {
     if (get_Connection(Connections::Chain)->GetConnectionsTo().size()>0)
-        for (int i=0;i<2;i++) 
-            dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin())->put_material(i,BuildingInventory+i+2,this);
+        for (int i=0;i<2;i++)
+            if (dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin()))
+                dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin())->put_material(i,BuildingInventory+i+2,this);
+    return ActionResult::OK;
 }

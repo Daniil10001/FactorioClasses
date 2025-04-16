@@ -15,7 +15,7 @@ protected:
 
     bool initilised;
 public:
-    constexpr static Types const type=Types::Object;
+    virtual Types type() const {return Types::Object;}
     bool isGhost = false; // needed while placing new objects
 
     //Object():initilised(0){};
