@@ -1,7 +1,5 @@
 name: CI
 
-runs-on: self-hosted
-
 on: [push, pull_request]
 
 defaults:
@@ -19,9 +17,10 @@ jobs:
         platform:
         #- { name: Windows VS2019, os: windows-2019  }
         #- { name: Windows VS2022, os: windows-2022  }
-        - { name: Linux GCC,      os: ubuntu-latest }
-        - { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
-        - { name: macOS,          os: macos-latest  }
+        - { name: Linux GCC,      os: self-hosted }
+        #- { name: Linux GCC,      os: ubuntu-latest }
+        #- { name: Linux Clang,    os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+        #- { name: macOS,          os: macos-latest  }
 
     steps:
     - name: Install Linux Dependencies
