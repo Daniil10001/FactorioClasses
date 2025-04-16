@@ -3,12 +3,12 @@
 #include "interactioninterfaces.hpp"
 #include "factory.hpp"
 #include "inserter.hpp"
+#include "conveyer.hpp"
 #include "jsoncommunicate.hpp"
 using std::cout, std::endl;
 
 int main()
 {
-    //cout<<Object::type<<" "<<Factory::type<<endl;
     cout<<"test Materials\n";
     Material m1=Material(40,1);
     Material m2=Material(10,2);
@@ -90,5 +90,8 @@ int main()
     ins2.setFilt(d2.get_material()->getId());
     //ins2.canDoAction();
     cout<<"Must be 0 1 2:"<<ins2.action()<<" "<<ins2.actionMove()<<" "<<d2.get_material()->get_quantity()<<endl;
+    
+    Building* b=&ins;
+    cout<<dynamic_cast<Conveyer*>(b);
     return 0;
 }

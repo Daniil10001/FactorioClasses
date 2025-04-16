@@ -4,6 +4,7 @@
 #include<cstdint>
 #include<stdexcept>
 #include<cassert>
+#include<map>
 #define ll long long
 
 
@@ -154,6 +155,8 @@ class ID
     inline constexpr friend bool operator==(const ID<>& lhs,T rhs){assert(rhs==0);return lhs==ID(0);}
 
 };
+
+
 
 class MaterialList
 {

@@ -14,7 +14,9 @@
 
 std::vector<loadingUnit> json_handling::items={};
 
-std::map<unsigned, std::shared_ptr<sf::Texture>> texture_handler::textures;
+std::map<unsigned, std::shared_ptr<sf::Texture>> TextureHandler::textures;
+
+std::map<unsigned, Types> TypesHandler::tps=TypesHandler::generate();
 
 Document* json_handling::loadJsonDocument(std::string filepath) {
     //using namespace std;
@@ -209,12 +211,35 @@ std::string json_communicate::getNameById(unsigned id) {
 }
 
 sf::Texture& json_communicate::getTextureById (unsigned id) {
-    if (texture_handler::textures.count(id)) return *texture_handler::textures.at(id);
+    if (TextureHandler::textures.count(id)) return *TextureHandler::textures.at(id);
     auto ihandler = json_handling::getJsonDocument( // it's revolution, johny
         "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
     std::string path="./resources/includes/"+json_communicate::getUrlById(id)+(std::string)((*ihandler)["image"].GetString());
     std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
-    texture_handler::textures.emplace(id,texteure);
+    TextureHandler::textures.emplace(id,texteure);
     return *texteure;
 }
 
+std::map<unsigned,Types> TypesHandler::generate()
+{
+    std::map<std::string, Types> String2Type = {{"Factory",Types::Factory},
+            {"Inserter",Types::Inserter}, {"Conveyer",Types::Conveyer}};
+    std::map<unsigned,Types> mp;
+    auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
+    auto arr=(*itemsDoc)["items"].GetArray();
+    rapidjson::Value::ConstMemberIterator iti,itt;
+    for (auto elem=arr.begin();elem!=arr.end();elem++)
+    {
+        iti=elem->FindMember("id");
+        assert(iti!=elem->MemberEnd());
+        itt=elem->FindMember("type");
+        assert(itt!=elem->MemberEnd());
+        if ((std::string)itt->value.GetString() == "Material")
+            continue;
+        if (String2Type.count((std::string)itt->value.GetString())==0)
+            throw std::runtime_error("In items.json there are some wrong types");
+        mp[(unsigned)iti->value.GetUint()]=String2Type[(std::string)itt->value.GetString()];
+    }
+    std::cerr<<"types loaded\n";
+    return mp;
+}

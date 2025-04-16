@@ -1,8 +1,8 @@
 #ifndef sessionlogic_hpp__
 #define sessionlogic_hpp__
 
-
 #include "factory.hpp"
+#include "conveyer.hpp"
 #include <array>
 #include <set>
 #include <map>
@@ -58,6 +58,7 @@ class SessionHandler
     TimersHandler tims;
 
     void MakeConnections(Object* b);
+    Object* findObj(point<ll> p);
     
     public:
     SessionHandler()
@@ -67,9 +68,10 @@ class SessionHandler
         objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
     };
 
+    std::set<Object*> findInters(point<ll> p, point<unsigned> sz);
+
     std::set<Object *> const get_layer(ObjectTypes lr) const;
 
-    template<Types T>
     ActionResult addToLayerB(unsigned id, point<ll> p, Direction dir);
 
     ActionResult delFromLayerB(Object * obj);

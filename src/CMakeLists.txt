@@ -44,7 +44,7 @@ target_link_libraries(SESLOGIC PUBLIC CONVEYER INSERTER FACTORY OBJ INIF MATERIA
 add_executable( test ${CMAKE_CURRENT_SOURCE_DIR}/testl.cpp)
 target_link_libraries(
         test
-        JSON MATERIAL FACTORY BUILDING INSERTER)
+        JSON MATERIAL FACTORY BUILDING INSERTER CONVEYER)
 
 # main
 # ----------------------------------------------

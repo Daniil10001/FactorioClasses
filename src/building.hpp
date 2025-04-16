@@ -121,6 +121,8 @@ protected:
     bool isFull();
 
     bool isFull(unsigned ceil);
+
+    inline Direction getDirection() { return direction;}
 };
 
 

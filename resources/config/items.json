@@ -3,14 +3,17 @@
   "items": [
     {
       "id": 0,
+      "type":"Material",
       "url": "Air/"
     },
     {
       "id":1001,
+      "type":"Factory",
       "url":"Miner/"
     },
     {
       "id":1002,
+      "type":"Inserter",
       "url":"Standarthand/"
     }
   ]
