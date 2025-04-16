@@ -101,7 +101,7 @@ void Window::addGhost(Object *obj) {
 }
 
 void Window::createSprite(Object* obj) {
-    objs.emplace(obj, json_communicate::getTextureById(obj->getId()));
+    objs.emplace(obj, json_communicate::getTextureById(obj->getId().id));
 }
 
 void Window::deleteSprite(Object *obj) {

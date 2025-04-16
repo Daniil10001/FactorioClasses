@@ -9,13 +9,6 @@ using std::cout, std::endl;
 
 int main()
 {
-<<<<<<< HEAD
-    //cout<<Object::type<<" "<<Factory::type<<endl;
-    cout<<"test Materials\n";
-    Material m1=Material(40,1);
-    Material m2=Material(10,2);
-    Material m3=Material(50,1);
-=======
 //    cout<<"test Materials\n";
 //    Material m1=Material(40,1);
 //    Material m2=Material(10,2);
@@ -81,7 +74,6 @@ int main()
 //    cout<<" "<<ins.action()<<endl;
 //    ins.action_move();
 //    cout<<"Result must be 10:"<<d2.get_material_quantity(m2.getId())<<'\n';
->>>>>>> refs/remotes/origin/main
 
 
     Window session_window;
