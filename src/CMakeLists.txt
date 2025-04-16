@@ -42,22 +42,17 @@ target_link_libraries(SESLOGIC PUBLIC CONVEYER INSERTER FACTORY OBJ INIF MATERIA
 
 
 add_executable( test ${CMAKE_CURRENT_SOURCE_DIR}/testl.cpp)
-target_link_libraries(
-        test
-        JSON MATERIAL FACTORY BUILDING INSERTER CONVEYER)
+target_link_libraries(test SESLOGIC)
+
+
 add_library(WINDOW STATIC ${CMAKE_CURRENT_SOURCE_DIR}/window.cpp)
-
-
 target_compile_definitions(WINDOW PUBLIC WINDOW)
-target_link_libraries(WINDOW PUBLIC SFML::Audio SFML::Graphics SFML::System SFML::Window)
+target_link_libraries(WINDOW PUBLIC SESLOGIC SFML::Audio SFML::Graphics SFML::System SFML::Window)
 
 # main
 # ----------------------------------------------
 add_executable( main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
-target_link_libraries(
-        main
-        JSON MATERIAL FACTORY BUILDING INSERTER
-        SFML::Graphics SFML::Audio SFML::System SFML::Window WINDOW)
+target_link_libraries(main WINDOW)
 # ----------------------------------------------
 
 set(CMAKE_CURRENT_SOURCE_DIR  ${TMP})
