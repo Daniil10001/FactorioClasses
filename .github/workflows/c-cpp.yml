@@ -8,13 +8,13 @@ defaults:
 
 jobs:
   build:
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
-    runs-on: ${{ matrix.platform.os }}
+    name: ${{ matrix.name }} ${{ matrix.config.name }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        platform:
+        include:
         #- { name: Windows VS2019, os: windows-2019  }
         #- { name: Windows VS2022, os: windows-2022  }
         - { name: Linux GCC,      os: self-hosted }
