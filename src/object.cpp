@@ -7,15 +7,15 @@ constexpr const char xs[]="size_x";
 constexpr const char ys[]="size_y";
 
 Object::Object(unsigned x_size, unsigned y_size) :
-    p(0,0),size(x_size,y_size)
+    id(0),p(0,0),size(x_size,y_size)
 {
     this->initilised=true;
 }
 
-Object::Object(unsigned id) :
+Object::Object(ID<> id) : id(id),
     size(
-            json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id),
-            json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id)
+            json_communicate::get_property<unsigned,Object,Checking::size_a(xs),xs>(id.id),
+            json_communicate::get_property<unsigned,Object,Checking::size_a(ys),ys>(id.id)
             )
 {                   //dummy thin neded to replaced by json
     this->initilised=true;
@@ -48,6 +48,6 @@ const point<long long> &Object::getPosition() {
     return p;
 }
 
-unsigned int Object::getId() {
+const ID<>& Object::getId() {
     return id;
 }

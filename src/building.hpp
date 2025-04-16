@@ -70,11 +70,11 @@ class ICarryObj
     
     virtual Material* get_material()=0;
 
-    virtual Material* get_material(unsigned id) = 0;
+    virtual Material* get_material(ID<> id) = 0;
 
-    virtual unsigned get_material_quantity (unsigned id) const=0;
+    virtual unsigned get_material_quantity (ID<> id) const=0;
 
-    virtual unsigned get_material_maxCapicy(unsigned id) const=0;
+    virtual unsigned get_material_maxCapicy(ID<> id) const=0;
 
     virtual State get_state()=0;
 };
@@ -102,19 +102,21 @@ protected:
 
     MaterialList const* get_requirments();
 
-    unsigned get_material_quantity (unsigned id) const final;
+    unsigned get_material_quantity (ID<> id) const final;
 
-    unsigned get_material_maxCapicy(unsigned id) const final;
+    unsigned get_material_maxCapicy(ID<> id) const final;
 
     virtual ActionResult put_material(Material *m);
     
-    virtual Material* get_material(unsigned id);
+    virtual Material* get_material(ID<> id);
 
     virtual Material* get_material();
-    
+
+    //virtual bool canDoAction()=0;
+
     virtual ActionResult action();
 
-    virtual ActionResult action_move(); //move items
+    virtual ActionResult actionMove(); //move items to another
 
     bool isFull();
 
@@ -134,11 +136,11 @@ class Dummy:public Object, public ICarryObj {
     
     Material* get_material() final;
 
-    Material* get_material(unsigned id) final;
+    Material* get_material(ID<> id) final;
 
-    unsigned get_material_quantity (unsigned id) const final;
+    unsigned get_material_quantity (ID<> id) const final;
 
-    unsigned get_material_maxCapicy(unsigned id) const final;
+    unsigned get_material_maxCapicy(ID<> id) const final;
 
     State get_state() final;    
 };

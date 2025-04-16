@@ -7,7 +7,6 @@
 #include "material.hpp"
 #include "services.hpp"
 #include "object.hpp"
-#
 #include "jsoncommunicate.hpp"
 //#include "new" ????????
 
@@ -56,6 +55,12 @@ bool Factory::isEnoughIngridients() const{
     }
     return true;
 }
+
+
+/*bool Factory::canDoAction()
+{
+    return get_state()==State::OK;
+}*/
 
 ActionResult Factory::action() {
     produce();

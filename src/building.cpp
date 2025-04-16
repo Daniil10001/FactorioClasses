@@ -8,7 +8,7 @@
 Building::Building(unsigned id, point<ll> position, Direction d) :
     Object(id),requirments(nullptr),  BuildingInventory(nullptr), direction(d)
 {
-   // std::cout<<"init "<<this<<std::endl;
+    //std::cout<<"init "<<this<<std::endl;
     setPosition(position);
     this->id=id;
 }
@@ -19,7 +19,7 @@ Building::~Building()
     if (requirments!=nullptr) delete requirments;
 }
 
-unsigned Building::get_material_quantity(unsigned id) const
+unsigned Building::get_material_quantity(ID<> id) const
 {
     for (unsigned i=0;i<requirments->count;i++)
         if(requirments->ids[i]==id)
@@ -27,7 +27,7 @@ unsigned Building::get_material_quantity(unsigned id) const
     return 0;
 }
 
-unsigned Building::get_material_maxCapicy(unsigned id) const
+unsigned Building::get_material_maxCapicy(ID<> id) const
 {
     for (unsigned i=0;i<requirments->count;i++)
         if(requirments->ids[i]==id)
@@ -49,14 +49,13 @@ MaterialList const*  Building::get_requirments()
 ActionResult Building::put_material(Material *m) {
     for (unsigned i = 0; i < requirments->count; i++) {
         if (requirments->ids[i] == m->getId()) {
-            BuildingInventory[i] + *m;
-            return ActionResult::OK;
+            return BuildingInventory[i] + *m;
         }
     }
     return ActionResult::BAD;
 }
 
-Material* Building::get_material(unsigned id) {
+Material* Building::get_material(ID<> id) {
     if (id==0) return get_material();
     for (unsigned cell=0;cell<this->requirments->count;cell++)
         if (this->BuildingInventory[cell].getId()==id) return this->BuildingInventory+cell;
@@ -74,7 +73,7 @@ ActionResult Building::action()
     return ActionResult::OK;
 }
 
-ActionResult Building::action_move()
+ActionResult Building::actionMove()
 {
     return ActionResult::OK;
 }
@@ -99,7 +98,7 @@ bool Building::isFull(unsigned ceil) {
     void Building::printInventory()
     {
         for (unsigned i = 0; i < requirments->count; i++)
-        std::cout<<BuildingInventory[i].getId()<<' '<<BuildingInventory[i].get_quantity()<<'\n';
+        std::cout<<BuildingInventory[i].getId().id<<' '<<BuildingInventory[i].get_quantity()<<'\n';
     }
 #endif
 
@@ -225,20 +224,20 @@ Material* Dummy::get_material() {
     return &this->m;
 }
 
-Material* Dummy::get_material(unsigned id) {
-    if (id==this->m.getId() || id==0)
+Material* Dummy::get_material(ID<> id) {
+    if (id==this->m.getId())
         return &this->m;
     return nullptr;
 }
 
-unsigned Dummy::get_material_quantity(unsigned id) const
+unsigned Dummy::get_material_quantity(ID<> id) const
 {
     if(m.getId()==id)
         return m.get_quantity();
     return 0;
 }
 
-unsigned Dummy::get_material_maxCapicy(unsigned id) const
+unsigned Dummy::get_material_maxCapicy(ID<> id) const
 {
     if(m.getId()==id)
         return m.get_maxquantity();
