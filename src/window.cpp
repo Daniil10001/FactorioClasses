@@ -20,17 +20,17 @@ bool GUI_C::isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem) {
     return false;
 }
 
-bool GUI_C::MouseClick(sf::Vector2i mouse_pos) {
+bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
     for (GUI_ELEMENT *elem: buttons)
         if (isHovering(mouse_pos, *elem)) {
-            ((Button *) elem)->call();
+            ((Button *) elem)->call(window_ptr);
             return true;
         }
     return false;
 }
 
 void GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
-                               std::string text, std::function<void()> func) {
+                               std::string text, std::function<void(Window*)> func) {
     Button* newButton = new Button(*(fonts.begin()));
     newButton->type = GUI_TYPE::Button;
     newButton->visible = true;
@@ -49,6 +49,16 @@ void GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
     newButton->call = func;
 
     buttons.push_back(newButton);
+}
+
+void GUI_C::createButton(Button *new_button) {
+    buttons.push_back(new_button);
+}
+
+void GUI_C::createButtonGrid(unsigned rows, unsigned columns, Button *buttons) {
+    for (unsigned i = 0; i < rows * columns; i++) {
+
+    }
 }
 
 void GUI_C::loadFont(std::string filepath) {
@@ -70,9 +80,11 @@ Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen
 Window::Window(sf::VideoMode dims, int fps, bool isFullScreen) :
         Window(dims, "Title holder", fps, isFullScreen) {};
 
-Window::Window() : Window(sf::VideoMode({1920,1080}), 60, false) {};
+Window::Window() : Window(sf::VideoMode({1280,720}), 60, false) {};
 
 Window::~Window() {};
+
+std::string Window::getTitle() {return title;}
 
 bool Window::isOpen() {
     return window.isOpen();
@@ -101,7 +113,7 @@ void Window::addGhost(Object *obj) {
 }
 
 void Window::createSprite(Object* obj) {
-    objs.emplace(obj, json_communicate::getTextureById(obj->getId()));
+    objs.emplace(obj, json_communicate::getTextureById(obj->getId().id));
 }
 
 void Window::deleteSprite(Object *obj) {
@@ -193,7 +205,7 @@ void Window::frame() {
         {
             // invoken only if not
             if (mouseButtonPressed->button == sf::Mouse::Button::Left &&
-                !GUI.MouseClick(sf::Mouse::getPosition(window)) &&
+                !GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
                 isGhost())
             {
                 placeGhost();

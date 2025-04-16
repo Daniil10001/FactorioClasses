@@ -46,13 +46,17 @@ struct Widget : GUI_ELEMENT {
     sf::Color color;
 };
 
+class Window;
+
 struct Button : Widget {
     Button(sf::Font& font) : Widget(font) {};
 
     sf::Color color; // color of the text
 
-    std::function<void()> call; // for now, it's void
+    std::function<void(Window*)> call; // for now, it's void
 };
+
+
 
 // not static because
 class GUI_C {
@@ -68,11 +72,17 @@ public:
 
     bool isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem);
 
-    bool MouseClick(sf::Vector2i mouse_pos);
+    bool MouseClick(sf::Vector2i mouse_pos, Window *window_ptr);
 
     void createButton(sf::Vector2f pos, sf::Vector2f dims,
                              sf::Color bg_color, sf::Color text_color,
-                             std::string text, std::function<void()> func);
+                             std::string text, std::function<void(Window*)> func);
+
+    // it is supposed that Button is fully initialized
+    void createButton(Button *new_button);
+
+    // Buttons given in a form of an array, initial
+    void createButtonGrid(unsigned rows, unsigned columns, Button *buttons);
 
     static void loadFont(std::string filepath);
 };
@@ -115,6 +125,8 @@ public:
     Window();
 
     ~Window();
+
+    std::string getTitle();
 
     // render handling
 
