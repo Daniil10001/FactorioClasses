@@ -234,11 +234,10 @@ std::map<unsigned,Types> TypesHandler::generate()
         iti=elem->FindMember("id");
         if (iti==elem->MemberEnd())
         {
-            sprintf(buf, "in items.json element number %i dose not have id field", (unsigned int)(elem-arr.begin()));
+            sprintf(buf, "in items.json element with number %i dose not have id field", (unsigned int)(elem-arr.begin()));
             throw std::runtime_error((const char *)buf);
         }
         itt=elem->FindMember("type");
-        assert(itt!=elem->MemberEnd());
         if (itt==elem->MemberEnd())
         {
             sprintf(buf, "in items.json element with id %i dose not have type field", (unsigned)iti->value.GetUint());
