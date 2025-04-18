@@ -76,7 +76,7 @@ class SessionHandler
 
     std::set<Object *> const get_layer(ObjectTypes lr) const;
 
-    ActionResult addToLayerB(unsigned id, point<ll> p, Direction dir);
+    Object * addToLayerB(unsigned id, point<ll> p, Direction dir);
 
     ActionResult delFromLayerB(Object * obj);
 

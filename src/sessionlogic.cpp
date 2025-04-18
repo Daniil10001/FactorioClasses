@@ -113,7 +113,7 @@ void SessionHandler::ClearDummies(const std::set<Object*> &setobj)
     }
 }
 
-ActionResult SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir)
+Object* SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir)
 {
     Types T = TypesHandler::getTypeById(id);
     Object* o;
@@ -133,10 +133,16 @@ ActionResult SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir
         break;
     }
     Processing_objects=1;
-    if (findInters(o->getPosition(),o->getSize(),ObjectTypes::Buildings).size()!=0) std::runtime_error("Intersection with other buildings!");
+    if (findInters(o->getPosition(),o->getSize(),ObjectTypes::Buildings).size()!=0) 
+    {
+        delete o;
+        //return nullptr;
+        std::runtime_error("Intersection with other buildings!");
+    }
     objs[ObjectTypes::Buildings].insert(o);
     ClearDummies(findInters(o->getPosition(),o->getSize(),ObjectTypes::SpecialPoints));
     MakeConnections(o);
     tims.register_timer(o);
     Processing_objects=0;
+    return o;
 }
