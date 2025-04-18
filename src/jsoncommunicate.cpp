@@ -228,12 +228,22 @@ std::map<unsigned,Types> TypesHandler::generate()
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
     auto arr=(*itemsDoc)["items"].GetArray();
     rapidjson::Value::ConstMemberIterator iti,itt;
+    char buf[128];
     for (auto elem=arr.begin();elem!=arr.end();elem++)
     {
         iti=elem->FindMember("id");
-        assert(iti!=elem->MemberEnd());
+        if (iti==elem->MemberEnd())
+        {
+            sprintf(buf, "in items.json element number %i dose not have id field", (unsigned int)(elem-arr.begin()));
+            throw std::runtime_error((const char *)buf);
+        }
         itt=elem->FindMember("type");
         assert(itt!=elem->MemberEnd());
+        if (itt==elem->MemberEnd())
+        {
+            sprintf(buf, "in items.json element with id %i dose not have type field", (unsigned)iti->value.GetUint());
+            throw std::runtime_error((const char *)buf);
+        }
         if ((std::string)itt->value.GetString() == "Material")
             continue;
         if (String2Type.count((std::string)itt->value.GetString())==0)

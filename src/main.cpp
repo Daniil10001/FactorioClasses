@@ -15,9 +15,13 @@ int main()
     session_window.GUI.createButton({0,0},{100,100}, {0,0,0}, {0,0,0}, "lolkek",
                                     []() {std::cout<<"lolkek initiated"<<std::endl;});
 
+    //cout<<1<<endl;
     while (session_window.isOpen()) {
         session_window.frame();
+        //cout<<2<<endl;
     }
+
+
 
 //    sf::Font font("resources/fonts/SpaceGrotesk-Medium.ttf");
 //    cout<<font.getInfo().family;
