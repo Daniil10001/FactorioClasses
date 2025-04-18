@@ -13,7 +13,7 @@ int main()
     GUI_C::loadFont("resources/fonts/SpaceGrotesk-Medium.ttf");
     cout<<session_window.GUI.fonts.begin()->getInfo().family;
     session_window.GUI.createButton({0,0},{100,100}, {0,0,0}, {0,0,0}, "lolkek",
-                                    []() {std::cout<<"lolkek initiated"<<std::endl;});
+                                    [](Window* window_ptr) {std::cout<<window_ptr->getTitle()<<std::endl;});
 
     //cout<<1<<endl;
     while (session_window.isOpen()) {
