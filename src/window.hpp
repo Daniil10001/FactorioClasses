@@ -12,6 +12,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "interactioninterfaces.hpp"
+#include "object.hpp"
 
 namespace GUI_TYPE_nps {
     enum GUI_TYPE {
@@ -57,6 +58,7 @@ struct Button : Widget {
     std::function<void(Window*)> call; // for now, it's void
 };
 
+struct CreateGhostButton;
 
 
 // not static because
@@ -75,15 +77,19 @@ public:
 
     bool MouseClick(sf::Vector2i mouse_pos, Window *window_ptr);
 
-    void createButton(sf::Vector2f pos, sf::Vector2f dims,
+    Button* createButton(sf::Vector2f pos, sf::Vector2f dims,
                              sf::Color bg_color, sf::Color text_color,
                              std::string text, std::function<void(Window*)> func);
+
+    CreateGhostButton* createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims,
+                                               sf::Color bg_color, sf::Color text_color,
+                                               std::string text, unsigned id);
 
     // it is supposed that Button is fully initialized
     void createButton(Button *new_button);
 
-    // Buttons given in a form of an array, initial
-    void createButtonGrid(unsigned rows, unsigned columns, Button *buttons);
+    // Buttons given in a form of an array, initialized positions will be overwritten
+    static void createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, float margin, Button **buttons);
 
     static void loadFont(std::string filepath);
 };
@@ -129,6 +135,9 @@ public:
 
     std::string getTitle();
 
+    int getWidth();
+    int getHeight();
+
     // render handling
 
     bool isOpen();
@@ -172,6 +181,19 @@ public:
 
     void frame();
 
+};
+
+struct CreateGhostButton : Button {
+    ID<> id;
+    CreateGhostButton(sf::Font& font, ID<> id) : Button(font), id(id)
+    {
+        call = [this](Window* window_ptr) {
+            std::cout << "Button with " << this->id.id<<std::endl;
+            Object* obj(new Object(this->id));
+            window_ptr->addGhost(obj);
+            std::cout<<"object being created"<<std::endl;
+        };
+    };
 };
 
 

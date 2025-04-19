@@ -29,9 +29,9 @@ bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
     return false;
 }
 
-void GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
+Button* GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
                                std::string text, std::function<void(Window*)> func) {
-    Button* newButton = new Button(*(fonts.begin()));
+    auto newButton = new Button(*(fonts.begin()));
     newButton->type = GUI_TYPE::Button;
     newButton->visible = true;
     newButton->pos = pos;
@@ -42,6 +42,7 @@ void GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
     newButton->text.setString(text);
     newButton->text.setFillColor(text_color);
     newButton->text.setCharacterSize(24);
+    newButton->text.setOrigin(pos);
 
     newButton->rect.setPosition(pos);
     newButton->rect.setSize(dims);
@@ -49,16 +50,60 @@ void GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
     newButton->call = func;
 
     buttons.push_back(newButton);
+
+    return newButton;
+}
+
+CreateGhostButton *
+GUI_C::createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
+                               std::string text, unsigned int id) {
+    auto newButton = new CreateGhostButton(*(fonts.begin()), id);
+    newButton->type = GUI_TYPE::Button;
+    newButton->visible = true;
+    newButton->pos = pos;
+    newButton->dims = dims;
+    newButton->bg_color = bg_color;
+    newButton->color = text_color;
+
+    newButton->text.setString(text);
+    newButton->text.setFillColor(text_color);
+    newButton->text.setCharacterSize(24);
+    newButton->text.setOrigin(pos);
+
+    newButton->rect.setPosition(pos);
+    newButton->rect.setSize(dims);
+
+    newButton->id = id;
+
+    buttons.push_back(newButton);
+
+    return newButton;
 }
 
 void GUI_C::createButton(Button *new_button) {
     buttons.push_back(new_button);
 }
 
-void GUI_C::createButtonGrid(unsigned rows, unsigned columns, Button *buttons) {
+void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, float margin, Button **buttons) {
+    std::vector<float> max_row_height(rows);
+    std::vector<float> max_col_width(columns);
+
     for (unsigned i = 0; i < rows * columns; i++) {
+        max_row_height[i / columns + 1] = std::max(max_row_height[i / columns + 1], buttons[i]->dims.y);
+        max_col_width[i % rows + 1] = std::max(max_col_width[i % columns + 1], buttons[i]->dims.x);
+    }
+
+    for (unsigned i = 0; i < rows * columns; i++) {
+        buttons[i]->pos.x = pos.x + margin;
+        for (unsigned col_width_scan = 0; col_width_scan < i % columns; col_width_scan++)
+            buttons[i]->pos.x += max_col_width[col_width_scan] + margin;
+
+        buttons[i]->pos.y = pos.y + margin;
+        for (unsigned row_height_scan = 0; row_height_scan < i / columns; row_height_scan++)
+            buttons[i]->pos.y += max_row_height[row_height_scan] + margin;
 
     }
+
 }
 
 void GUI_C::loadFont(std::string filepath) {
@@ -85,6 +130,10 @@ Window::Window() : Window(sf::VideoMode({1280,720}), 60, false) {};
 Window::~Window() {};
 
 std::string Window::getTitle() {return title;}
+
+int Window::getWidth() {return window.getSize().x;}
+
+int Window::getHeight() {return window.getSize().y;}
 
 bool Window::isOpen() {
     return window.isOpen();
