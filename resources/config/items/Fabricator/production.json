@@ -1,0 +1,20 @@
+{
+  "recipes": [
+    {
+      "id":0,
+      "Name":"Железно",
+      "count": 1,
+      "time": 0,
+      "requirements": [1,2,3],
+      "consumes": [1,1,-1]
+    },
+    {
+      "id":1,
+      "Name":"Чугун",
+      "count": 1,
+      "time": 0,
+      "requirements": [1,2,3],
+      "consumes": [1,2,-1]
+    }
+  ]
+}

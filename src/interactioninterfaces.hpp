@@ -14,6 +14,7 @@ class Factory;
 class Dummy;
 class Inserter;
 class Conveyer;
+class Chest;
 
 namespace Types_nps{
 enum Types{
@@ -23,6 +24,7 @@ enum Types{
     Factory,
     Inserter,
     Conveyer,
+    Chest,
     Count,
 };
 }
@@ -92,8 +94,8 @@ class Direction
     point<ll> direction;
     void update();
     public:
-    static inline const point<ll> DOWN=point<ll>(0,-1);
-    static inline const point<ll> UP=point<ll>(0,1);
+    static inline const point<ll> DOWN=point<ll>(0,1);
+    static inline const point<ll> UP=point<ll>(0,-1);
     static inline const point<ll> LEFT=point<ll>(-1,0);
     static inline const point<ll> RIGHT=point<ll>(1,0);
     static inline const point<ll> UD=point<ll>(0,0);
@@ -148,11 +150,12 @@ class ID
     inline ID& operator=(ID id){this->id=id.id;return *this;}
     inline ID& operator=(T id){this->id=id;return *this;}
     //inline constexpr friend bool operator==(const ID<> lhs,const ID<> rhs){return (!(lhs.id==0 && rhs.id==0))&&(lhs.id==rhs.id);}
-    inline constexpr friend bool operator==(const ID<>& lhs,const ID<>& rhs){return (!(lhs.id==0 && rhs.id==0))&&(lhs.id==rhs.id);}
+    inline constexpr friend bool operator==(const ID<>& lhs,const ID<>& rhs){return (lhs.id==0 || rhs.id==0)^(lhs.id==rhs.id);}
+    inline constexpr friend bool operator>=(const ID<>& lhs,const ID<>& rhs){return (!(lhs.id==0 || rhs.id==0))&&(lhs.id==rhs.id);}
     //inline constexpr friend bool operator!=(const ID<> lhs,const ID<> rhs){return !(lhs==rhs);}
     inline constexpr friend bool operator!=(const ID<>& lhs,const ID<>& rhs){return !(lhs==rhs);}
 
-    inline constexpr friend bool operator==(const ID<>& lhs,T rhs){assert(rhs==0);return lhs==ID(0);}
+    inline constexpr friend bool operator==(const ID<>& lhs,T rhs){assert(rhs==0); return lhs.id==0;}
 
 };
 

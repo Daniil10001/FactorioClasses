@@ -223,7 +223,7 @@ sf::Texture& json_communicate::getTextureById (unsigned id) {
 std::map<unsigned,Types> TypesHandler::generate()
 {
     std::map<std::string, Types> String2Type = {{"Factory",Types::Factory},
-            {"Inserter",Types::Inserter}, {"Conveyer",Types::Conveyer}};
+            {"Inserter",Types::Inserter}, {"Conveyer",Types::Conveyer}, {"Chest",Types::Chest}};
     std::map<unsigned,Types> mp;
     auto itemsDoc = json_handling::getJsonDocument("./resources/config/items.json");
     auto arr=(*itemsDoc)["items"].GetArray();
@@ -251,4 +251,16 @@ std::map<unsigned,Types> TypesHandler::generate()
     }
     std::cerr<<"types loaded\n";
     return mp;
+}
+
+Types TypesHandler::getTypeById(unsigned id)
+{
+    if (TypesHandler::tps.count(id)!=0)
+        return TypesHandler::tps[id];
+    return Types::Count;
+}
+
+Types TypesHandler::getTypeById(ID<>& id)
+{
+    return TypesHandler::getTypeById(id.id);
 }

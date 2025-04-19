@@ -13,7 +13,7 @@
       "Name":"Уголь",
       "count": 1,
       "time": 0,
-      "requirements": [1],
+      "requirements": [2],
       "consumes": [-1]
     }
   ]

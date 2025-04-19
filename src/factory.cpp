@@ -72,3 +72,27 @@ void Factory::produce() {
             BuildingInventory[i] -= requirments->consumes[i];
     }
 }
+
+
+Chest::Chest(unsigned id, point<ll> position, Direction d):Building(id, position,d) {
+    this->level =json_communicate::get_property<unsigned,Chest,Checking::size_a(lvl),lvl>(id);//get from json
+
+    this->requirments = json_communicate::getRequirementsById(id);
+    this->BuildingInventory = new Material[this->requirments->count];
+    
+    for(unsigned i=0;i<this->requirments->count;i++)
+        (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
+}
+
+
+ActionResult Chest::put_material(Material *m) {
+    //std::cout<<"st added\n";
+    for (unsigned i = 0; i < requirments->count; i++) {
+        //std::cout<<requirments->ids[i].id<<' '<< m->getId().id<< ' '<< (requirments->ids[i] == m->getId()) <<"\n";
+        if (BuildingInventory[i].getId() == m->getId()) {
+            //std::cout<<"added\n";
+            return BuildingInventory[i] + *m;
+        }
+    }
+    return ActionResult::BAD;
+}
