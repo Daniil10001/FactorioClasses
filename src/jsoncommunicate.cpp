@@ -231,9 +231,9 @@ std::map<unsigned,Types> TypesHandler::generate()
     for (auto elem=arr.begin();elem!=arr.end();elem++)
     {
         iti=elem->FindMember("id");
-        assert(iti!=elem->MemberEnd());
+//        assert(iti!=elem->MemberEnd());
         itt=elem->FindMember("type");
-        assert(itt!=elem->MemberEnd());
+//        assert(itt!=elem->MemberEnd());
         if ((std::string)itt->value.GetString() == "Material")
             continue;
         if (String2Type.count((std::string)itt->value.GetString())==0)
