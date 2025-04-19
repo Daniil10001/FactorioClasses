@@ -67,9 +67,11 @@ ActionResult Conveyer::action()
 
 ActionResult Conveyer::actionMove()
 {
-    if (get_Connection(Connections::Chain)->GetConnectionsTo().size()>0)
+    if (get_Connection(Connections::Chain)->GetConnectionsTo().size()==1)
         for (int i=0;i<2;i++)
             if (dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin()))
                 dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin())->put_material(i,BuildingInventory+i+2,this);
+    else
+        throw std::runtime_error("Erorr in chaining conveyer to");
     return ActionResult::OK;
 }

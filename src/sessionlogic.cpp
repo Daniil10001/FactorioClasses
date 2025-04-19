@@ -39,12 +39,12 @@ Object* SessionHandler::findObj(point<ll> p)
     return nullptr;
 }
 
-std::set<Object*> SessionHandler::findInters(point<ll> p, point<unsigned> sz)
+std::set<Object*> SessionHandler::findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer)
 {
     std::set<Object*> st;
     point<ll> pb;
     point<unsigned> szb;
-    for (auto obj: objs[ObjectTypes::Buildings])
+    for (auto obj: objs[layer])
     {
         pb=obj->getPosition();
         sz=obj->getSize();
@@ -98,5 +98,51 @@ void SessionHandler::MakeConnections(Object* b)
         throw std::invalid_argument("Bad call for making connections");
         break;
     }
-};
+}
 
+void SessionHandler::ClearDummies(const std::set<Object*> &setobj)
+{
+    for (auto obj: setobj)
+    {
+        if (dynamic_cast<Building*>(obj))
+            for (auto obj_c: dynamic_cast<Building*>(obj)->get_Connection(Connections::Standart)->GetConnectionsFrom())
+            {
+               MakeConnections(dynamic_cast<Object*>(obj_c));
+            }
+        delete obj;
+    }
+}
+
+Object* SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir)
+{
+    Types T = TypesHandler::getTypeById(id);
+    Object* o;
+    switch (T)
+    {
+    case Types::Conveyer:
+        o = new Conveyer(id, p, dir);
+        break;
+    case Types::Factory:
+        o = new Conveyer(id, p, dir);
+        break;
+    case Types::Inserter:
+        o = new Conveyer(id, p, dir);
+        break;
+    default:
+    throw std::invalid_argument("Bad call for type that creates in layer buildings!");
+        break;
+    }
+    Processing_objects=1;
+    if (findInters(o->getPosition(),o->getSize(),ObjectTypes::Buildings).size()!=0) 
+    {
+        delete o;
+        //return nullptr;
+        std::runtime_error("Intersection with other buildings!");
+    }
+    objs[ObjectTypes::Buildings].insert(o);
+    ClearDummies(findInters(o->getPosition(),o->getSize(),ObjectTypes::SpecialPoints));
+    MakeConnections(o);
+    tims.register_timer(o);
+    Processing_objects=0;
+    return o;
+}

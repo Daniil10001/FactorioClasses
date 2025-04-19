@@ -27,10 +27,14 @@ int main()
     }
     session_window.GUI.createButtonGrid(2,2, {session_window.getWidth() * (float)0.75, 0}, 2, (Button**)objectButtons);
 
+    //cout<<1<<endl;
     while (session_window.isOpen()) {
         session_window.frame();
+        //cout<<2<<endl;
     }
     session_window.addGhost(new Object(24));
+
+
 
 //    sf::Font font("resources/fonts/SpaceGrotesk-Medium.ttf");
 //    cout<<font.getInfo().family;

@@ -2,7 +2,9 @@
 #define sessionlogic_hpp__
 
 #include "factory.hpp"
+#include "inserter.hpp"
 #include "conveyer.hpp"
+#include "jsoncommunicate.hpp"
 #include <array>
 #include <set>
 #include <map>
@@ -54,10 +56,12 @@ class SessionHandler
 {
     private:
     std::array<std::set<Object*>,ObjectTypes::Count> objs;
-    //std::map<Object *,std::vector<std::pair<point<ll>,std::pair<bool,Object*>>>> interesting_points;
+    //std::map<Object *,Dummy *> interesting_points;
     TimersHandler tims;
+    bool Processing_objects=0;
 
     void MakeConnections(Object* b);
+    void ClearDummies(const std::set<Object*> &setobj);
     Object* findObj(point<ll> p);
     
     public:
@@ -68,11 +72,11 @@ class SessionHandler
         objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
     };
 
-    std::set<Object*> findInters(point<ll> p, point<unsigned> sz);
+    std::set<Object*> findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer);
 
     std::set<Object *> const get_layer(ObjectTypes lr) const;
 
-    ActionResult addToLayerB(unsigned id, point<ll> p, Direction dir);
+    Object * addToLayerB(unsigned id, point<ll> p, Direction dir);
 
     ActionResult delFromLayerB(Object * obj);
 
