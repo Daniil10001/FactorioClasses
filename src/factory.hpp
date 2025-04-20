@@ -25,7 +25,7 @@ public:
     // -1 is product
     //Material* get_material(unsigned cell);
 
-    ActionResult action();
+    ActionResult action() final;
 
     //bool canDoAction() final;
 
@@ -35,7 +35,15 @@ public:
     void produce();
 };
 
+class Chest: public Building {
+    unsigned int level;
+    public:
+    virtual Types type() const {return Types::Chest;}
+    Chest(unsigned id, point<ll> position,  Direction d);
+    ActionResult put_material(Material *m);
+};
 
 
 
-#endif //FACTORIO_FACTORY_H
+
+#endif 

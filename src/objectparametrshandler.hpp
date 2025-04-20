@@ -53,6 +53,8 @@ constexpr Types type_id(){
         return Types::Building;
     if (std::is_same<T,Factory>())
         return Types::Factory;
+    if (std::is_same<T,Chest>())
+        return Types::Chest;
     throw "Not defined type";
     return  Types::Count;
 }
@@ -185,10 +187,10 @@ constexpr Carrier<N1, N2> make_carrier(const pair<Types,sarr> (&cup)[N1], const 
 }
 
 
-static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x","size_y","image"}},{Types::Factory,{"level","cooldown"}},{Types::Inserter,{"level","cooldown","fromDist","toDist"}}}; //возможные параметры объекта
+static constexpr inline pair<Types,sarr> const cup[]={{Types::Object, {"size_x","size_y","image"}},{Types::Factory,{"level","cooldown"}}, {Types::Chest,{"level"}},{Types::Inserter,{"level","cooldown","fromDist","toDist"}}}; //возможные параметры объекта
 
 //связь наслелования элемент 1 - потомок, 2 - предок, поддерживаются только деревья с одним предком у каждой вершины
-static constexpr inline pair<Types, Types> const ns[]={{Types::Building,Types::Object}, {Types::Factory,Types::Building}, {Types::Inserter, Types::Building}};
+static constexpr inline pair<Types, Types> const ns[]={{Types::Building,Types::Object}, {Types::Factory,Types::Building}, {Types::Chest, Types::Building}, {Types::Inserter, Types::Building}};
 
 static constexpr inline auto Propeties=make_carrier(cup,ns);
 }

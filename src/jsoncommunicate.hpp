@@ -132,7 +132,7 @@ class TypesHandler
     static std::map<unsigned,Types> tps;
     public:
     static Types getTypeById(unsigned id);
-    static Types getTypeById(ID<> id);
+    static Types getTypeById(ID<>& id);
 };
 
 class TextureHandler

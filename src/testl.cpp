@@ -1,10 +1,7 @@
 #include "iostream"
-#include "material.hpp"
 #include "interactioninterfaces.hpp"
-#include "factory.hpp"
-#include "inserter.hpp"
-#include "conveyer.hpp"
 #include "jsoncommunicate.hpp"
+#include "sessionlogic.hpp"
 using std::cout, std::endl;
 
 int main()
@@ -91,7 +88,26 @@ int main()
     //ins2.canDoAction();
     cout<<"Must be 0 1 2:"<<ins2.action()<<" "<<ins2.actionMove()<<" "<<d2.get_material()->get_quantity()<<endl;
     
-    Building* b=&ins;
-    cout<<dynamic_cast<Conveyer*>(b);
+    point<ll> p1(2,2),p2(2,1),p3(2,0);
+    Direction dr1(Directions::UP);
+    SessionHandler s;
+
+    cout<<"start adding"<<'\n';
+    Factory* fs= dynamic_cast<Factory*>(s.addToLayerB(1001,p1,dr1));
+    Inserter* is=dynamic_cast<Inserter*>(s.addToLayerB(1002,p2,dr1));
+    //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsTo().size()<<"\n";
+    //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
+    Chest* cs=dynamic_cast<Chest*>(s.addToLayerB(1003,p3,dr1));
+    //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsTo().size()<<"\n";
+    //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
+    //std::cout<<cs->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
+    cout<<"end"<<'\n';
+    fs->action();
+    fs->actionMove();
+    cout<<fs->get_material_quantity(ID<>(1))<<'\n';
+    cout<<"get "<<(is->action()==ActionResult::OK)<<'\n';
+    cout<<"move "<<(is->actionMove()==ActionResult::OK)<<'\n';
+    cout<<fs->get_material_quantity(ID<>(1))<<'\n';
+    cout<<cs->get_material_quantity(ID<>(1))<<' '<<cs->get_material_quantity(ID<>(2))<<'\n';
     return 0;
 }

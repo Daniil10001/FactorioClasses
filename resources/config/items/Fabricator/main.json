@@ -1,0 +1,11 @@
+{
+  "id": 1005,
+  "name": "Fabricator",
+
+  "level": 1,
+  "image": "fabricator.png",
+  "recipes_count": 1,
+  "size_x":2,
+  "size_y":2,
+  "cooldown": 1.0
+}

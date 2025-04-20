@@ -22,7 +22,7 @@ Building::~Building()
 unsigned Building::get_material_quantity(ID<> id) const
 {
     for (unsigned i=0;i<requirments->count;i++)
-        if(requirments->ids[i]==id)
+        if(BuildingInventory[i].getId()>=id)
             return BuildingInventory[i].get_quantity();
     return 0;
 }
@@ -30,11 +30,10 @@ unsigned Building::get_material_quantity(ID<> id) const
 unsigned Building::get_material_maxCapicy(ID<> id) const
 {
     for (unsigned i=0;i<requirments->count;i++)
-        if(requirments->ids[i]==id)
+        if(BuildingInventory[i].getId()>=id)
             return BuildingInventory[i].get_maxquantity();
     return 0;
 }
-
 
 State Building::get_state()
 {
@@ -46,9 +45,13 @@ MaterialList const*  Building::get_requirments()
     return this->requirments;
 }
 
+//#include<iostream>
 ActionResult Building::put_material(Material *m) {
+    //std::cout<<"st added\n";
     for (unsigned i = 0; i < requirments->count; i++) {
+        //std::cout<<requirments->ids[i].id<<' '<< m->getId().id<< ' '<< (requirments->ids[i] == m->getId()) <<"\n";
         if (requirments->ids[i] == m->getId()) {
+            //std::cout<<"added\n";
             return BuildingInventory[i] + *m;
         }
     }
@@ -56,13 +59,15 @@ ActionResult Building::put_material(Material *m) {
 }
 
 Material* Building::get_material(ID<> id) {
-    if (id==0) return get_material();
+    if (id.id==0) return get_material();
     for (unsigned cell=0;cell<this->requirments->count;cell++)
-        if (this->BuildingInventory[cell].getId()==id) return this->BuildingInventory+cell;
+        if (this->BuildingInventory[cell].getId()>=id) return this->BuildingInventory+cell;
     return nullptr;
 }
 
+//#include<iostream>
 Material* Building::get_material() {
+    //std::cout<<"get_mater\n";
     for (unsigned cell=0;cell<this->requirments->count;cell++)
         if (this->BuildingInventory[cell].get_quantity()>0) return this->BuildingInventory+cell;
     return nullptr;
@@ -142,16 +147,20 @@ ActionResult Connection::DeleteConnectionFrom(ICarryObj* from)
 
 Connection::~Connection()
 {
-    //std::cout<<"dell "<<this->me<<std::endl;
+    //std::cout<<"Deleting connections "<<this<<" "<<this->me<<std::endl;
     for (ICarryObj* b:this->to)
         for (short c=0;c!=Connections::Count;c++)
         {
             //std::cout<<c<<' '<<b<<std::endl;
+            //std::cout<<"Discon from "<<b<<" "<<c<<" "<<b->get_Connection((Connections)c)<<'\n';
             b->get_Connection((Connections)c)->DeleteConnectionFrom(this->me);
         }
     for (ICarryObj* b:this->from)
         for (short c=0;c!=Connections::Count;c++)
+        {
+            //std::cout<<"Discon to "<<b<<" "<<c<<" "<<b->get_Connection((Connections)c)<<'\n';
             b->get_Connection((Connections)c)->DeleteConnectionTo(this->me);
+        }
     //std::cout<<"comletle"<<std::endl;
 }
 
@@ -181,20 +190,27 @@ ActionResult MakeConnForward(Connection* from, Connection* to)
 
 ActionResult MakeConnStrait(ICarryObj* from, ICarryObj* to, Connections p)
 {
-    assert(p!=Connections::Standart);
-    assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
+    if (from==to) throw std::invalid_argument("Can not connect same thing!");
+    if (p==Connections::Standart)
+        throw std::invalid_argument("Invalid use of MakeConnStrait");
+    if (from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)==0)
+        throw std::invalid_argument("In MakeConnStrait. You need to add Standart connection before!");
     return MakeConnStrait(from->get_Connection(p),to->get_Connection(p));
 }
 
 ActionResult MakeConnForward(ICarryObj* from, ICarryObj* to, Connections p)
 {
-    assert(p!=Connections::Standart);
-    assert(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)!=0);
+    if (from==to) throw std::invalid_argument("Can not connect same thing!");
+    if (p==Connections::Standart)
+        throw std::invalid_argument("Invalid use of MakeConnForward");
+    if(from->get_Connection(Connections::Standart)->GetConnectionsTo().count(to)==0)
+        throw std::invalid_argument("In MakeConnForward. You need to add Standart connection before!");
     return MakeConnForward(from->get_Connection(p),to->get_Connection(p));
 }
 
 ActionResult MakeConnFull(ICarryObj* from, ICarryObj* to, Connections p)
 {
+    if (from==to) throw std::invalid_argument("Can not connect same thing!");
     if(MakeConnStrait(from->get_Connection(p),to->get_Connection(p))==ActionResult::OK)
     {
         if (MakeConnForward(from->get_Connection(p),to->get_Connection(p))==ActionResult::BAD)
@@ -203,6 +219,7 @@ ActionResult MakeConnFull(ICarryObj* from, ICarryObj* to, Connections p)
             return ActionResult::BAD;
         }
     }
+    else return ActionResult::BAD;
     return ActionResult::OK;
 }
 

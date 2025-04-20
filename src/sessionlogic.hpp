@@ -62,15 +62,17 @@ class SessionHandler
 
     void MakeConnections(Object* b);
     void ClearDummies(const std::set<Object*> &setobj);
-    Object* findObj(point<ll> p);
+    Object* findObj(point<ll> p, ObjectTypes layer);
     
     public:
     SessionHandler()
     {
-        objs[ObjectTypes::Map].emplace(new Object(100,100));
-        objs[ObjectTypes::Buildings].emplace(new Object(1,2));
-        objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
+        //objs[ObjectTypes::Map].emplace(new Object(100,100));
+        //objs[ObjectTypes::Buildings].emplace(new Object(1,2));
+        //objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
     };
+
+    ~SessionHandler();
 
     std::set<Object*> findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer);
 
@@ -79,8 +81,6 @@ class SessionHandler
     Object * addToLayerB(unsigned id, point<ll> p, Direction dir);
 
     ActionResult delFromLayerB(Object * obj);
-
-    ~SessionHandler(){};
 };
 
 

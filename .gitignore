@@ -2,4 +2,8 @@ build/
 cmake-build-debug/
 .idea/
 .vscode/
-.DS_Store/
+.DS_Store
+include/.DS_Store
+resources/.DS_Store
+resources/config/.DS_Store
+resources/config/items/.DS_Store
