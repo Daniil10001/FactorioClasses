@@ -10,12 +10,110 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+using GUI_TYPE_nps::GUI_TYPE;
+
 std::vector<sf::Font> GUI_C::fonts ={};
 
+GUI_ELEMENT::GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color)
+{
+    rect.setPosition(pos);
+    rect.setSize(dims);
+    rect.setFillColor(bg_color);
+
+    GUI_TYPE type = GUI_TYPE::DEFAULT;
+}
+
+void GUI_ELEMENT::draw(sf::RenderWindow& window) {
+    window.draw(rect);
+}
+
+void GUI_ELEMENT::setPosition(sf::Vector2f pos)
+{
+    rect.setPosition(pos);
+    for (GUI_ELEMENT* child : children)
+        child->rect.setOrigin(pos);
+}
+
+void GUI_ELEMENT::setVisible() {
+    sf::Color newCol = rect.getFillColor();
+    newCol *= {1,1,1, 0};
+    rect.setFillColor(newCol);
+}
+
+void GUI_ELEMENT::setInvisible() {
+    sf::Color newCol = rect.getFillColor();
+    newCol += {0,0,0, 255};
+    rect.setFillColor(newCol);
+}
+
+void GUI_ELEMENT::setBGColor(sf::Color col) {
+    rect.setFillColor(col);
+}
+
+void GUI_ELEMENT::setSize(sf::Vector2f size) {
+    rect.setSize(size);
+}
+
+sf::Vector2f GUI_ELEMENT::getPosition() {
+    return rect.getPosition();
+}
+
+sf::Vector2f GUI_ELEMENT::getSize() {
+    return rect.getSize();
+}
+
+sf::Color GUI_ELEMENT::getBGColor() {
+    return rect.getFillColor();
+}
+
+
+TextWidget::TextWidget(sf::Font &font) : text(font) {
+    type = GUI_TYPE::TextWidget;
+}
+
+TextWidget::TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
+               sf::Font& font, sf::Color color, std::string textT) :
+               text(font), GUI_ELEMENT(pos, dims, bg_color)
+{
+    text.setString(textT);
+    text.setFillColor(color);
+    text.setOrigin(pos);
+    text.setCharacterSize(10);
+
+    type = GUI_TYPE::TextWidget;
+}
+
+void TextWidget::setString(std::string& str) {
+    text.setString(str);
+}
+
+void TextWidget::setColor(sf::Color col) {
+    text.setFillColor(col);
+}
+
+void TextWidget::setPosition(sf::Vector2f pos) {
+    rect.setPosition(pos);
+    text.setOrigin(pos);
+}
+
+void TextWidget::setTextSize(unsigned int points) {
+    text.setCharacterSize(points);
+}
+
+void TextWidget::draw(sf::RenderWindow &window) {
+    window.draw(rect);
+    window.draw(text);
+}
+
+
+
 bool GUI_C::isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem) {
-    if (((float)mouse_pos.x - elem.pos.x) <= elem.dims.x && ((float)mouse_pos.x - elem.pos.x) >= 0 &&
-        ((float)mouse_pos.y - elem.pos.y) <= elem.dims.y && ((float)mouse_pos.y - elem.pos.y) >= 0)
-        return true;
+    if (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
+        ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
+
+        ((float)mouse_pos.y - elem.getPosition().y) <= elem.getPosition().y &&
+        ((float)mouse_pos.y - elem.getPosition().y) >= 0)
+            return true;
 
     return false;
 }
@@ -32,20 +130,13 @@ bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
 Button* GUI_C::createButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
                                std::string text, std::function<void(Window*)> func) {
     auto newButton = new Button(*(fonts.begin()));
-    newButton->type = GUI_TYPE::Button;
-    newButton->visible = true;
-    newButton->pos = pos;
-    newButton->dims = dims;
-    newButton->bg_color = bg_color;
-    newButton->color = text_color;
+    newButton->setPosition(pos);
+    newButton->setSize(dims);
+    newButton->setBGColor(bg_color);
+    newButton->setColor(text_color);
 
-    newButton->text.setString(text);
-    newButton->text.setFillColor(text_color);
-    newButton->text.setCharacterSize(24);
-    newButton->text.setOrigin(pos);
-
-    newButton->rect.setPosition(pos);
-    newButton->rect.setSize(dims);
+    newButton->setString(text);
+    newButton->setTextSize(24);
 
     newButton->call = func;
 
@@ -58,20 +149,15 @@ CreateGhostButton *
 GUI_C::createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color, sf::Color text_color,
                                std::string text, unsigned int id) {
     auto newButton = new CreateGhostButton(*(fonts.begin()), id);
-    newButton->type = GUI_TYPE::Button;
-    newButton->visible = true;
-    newButton->pos = pos;
-    newButton->dims = dims;
-    newButton->bg_color = bg_color;
-    newButton->color = text_color;
+    newButton->setPosition(pos);
+    newButton->setSize(dims);
+    newButton->setBGColor(bg_color);
+    newButton->setColor(text_color);
 
-    newButton->text.setString(text);
-    newButton->text.setFillColor(text_color);
-    newButton->text.setCharacterSize(24);
-    newButton->text.setOrigin(pos);
+    newButton->setString(text);
+    newButton->setTextSize(24);
 
-    newButton->rect.setPosition(pos);
-    newButton->rect.setSize(dims);
+    buttons.push_back(newButton);
 
     newButton->id = id;
 
@@ -85,23 +171,26 @@ void GUI_C::createButton(Button *new_button) {
 }
 
 void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, float margin, Button **buttons) {
-    std::vector<float> max_row_height(rows);
-    std::vector<float> max_col_width(columns);
+    std::vector<float> max_row_height(rows, 0);
+    std::vector<float> max_col_width(columns, 0);
 
     for (unsigned i = 0; i < rows * columns; i++) {
-        max_row_height[i / columns + 1] = std::max(max_row_height[i / columns + 1], buttons[i]->dims.y);
-        max_col_width[i % rows + 1] = std::max(max_col_width[i % columns + 1], buttons[i]->dims.x);
+        max_row_height[i / columns] = std::max(max_row_height[i / columns], buttons[i]->getSize().y);
+        max_col_width[i % rows] = std::max(max_col_width[i % columns], buttons[i]->getSize().x);
+        std::cout << buttons[i]->getSize().x << " " << buttons[i]->getSize().y << std::endl;
     }
 
     for (unsigned i = 0; i < rows * columns; i++) {
-        buttons[i]->pos.x = pos.x + margin;
+        float x = pos.x + margin;
         for (unsigned col_width_scan = 0; col_width_scan < i % columns; col_width_scan++)
-            buttons[i]->pos.x += max_col_width[col_width_scan] + margin;
+            x += max_col_width[col_width_scan] + margin;
 
-        buttons[i]->pos.y = pos.y + margin;
+        float y = pos.y + margin;
         for (unsigned row_height_scan = 0; row_height_scan < i / columns; row_height_scan++)
-            buttons[i]->pos.y += max_row_height[row_height_scan] + margin;
+            y += max_row_height[row_height_scan] + margin;
+        std::cout<< "Button at " << x <<" "<< y <<std::endl;
 
+        buttons[i]->setPosition({x, y});
     }
 
 }
@@ -222,11 +311,9 @@ bool Window::isGhost() {
 
 void Window::drawGUI() {
     for (GUI_ELEMENT* elem: GUI.buttons) {
-        if (elem->type == GUI_TYPE::Button) {
-//            std::cout<<"lolkek";
-            window.draw(((Button*)elem)->rect);
-            window.draw(((Button*)elem)->text);
-        }
+        if (elem->type == GUI_TYPE::CreateButton)
+            ((CreateGhostButton*)elem)->draw(window);
+
     }
 }
 

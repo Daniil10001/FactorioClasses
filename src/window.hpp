@@ -16,46 +16,89 @@
 
 namespace GUI_TYPE_nps {
     enum GUI_TYPE {
-        Widget,
+        DEFAULT,
+        TextWidget,
         Button,
-        Lol
+        CreateButton
     };
 }
 
 using GUI_TYPE_nps::GUI_TYPE;
 
-struct GUI_ELEMENT {
+class GUI_ELEMENT {
+protected:
     sf::RectangleShape rect;
 
-    bool visible;
-    GUI_TYPE type;
-    sf::Vector2f dims; // here in sfml's pixels
-    sf::Vector2f pos; // top left corner
-    sf::Color bg_color;
+
 
     // may be unused
-    std::unique_ptr<GUI_ELEMENT*> children = nullptr; // for now there is only one child possible
+    std::vector<GUI_ELEMENT*> children; // for now there is only one child possible
+
+public:
+    GUI_TYPE type;
+
+    GUI_ELEMENT() {type = GUI_TYPE::DEFAULT;}
+
+    GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color);
+
+    virtual void draw(sf::RenderWindow&);
+
+    virtual void setPosition(sf::Vector2f);
+
+    virtual void setBGColor(sf::Color);
+
+    virtual void setVisible();
+
+    virtual void setInvisible();
+
+    virtual void setSize(sf::Vector2f size);
+
+    sf::Vector2f getPosition();
+
+    sf::Vector2f getSize();
+
+    sf::Color getBGColor();
 };
 
-
-
-
-
-struct Widget : GUI_ELEMENT {
-    Widget(sf::Font& font) : text(font) {};
-
+class TextWidget : public GUI_ELEMENT {
+protected:
     sf::Text text;
     sf::Color color;
+
+public:
+
+
+    explicit TextWidget(sf::Font& font);
+
+    TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
+               sf::Font& font, sf::Color color, std::string text);
+
+    void draw(sf::RenderWindow&) override;
+
+    void setString(std::string&);
+
+    void setPosition(sf::Vector2f) override; // relative to basic element (rectangle)
+
+    void setColor(sf::Color); // color of the text
+
+    void setTextSize(unsigned points);
+
 };
 
 class Window;
 
-struct Button : Widget {
-    Button(sf::Font& font) : Widget(font) {};
+struct Button : public TextWidget {
+    explicit Button(sf::Font& font) : TextWidget(font) {
+        type = GUI_TYPE::Button;
+    };
+
+
 
     sf::Color color; // color of the text
 
-    std::function<void(Window*)> call; // for now, it's void
+    std::function<void(Window*)> call; // return is void, but may be extended
+
+
 };
 
 struct CreateGhostButton;
@@ -117,9 +160,6 @@ private:
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
-
-
-
 
 public:
 
@@ -193,7 +233,10 @@ struct CreateGhostButton : Button {
             window_ptr->addGhost(obj);
             std::cout<<"object being created"<<std::endl;
         };
+        type = GUI_TYPE::CreateButton;
     };
+
+
 };
 
 

@@ -22,7 +22,7 @@ int main()
     std::string buttonsnames[] = {"lol", "kek", "cheeeeeeburek", "shaverma"};
     int desired_ids[] = {0,0,0,0};
     for (unsigned i = 0; i < 4; i++) {
-        objectButtons[i] = session_window.GUI.createCreateGhostButton({0,0}, {20, 10}, {255,255,0}, {255,0,0},
+        objectButtons[i] = session_window.GUI.createCreateGhostButton({0,0}, {150, 100}, {255,255,0}, {255,0,0},
                                                            buttonsnames[i], desired_ids[i]);
     }
     session_window.GUI.createButtonGrid(2,2, {session_window.getWidth() * (float)0.75, 0}, 2, (Button**)objectButtons);
