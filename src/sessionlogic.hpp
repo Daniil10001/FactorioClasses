@@ -133,7 +133,7 @@ public:
 
     Object *addToLayerB(unsigned id, point<ll> p, Direction dir);
 
-    std::vector<const Material &> getBuildingInventory(Object *);
+    const std::vector<Material> getBuildingInventory(Object *) const;
 
     ActionResult delFromLayerB(Object *obj);
 

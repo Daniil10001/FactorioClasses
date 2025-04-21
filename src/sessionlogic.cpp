@@ -190,6 +190,13 @@ SessionHandler::~SessionHandler()
         }
 }
 
+const std::vector<Material> SessionHandler::getBuildingInventory(Object *obj) const
+{
+    ICarryObj* ic=dynamic_cast<ICarryObj*>(obj);
+    if (ic) return ic->getInventory();
+    throw std::invalid_argument("You can't get inventory not from ICarryObj child!");
+}
+
 //------------------------------------------------------------------------------------------------------
 
 RunMachine::RunMachine(Building *obj) : _curr(Wait)
