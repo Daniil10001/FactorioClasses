@@ -75,6 +75,8 @@ class ICarryObj
     virtual unsigned get_material_quantity (ID<> id) const=0;
 
     virtual unsigned get_material_maxCapicy(ID<> id) const=0;
+    
+    virtual const std::vector<Material> getInventory() const=0;
 
     virtual State get_state()=0;
 };
@@ -89,8 +91,9 @@ protected:
     Material* BuildingInventory;
 
     Direction direction;
-
- public:
+    double cooldpown;
+    
+public:
     constexpr static Types const type=Types::Building; 
     //Building();
     Building(unsigned id, point<ll> position, Direction d);
@@ -112,6 +115,8 @@ protected:
 
     virtual Material* get_material();
 
+    const std::vector<Material> getInventory() const final;
+
     //virtual bool canDoAction()=0;
 
     virtual ActionResult action();
@@ -122,7 +127,10 @@ protected:
 
     bool isFull(unsigned ceil);
 
+    inline double get_cooldown(){ return this->cooldpown;}
+
     inline Direction getDirection() { return direction;}
+
 };
 
 
@@ -143,6 +151,8 @@ class Dummy:public Object, public ICarryObj {
     unsigned get_material_quantity (ID<> id) const final;
 
     unsigned get_material_maxCapicy(ID<> id) const final;
+
+    const std::vector<Material> getInventory() const final;
 
     State get_state() final;    
 };

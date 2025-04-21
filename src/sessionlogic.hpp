@@ -7,7 +7,10 @@
 #include "jsoncommunicate.hpp"
 #include <array>
 #include <set>
+#include <functional>
+#include <atomic>
 #include <map>
+#include <vector>
 #include <chrono>
 #include <stdexcept>
 
@@ -19,73 +22,125 @@ enum ObjectTypes
     Count
 };
 
+class RunMachine
+{
+public:
+    enum StatesOfObj : short
+    {
+        Action,
+        ActionMove,
+        Wait,
+        Count
+    };
+
+private:
+    short _curr;
+    std::array<std::function<ActionResult()>, StatesOfObj::Count> func_call;
+
+public:
+    RunMachine(Building *obj);
+    void Do();
+    inline short getCurr() { return _curr; };
+};
+
 class TimersHandler
 {
-    private:
-        std::map<Object*,std::chrono::time_point<std::chrono::system_clock>> Timers;
+private:
+    std::map<Building *, std::chrono::time_point<std::chrono::system_clock>> Timers;
+    std::map<Building *, RunMachine *> Runner;
+    bool doing = false;
+    bool busy = false;
 
-    public:
-
-    double get_delta_s(Object* o)
+    double get_delta_s(Building *o)
     {
-        if (Timers.count(o)==0) throw std::invalid_argument("No timer for object");
-        return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now()-Timers[o]).count()/1e6;
+        if (Timers.count(o) == 0)
+            throw std::invalid_argument("No timer for object");
+        return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - Timers[o]).count() / 1e6;
     }
 
-    void restart_timer(Object* o)
+    void restart_timer(Building *o)
     {
-        Timers[o]=std::chrono::system_clock::now();
+        if (Timers.count(o) == 0)
+            throw std::invalid_argument("No timer for object");
+        Timers[o] = std::chrono::system_clock::now();
     }
 
-    ActionResult register_timer(Object* o)
+public:
+    int active = 0;
+    void startHandling(bool onetime = false);
+
+    ActionResult register_timer(Object *o)
     {
-        Timers.emplace(std::make_pair(o,std::chrono::system_clock::now()));
+        if (!dynamic_cast<Building *>(o))
+            throw std::invalid_argument("Not a building added!");
+        while (doing || busy)
+        {
+        }
+        busy = true;
+        Building *b = dynamic_cast<Building *>(o);
+        Timers.emplace(std::make_pair(b, std::chrono::system_clock::now()));
+        Runner.emplace(std::make_pair(b, new RunMachine(b)));
+        busy = false;
         return ActionResult::OK;
     }
 
-    ActionResult unregister_timer(Object* o)
+    ActionResult unregister_timer(Object *o)
     {
-        if (Timers.count(o)!=0)
-            Timers.erase(o);
-        else return ActionResult::BAD;
+        if (!dynamic_cast<Building *>(o))
+            throw std::invalid_argument("Not a building unregistering!");
+        while (doing || busy)
+        {
+        }
+        doing = true;
+        Building *b = dynamic_cast<Building *>(o);
+        if (Timers.count(b) != 0)
+        {
+            Timers.erase(b);
+            delete Runner[b];
+            Runner.erase(b);
+            busy = false;
+        }
+        else
+            return ActionResult::BAD;
+        busy = false;
         return ActionResult::OK;
     }
 };
 
 class SessionHandler
 {
-    private:
-    std::array<std::set<Object*>,ObjectTypes::Count> objs;
-    //std::map<Object *,Dummy *> interesting_points;
+private:
+    std::array<std::set<Object *>, ObjectTypes::Count> objs;
+    // std::map<Object *,Dummy *> interesting_points;
     TimersHandler tims;
-    bool Processing_objects=0;
 
-    void MakeConnections(Object* b);
-    void ClearDummies(const std::set<Object*> &setobj);
-    Object* findObj(point<ll> p, ObjectTypes layer);
-    
-    public:
-    SessionHandler()
-    {
-        //objs[ObjectTypes::Map].emplace(new Object(100,100));
-        //objs[ObjectTypes::Buildings].emplace(new Object(1,2));
-        //objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
+    void MakeConnections(Object *b);
+    void ClearDummies(const std::set<Object *> &setobj);
+    Object *findObj(point<ll> p, ObjectTypes layer);
+
+public:
+    SessionHandler() {
+        // objs[ObjectTypes::Map].emplace(new Object(100,100));
+        // objs[ObjectTypes::Buildings].emplace(new Object(1,2));
+        // objs[ObjectTypes::Buildings].emplace(new Factory(1001u,point<ll>(1,1),Directions::UP));
     };
 
     ~SessionHandler();
 
-    std::vector<Material&>& getBuildingInventory(Object *);
-
-    std::set<Object*> findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer);
+    std::set<Object *> findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer);
 
     std::set<Object *> const get_layer(ObjectTypes lr) const;
 
-    Object * addToLayerB(unsigned id, point<ll> p, Direction dir);
+    Object *addToLayerB(unsigned id, point<ll> p, Direction dir);
 
-    ActionResult delFromLayerB(Object * obj);
+    std::vector<const Material &> getBuildingInventory(Object *);
+
+    ActionResult delFromLayerB(Object *obj);
+
+    TimersHandler &getTims()
+    {
+        return tims;
+    }
 };
-
-
-
 
 #endif

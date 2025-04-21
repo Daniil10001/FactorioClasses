@@ -1,9 +1,16 @@
 #include"inserter.hpp"
+#include "jsoncommunicate.hpp"
+
+constexpr const char lvl[]="level";
+constexpr const char cldn[]="cooldown";
+
 
 Inserter::Inserter(unsigned id, point<ll> position, Direction d):Building(id, position, d), idfilt(0), hand_dir(d)
 {
+    requirments=new MaterialList(1);
     BuildingInventory = new Material[1];
     BuildingInventory->setCapacity(1);
+    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id);
 }
 
 Inserter::~Inserter(){}

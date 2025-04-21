@@ -16,14 +16,14 @@ ActionResult operator+(Material& lhs, Material& rhs){
 
 Material& Material::operator+=(const int rhs){
     if (rhs<0) return (*this)-=(-rhs);
-    if (this-> id==0) throw std::invalid_argument("Can not add nothing to nothing");
+    if (this-> id.id==0) throw std::invalid_argument("Can not add nothing to nothing");
     this->quantity+=min(this->capacity-this->quantity,(unsigned)rhs);
     return *this;
 }
 
 Material& Material::operator-=(const int rhs){
     if (rhs<0) return (*this)+=(-rhs);
-    if (this-> id==0) throw std::invalid_argument("Can not add nothing to nothing");
+    if (this-> id.id==0) throw std::invalid_argument("Can not add nothing to nothing");
     this->quantity-=min(this->quantity,(unsigned)rhs);
     return *this;
 }

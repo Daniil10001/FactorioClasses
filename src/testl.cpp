@@ -2,7 +2,16 @@
 #include "interactioninterfaces.hpp"
 #include "jsoncommunicate.hpp"
 #include "sessionlogic.hpp"
+#include<thread>
 using std::cout, std::endl;
+
+
+void printInv(const std::vector<Material>& v)
+{
+    cout<<" | ";
+    for (auto m: v) cout<<"[id: "<<m.getId().id<<", q: "<<m.get_quantity()<<"] ";
+    cout<<" | "<<endl;
+}
 
 int main()
 {
@@ -102,12 +111,21 @@ int main()
     //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
     //std::cout<<cs->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
     cout<<"end"<<'\n';
-    fs->action();
+    /*fs->action();
     fs->actionMove();
     cout<<fs->get_material_quantity(ID<>(1))<<'\n';
     cout<<"get "<<(is->action()==ActionResult::OK)<<'\n';
     cout<<"move "<<(is->actionMove()==ActionResult::OK)<<'\n';
-    cout<<fs->get_material_quantity(ID<>(1))<<'\n';
-    cout<<cs->get_material_quantity(ID<>(1))<<' '<<cs->get_material_quantity(ID<>(2))<<'\n';
+    */
+   int i=0;
+   while (i<100)
+   {
+    s.getTims().startHandling(true);
+    cout<<"Factory:";printInv(fs->getInventory());
+    cout<<"Inserter:";printInv(is->getInventory());
+    cout<<"Chest:";printInv(cs->getInventory());  //<<cs->get_material_quantity(ID<>(1))<<' '<<cs->get_material_quantity(ID<>(2))<<'\n';
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    i++;
+   }
     return 0;
 }

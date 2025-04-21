@@ -6,7 +6,7 @@
 }*/
 
 Building::Building(unsigned id, point<ll> position, Direction d) :
-    Object(id),requirments(nullptr),  BuildingInventory(nullptr), direction(d)
+    Object(id),requirments(nullptr),  BuildingInventory(nullptr), direction(d), cooldpown(0)
 {
     //std::cout<<"init "<<this<<std::endl;
     setPosition(position);
@@ -50,7 +50,7 @@ ActionResult Building::put_material(Material *m) {
     //std::cout<<"st added\n";
     for (unsigned i = 0; i < requirments->count; i++) {
         //std::cout<<requirments->ids[i].id<<' '<< m->getId().id<< ' '<< (requirments->ids[i] == m->getId()) <<"\n";
-        if (requirments->ids[i] == m->getId()) {
+        if (requirments->ids[i] == m->getId() && BuildingInventory[i].get_quantity()<BuildingInventory[i].get_maxquantity()) {
             //std::cout<<"added\n";
             return BuildingInventory[i] + *m;
         }
@@ -107,6 +107,13 @@ bool Building::isFull(unsigned ceil) {
     }
 #endif
 
+
+const std::vector<Material> Building::getInventory() const
+{
+    std::vector<Material> v;
+    for (unsigned i = 0; i < requirments->count; i++) v.push_back(BuildingInventory[i]);
+    return v;
+}
 
 //connection segment
 //---------------------------------------------------------------
@@ -259,4 +266,11 @@ unsigned Dummy::get_material_maxCapicy(ID<> id) const
     if(m.getId()==id)
         return m.get_maxquantity();
     return 0;
+}
+
+const std::vector<Material> Dummy::getInventory() const
+{
+    std::vector<Material> v;
+    v.push_back(m);
+    return v;
 }

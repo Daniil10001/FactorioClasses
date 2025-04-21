@@ -6,5 +6,5 @@
   "image": "robohand.png",
   "size_x":1,
   "size_y":1,
-  "cooldown": 1.0
+  "cooldown": 0.7
 }
