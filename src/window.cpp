@@ -9,6 +9,7 @@
 #include <vector>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "sessionlogic.hpp"
 
 using GUI_TYPE_nps::GUI_TYPE;
 
@@ -31,7 +32,7 @@ void GUI_ELEMENT::setPosition(sf::Vector2f pos)
 {
     rect.setPosition(pos);
     for (GUI_ELEMENT* child : children)
-        child->rect.setOrigin(pos);
+        child->rect.setPosition(pos);
 }
 
 void GUI_ELEMENT::setVisible() {
@@ -77,7 +78,7 @@ TextWidget::TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
 {
     text.setString(textT);
     text.setFillColor(color);
-    text.setOrigin(pos);
+    text.setPosition(pos);
     text.setCharacterSize(10);
 
     type = GUI_TYPE::TextWidget;
@@ -93,7 +94,7 @@ void TextWidget::setColor(sf::Color col) {
 
 void TextWidget::setPosition(sf::Vector2f pos) {
     rect.setPosition(pos);
-    text.setOrigin(pos);
+    text.setPosition(pos);
 }
 
 void TextWidget::setTextSize(unsigned int points) {
@@ -103,6 +104,7 @@ void TextWidget::setTextSize(unsigned int points) {
 void TextWidget::draw(sf::RenderWindow &window) {
     window.draw(rect);
     window.draw(text);
+
 }
 
 
@@ -111,7 +113,7 @@ bool GUI_C::isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem) {
     if (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
         ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
 
-        ((float)mouse_pos.y - elem.getPosition().y) <= elem.getPosition().y &&
+        ((float)mouse_pos.y - elem.getPosition().y) <= elem.getSize().y &&
         ((float)mouse_pos.y - elem.getPosition().y) >= 0)
             return true;
 
@@ -155,10 +157,7 @@ GUI_C::createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg
     newButton->setColor(text_color);
 
     newButton->setString(text);
-    newButton->setTextSize(24);
-
-    buttons.push_back(newButton);
-
+    newButton->setTextSize(10);
     newButton->id = id;
 
     buttons.push_back(newButton);
@@ -228,14 +227,14 @@ bool Window::isOpen() {
     return window.isOpen();
 }
 
-const sf::Vector2f Window::Window2Grid(point<long long> p) {
-    return sf::Vector2f(p.x / pixels_per_tile / upscale,
-                        p.y / pixels_per_tile / upscale);
+const sf::Vector2f Window::Grid2Window(point<long long> p) {
+    return sf::Vector2f(p.x * pixels_per_tile * upscale + window_start.x,
+                        p.y * pixels_per_tile * upscale + window_start.y);
 }
 
-const point<long long> Window::Grid2Window(sf::Vector2f grid) {
-    return point<ll>(grid.x * pixels_per_tile * upscale,
-                     grid.y * pixels_per_tile * upscale);
+const point<long long> Window::Window2Grid(sf::Vector2f pos) {
+    return point<ll>((pos.x - window_start.x) / pixels_per_tile / upscale,
+                     (pos.y - window_start.y) / pixels_per_tile / upscale);
 }
 
 
@@ -259,21 +258,29 @@ void Window::deleteSprite(Object *obj) {
 }
 
 void Window::updatePosition(Object* obj) {
-    auto temp = obj->getPosition();
+    auto& this_sprite = objs.at(obj);
 
     if (obj == currGhost) {
         auto currMouse = sf::Mouse::getPosition(window);
 
         // may cause an error
-        objs.at(obj).setPosition({
-            (float)((uint64_t)currMouse.x / pixels_per_tile) * upscale,
-            (float)((uint64_t)currMouse.y / pixels_per_tile) * upscale
-        });
+        currGhost->setPosition(Window2Grid((sf::Vector2f)currMouse));
+
+        this_sprite.setPosition(Grid2Window(currGhost->getPosition()));
+        this_sprite.setScale({
+                                     ((float)obj->getSize().x * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.x,
+                                     ((float)obj->getSize().y * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.y
+                             });
 
         return;
     }
 
-    objs.at(obj).setPosition(Window2Grid(temp) * (float)pixels_per_tile * (float)upscale + window_start);
+    this_sprite.setPosition(Grid2Window(obj->getPosition()));
+
+    this_sprite.setScale({
+                                 ((float)obj->getSize().x * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.x,
+                                 ((float)obj->getSize().y * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.y
+                         });
 
 }
 
@@ -290,18 +297,22 @@ void Window::draw(Object *obj) {
 void Window::drawAll() {
     for (auto x: objs)
         Window::draw(x.first);
+
+    if (currGhost)
+        Window::draw(currGhost);
 }
 
 void Window::placeGhost() {
     if (!currGhost)
         return;
 
-    objs.at(currGhost).setColor(sf::Color(255,255,255));
+    objs.erase(currGhost);
 
+    createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
     /*
      * Some behaviour here regarding placing a building
      */
-
+    delete currGhost;
     currGhost = nullptr;
 }
 
@@ -333,6 +344,13 @@ void Window::frame() {
         {
             if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
                 window.close();
+
+            keysPressed.insert_or_assign(keyPressed->scancode, true);
+        }
+
+        else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+        {
+            keysPressed.insert_or_assign(keyReleased->scancode, false);
         }
 
         else if
@@ -353,9 +371,31 @@ void Window::frame() {
         //
     }
 
+    // keyboard keys handling
+    for (auto iter = keysPressed.begin(); iter != keysPressed.end(); ++iter) {
+        if ((iter->first == sf::Keyboard::Scancode::Up || iter->first == sf::Keyboard::Scancode::W) && iter->second)
+            window_start += {0, upscale};
+
+        if ((iter->first == sf::Keyboard::Scancode::Down || iter->first == sf::Keyboard::Scancode::S) && iter->second)
+            window_start += {0, -upscale};
+
+        if ((iter->first == sf::Keyboard::Scancode::Left || iter->first == sf::Keyboard::Scancode::A) && iter->second)
+            window_start += {upscale, 0};
+
+        if ((iter->first == sf::Keyboard::Scancode::Right || iter->first == sf::Keyboard::Scancode::D) && iter->second)
+            window_start += {-upscale, 0};
+
+
+        if (iter->first == sf::Keyboard::Scancode::LBracket && iter->second)
+            upscale -= 0.3;
+
+        if (iter->first == sf::Keyboard::Scancode::RBracket && iter->second)
+            upscale += 0.3;
+    }
+
     window.clear(sf::Color::Black);
 
-//    drawAll();
+    drawAll();
     drawGUI();
 
     window.display();
