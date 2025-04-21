@@ -35,4 +35,4 @@ jobs:
             mkdir build && cd build && cmake ${{matrix.platform.flags}} ..
 
     - name: Build
-      run: cd build && make -j
+      run: cd build && cmake --build . --parallel
