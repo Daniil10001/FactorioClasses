@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include "interactioninterfaces.hpp"
 #include "object.hpp"
+#include "sessionlogic.hpp"
 
 namespace GUI_TYPE_nps {
     enum GUI_TYPE {
@@ -142,7 +143,7 @@ class Window {
 private:
     sf::RenderWindow window;
 
-
+    SessionHandler session;
 
     sf::VideoMode dims;
 
@@ -151,9 +152,12 @@ private:
     int fps;
     bool isFullScreen;
 
-    sf::Vector2f window_start;
+    // sfml = tile * pixels_per_tile + window_start
+    sf::Vector2f window_start = {0,0};
     const uint64_t pixels_per_tile=100;
-    float upscale=1;
+    float upscale=10;
+
+    std::map<sf::Keyboard::Scancode, bool> keysPressed;
 
     Object* currGhost; // for the time being it's left single
 
@@ -182,9 +186,9 @@ public:
 
     bool isOpen();
 
-    const sf::Vector2f Window2Grid(point<ll> p);
+    const sf::Vector2f Grid2Window(point<ll> p);
 
-    const point<ll> Grid2Window(sf::Vector2f grid);
+    const point<ll> Window2Grid(sf::Vector2f pos);
 
 
 
