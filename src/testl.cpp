@@ -120,6 +120,7 @@ int main()
    int i=0;
    while (i<100)
    {
+    auto& a=fs->getInventory();
     s.getTims().startHandling(true);
     cout<<"Factory:";printInv(fs->getInventory());
     cout<<"Inserter:";printInv(is->getInventory());
