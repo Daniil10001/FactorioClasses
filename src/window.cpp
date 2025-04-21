@@ -25,14 +25,19 @@ GUI_ELEMENT::GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
 }
 
 void GUI_ELEMENT::draw(sf::RenderWindow& window) {
+    for (auto child : children) {
+        child->draw(window);
+    }
+
     window.draw(rect);
 }
 
 void GUI_ELEMENT::setPosition(sf::Vector2f pos)
 {
-    rect.setPosition(pos);
     for (GUI_ELEMENT* child : children)
-        child->rect.setPosition(pos);
+        child->setPosition(pos + rect.getPosition() - child->getPosition());
+
+    rect.setPosition(pos);
 }
 
 void GUI_ELEMENT::setVisible() {
@@ -65,6 +70,10 @@ sf::Vector2f GUI_ELEMENT::getSize() {
 
 sf::Color GUI_ELEMENT::getBGColor() {
     return rect.getFillColor();
+}
+
+void GUI_ELEMENT::pushChild(GUI_ELEMENT *child) {
+    children.push_back(child);
 }
 
 
@@ -102,22 +111,21 @@ void TextWidget::setTextSize(unsigned int points) {
 }
 
 void TextWidget::draw(sf::RenderWindow &window) {
+    for (auto child : children)
+        child->draw(window);
+
     window.draw(rect);
     window.draw(text);
-
 }
 
 
 
 bool GUI_C::isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem) {
-    if (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
-        ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
+    return (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
+            ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
 
-        ((float)mouse_pos.y - elem.getPosition().y) <= elem.getSize().y &&
-        ((float)mouse_pos.y - elem.getPosition().y) >= 0)
-            return true;
-
-    return false;
+            ((float)mouse_pos.y - elem.getPosition().y) <= elem.getSize().y &&
+            ((float)mouse_pos.y - elem.getPosition().y) >= 0);
 }
 
 bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
@@ -163,6 +171,10 @@ GUI_C::createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg
     buttons.push_back(newButton);
 
     return newButton;
+}
+
+void GUI_C::attachWidget(GUI_ELEMENT *widg) {
+    widgets.push_back(widg);
 }
 
 void GUI_C::createButton(Button *new_button) {
@@ -249,12 +261,22 @@ void Window::addGhost(Object *obj) {
     objs.at(obj).setColor(sf::Color(0, 0, 255));
 }
 
-void Window::createSprite(Object* obj) {
+sf::Sprite& Window::createSprite(Object* obj) {
     objs.emplace(obj, json_communicate::getTextureById(obj->getId().id));
+    return objs.at(obj);
 }
 
 void Window::deleteSprite(Object *obj) {
     objs.erase(obj);
+}
+
+bool Window::isHovering(sf::Vector2i mouse_pos, Object &elem) {
+    auto selGrid = Window2Grid((sf::Vector2f)mouse_pos);
+    return ((selGrid.x - elem.getPosition().x) <= elem.getSize().x &&
+            (selGrid.x - elem.getPosition().x) >= 0 &&
+
+            (selGrid.y - elem.getPosition().y) <= elem.getSize().y &&
+            (selGrid.y - elem.getPosition().y) >= 0);
 }
 
 void Window::updatePosition(Object* obj) {
@@ -272,6 +294,7 @@ void Window::updatePosition(Object* obj) {
                                      ((float)obj->getSize().y * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.y
                              });
 
+
         return;
     }
 
@@ -287,6 +310,23 @@ void Window::updatePosition(Object* obj) {
 void Window::updatePositionAll() {
     for (auto x: objs)
         updatePosition(x.first);
+}
+
+void Window::invokeBuildingInfo(Object &obj) {
+    sf::Vector2f pos = {objs.at(&obj).getPosition().x, objs.at(&obj).getPosition().y - 20};
+    sf::Vector2f dims = {100, 200};
+
+    auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,100));
+//    infoWindow->pushChild();
+    auto& inventory = session.getBuildingInventory(&obj);
+    for (auto& material : *inventory) {
+        infoWindow->pushChild((new TextWidget({0, 0}, dims, {0, 0, 0, 100},
+                                              *GUI.fonts.begin(), {255, 255, 255},
+                                              "")));
+    }
+//    infoWindow->pushChild();
+
+    GUI.attachWidget(infoWindow);
 }
 
 void Window::draw(Object *obj) {
@@ -306,12 +346,11 @@ void Window::placeGhost() {
     if (!currGhost)
         return;
 
-    objs.erase(currGhost);
-
     createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
     /*
      * Some behaviour here regarding placing a building
      */
+    objs.erase(currGhost);
     delete currGhost;
     currGhost = nullptr;
 }

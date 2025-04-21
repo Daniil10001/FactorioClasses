@@ -74,6 +74,8 @@ class SessionHandler
 
     ~SessionHandler();
 
+    std::vector<Material&>& getBuildingInventory(Object *);
+
     std::set<Object*> findInters(point<ll> p, point<unsigned> sz, ObjectTypes layer);
 
     std::set<Object *> const get_layer(ObjectTypes lr) const;

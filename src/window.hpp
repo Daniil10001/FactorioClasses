@@ -59,6 +59,9 @@ public:
     sf::Vector2f getSize();
 
     sf::Color getBGColor();
+
+    void pushChild(GUI_ELEMENT*);
+
 };
 
 class TextWidget : public GUI_ELEMENT {
@@ -129,6 +132,8 @@ public:
                                                sf::Color bg_color, sf::Color text_color,
                                                std::string text, unsigned id);
 
+    void attachWidget(GUI_ELEMENT*);
+
     // it is supposed that Button is fully initialized
     void createButton(Button *new_button);
 
@@ -160,7 +165,7 @@ private:
     std::map<sf::Keyboard::Scancode, bool> keysPressed;
 
     Object* currGhost; // for the time being it's left single
-
+    Directions ghostDirec;
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
@@ -193,29 +198,31 @@ public:
 
 
     // SPRITES HANDLING
+
     void drawTiled(Object* obj, point<ll> position);
 
-    void createSprite(Object* obj);
+    sf::Sprite& createSprite(Object* obj);
 
     void deleteSprite(Object* obj);
 
-    // Position is calculated in session logic and written in Object
-    // Here it is simply being transferred to sf::Sprite
-    // obj key presence will not be checked
-    void updatePosition(Object *obj);
+    bool isHovering(sf::Vector2i mouse_pos, Object &elem); // is hovering sprite
+
+    void updatePosition(Object *obj);   // Position is calculated in session logic and written in Object
+                                        // Here it is simply being transferred to sf::Sprite
+                                        // obj key presence will not be checked
 
     void updatePositionAll();
 
 
+    void invokeBuildingInfo(Object&);
 
-    // includes updatePosition
-    void draw(Object *obj);
+    void draw(Object *obj); // includes updatePosition
 
     void drawAll();
 
-    // Adds a single ghost leaving a pointer mark in currGhost
-    // Places previous ghost
-    void addGhost(Object* obj);
+
+    void addGhost(Object* obj); // Adds a single ghost leaving a pointer mark in currGhost
+                                // Places previous ghost
 
     void placeGhost();
 
