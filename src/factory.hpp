@@ -13,7 +13,6 @@ private:
     unsigned int level;
     State state=State::OK;
     unsigned factoryMaterialsStart;
-    double cooldpown;
 public:
     virtual Types type() const {return Types::Factory;}
     Factory(unsigned id, point<ll> position,  Direction d);

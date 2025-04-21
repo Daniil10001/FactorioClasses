@@ -20,7 +20,7 @@ int main()
 
     CreateGhostButton* objectButtons[4];
     std::string buttonsnames[] = {"lol", "kek", "cheeeeeeburek", "shaverma"};
-    int desired_ids[] = {0,0,0,0};
+    int desired_ids[] = {1001,1001,1001,1001};
     for (unsigned i = 0; i < 4; i++) {
         objectButtons[i] = session_window.GUI.createCreateGhostButton({0,0}, {150, 100}, {255,255,0}, {255,0,0},
                                                            buttonsnames[i], desired_ids[i]);

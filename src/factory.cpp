@@ -66,8 +66,10 @@ ActionResult Factory::action() {
     return ActionResult::OK;
 }
 
+
 void Factory::produce() {
     if (state == State::OK) {
+        //std::cout<<"p!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<'\n';
         for (unsigned i = 0; i < requirments->count; i++)
             BuildingInventory[i] -= requirments->consumes[i];
     }
@@ -89,7 +91,7 @@ ActionResult Chest::put_material(Material *m) {
     //std::cout<<"st added\n";
     for (unsigned i = 0; i < requirments->count; i++) {
         //std::cout<<requirments->ids[i].id<<' '<< m->getId().id<< ' '<< (requirments->ids[i] == m->getId()) <<"\n";
-        if (BuildingInventory[i].getId() == m->getId()) {
+        if (BuildingInventory[i].getId() == m->getId() && BuildingInventory[i].get_quantity()<BuildingInventory[i].get_maxquantity()) {
             //std::cout<<"added\n";
             return BuildingInventory[i] + *m;
         }

@@ -1,10 +1,16 @@
 #include"conveyer.hpp"
+#include "jsoncommunicate.hpp"
+
+constexpr const char lvl[]="level";
+constexpr const char cldn[]="cooldown";
 
 Conveyer::Conveyer(unsigned id, point<ll> position, Direction d):Building(id,position,d)
 {
+    requirments=new MaterialList(4);
     BuildingInventory=new Material[4];
     for (unsigned cell=0; cell<4;cell++) BuildingInventory[cell].setCapacity(1);
     requirments=nullptr;
+    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id);
 }
 
 ActionResult Conveyer::put_material(Material *m) {
