@@ -171,6 +171,7 @@ public:
     float time; // may be crafting time
     MaterialList();
     MaterialList(unsigned count);
+    MaterialList(MaterialList&);
     ~MaterialList();
 };
 

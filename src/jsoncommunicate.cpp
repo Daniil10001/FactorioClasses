@@ -184,28 +184,6 @@ std::string json_communicate::getUrlById(unsigned id) {
     return getValueById<std::string>((*itemsDoc)["items"].GetArray(),id,"url");
 }
 
-MaterialList* json_communicate::getRequirementsById(unsigned id, unsigned recipe_id) {
-    auto prodLists = json_handling::getJsonDocument(
-            "./resources/config/items/" + json_communicate::getUrlById(id) + "production.json"
-            );
-    auto arr=(*prodLists)["recipes"].GetArray();
-
-    unsigned count = getValueById<unsigned>(arr,recipe_id,"count");;
-
-    auto reqList = new MaterialList(count);
-    reqList->time = getValueById<float>(arr,recipe_id,"time");
-
-    auto cons=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"consumes");
-    auto req=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"requirements");
-
-    for (unsigned i = 0; i < count; i++) {
-        reqList->consumes[i] = cons[i].GetInt();
-        reqList->ids[i] = req[i].GetUint();
-    }
-
-    return reqList;
-}
-
 std::string json_communicate::getNameById(unsigned id) {
     return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))["name"].GetString();
 }
@@ -263,4 +241,51 @@ Types TypesHandler::getTypeById(unsigned id)
 Types TypesHandler::getTypeById(ID<>& id)
 {
     return TypesHandler::getTypeById(id.id);
+}
+
+//---------------------------------------------------------------------------------
+
+void RecipyHandler::addItem(unsigned id)
+{
+    recepies[id]={};
+    auto prodLists = json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "production.json");
+    auto arr=(*prodLists)["recipes"].GetArray();
+    rapidjson::Value::ConstMemberIterator it;
+    for (auto elem=arr.begin();elem!=arr.end();elem++)
+    {
+        it=elem->FindMember("id");
+        assert (it!=elem->MemberEnd());
+        unsigned recipe_id= it->value.GetUint();
+        unsigned count = getValueById<unsigned>(arr,recipe_id,"count");
+
+        auto reqList = new MaterialList(count);
+        reqList->time = getValueById<float>(arr,recipe_id,"time");
+
+        auto cons=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"consumes");
+        auto req=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"requirements");
+
+        for (unsigned i = 0; i < count; i++) {
+            reqList->consumes[i] = cons[i].GetInt();
+            reqList->ids[i] = req[i].GetUint();
+        }
+        recepies[id].emplace(std::make_pair(recipe_id,reqList));
+    }
+}
+
+
+std::map<unsigned, std::map<unsigned,std::shared_ptr<MaterialList>>> RecipyHandler::recepies={};
+
+MaterialList* RecipyHandler::getRequirementsById(ID<> BuildingId, unsigned recipy_id)
+{
+    char buf[1000];
+    sprintf(buf,"Object with id %i do not have recipy with id %i",BuildingId.id,recipy_id);
+    if (recepies.count(BuildingId.id)==0) addItem(BuildingId.id);
+    if (recepies[BuildingId.id].count(recipy_id)==0) throw std::invalid_argument((const char *)buf);
+    return new MaterialList(*recepies[BuildingId.id][recipy_id]); 
+}
+
+const std::map<unsigned,std::shared_ptr<MaterialList>>& RecipyHandler::getRequirementsList(ID<> BuildingId)
+{
+    if (recepies.count(BuildingId.id)==0) addItem(BuildingId.id);
+    return recepies[BuildingId.id];
 }

@@ -251,3 +251,9 @@ void TimersHandler::startHandling(bool onetime)
         busy = false;
     }
 }
+
+TimersHandler::~TimersHandler()
+{
+    for (auto rm: Runner)
+        delete rm.second;
+}

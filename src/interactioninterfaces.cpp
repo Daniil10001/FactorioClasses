@@ -14,6 +14,19 @@ MaterialList::MaterialList(unsigned count)
     this->consumes=new int[count];
 }
 
+MaterialList::MaterialList(MaterialList& m)
+{
+    this->count=m.count;
+    this->time=m.time;
+    this->ids=new ID<>[this->count];
+    this->consumes=new int[this->count];
+    for (unsigned i=0;i<this->count;i++)
+    {
+        this->ids[i]=m.ids[i];
+        this->consumes[i]=m.consumes[i];
+    }
+}
+
 MaterialList::~MaterialList()
 {
     delete [] ids;

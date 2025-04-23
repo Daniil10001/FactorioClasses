@@ -16,14 +16,28 @@ constexpr const char cldn[]="cooldown";
 Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, position,d) {
     this->level =json_communicate::get_property<unsigned,Factory,Checking::size_a(lvl),lvl>(id);//get from json
 
-    this->requirments = json_communicate::getRequirementsById(id);
+    this->requirments = RecipyHandler::getRequirementsById(this->id);
     this->BuildingInventory = new Material[this->requirments->count];
     
     for(unsigned i=0;i<this->requirments->count;i++)
         (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
 
-    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id);
+    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id)+requirments->time;
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
+}
+
+ActionResult Factory::changeRecipy(unsigned id)
+{
+    char buf[1000];
+    sprintf(buf,"Object with id %i do not have recipy with id %i",this->id.id,id);
+    if (RecipyHandler::getRequirementsList(this->id).count(id)==0) throw std::invalid_argument((const char *)buf);
+    delete [] BuildingInventory;
+    delete requirments;
+    this->requirments = RecipyHandler::getRequirementsById(this->id);
+    this->BuildingInventory = new Material[this->requirments->count];
+    
+    for(unsigned i=0;i<this->requirments->count;i++)
+        (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
 }
 
 State Factory::get_state() {
@@ -62,7 +76,9 @@ bool Factory::isEnoughIngridients() const{
 }*/
 
 ActionResult Factory::action() {
-    produce();
+    get_state();
+    if (isEnoughIngridients() && state == State::OK) produce();
+    else return ActionResult::BAD;
     return ActionResult::OK;
 }
 
@@ -79,7 +95,7 @@ void Factory::produce() {
 Chest::Chest(unsigned id, point<ll> position, Direction d):Building(id, position,d) {
     this->level =json_communicate::get_property<unsigned,Chest,Checking::size_a(lvl),lvl>(id);//get from json
 
-    this->requirments = json_communicate::getRequirementsById(id);
+    this->requirments = RecipyHandler::getRequirementsById(id);
     this->BuildingInventory = new Material[this->requirments->count];
     
     for(unsigned i=0;i<this->requirments->count;i++)
