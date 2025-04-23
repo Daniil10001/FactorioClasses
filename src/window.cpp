@@ -20,8 +20,15 @@ GUI_ELEMENT::GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
     rect.setPosition(pos);
     rect.setSize(dims);
     rect.setFillColor(bg_color);
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor({255,255,255});
 
     GUI_TYPE type = GUI_TYPE::DEFAULT;
+}
+
+GUI_ELEMENT::~GUI_ELEMENT() {
+    for (auto child : children)
+        delete child;
 }
 
 void GUI_ELEMENT::draw(sf::RenderWindow& window) {
@@ -177,6 +184,10 @@ void GUI_C::attachWidget(GUI_ELEMENT *widg) {
     widgets.push_back(widg);
 }
 
+void GUI_C::attachInfo(GUI_ELEMENT *elem, Object &obj) {
+    infos.insert_or_assign(&obj, elem);
+}
+
 void GUI_C::createButton(Button *new_button) {
     buttons.push_back(new_button);
 }
@@ -272,11 +283,19 @@ void Window::deleteSprite(Object *obj) {
 
 bool Window::isHovering(sf::Vector2i mouse_pos, Object &elem) {
     auto selGrid = Window2Grid((sf::Vector2f)mouse_pos);
-    return ((selGrid.x - elem.getPosition().x) <= elem.getSize().x &&
+    return ((selGrid.x - elem.getPosition().x) <= elem.getSize().x - 1 &&
             (selGrid.x - elem.getPosition().x) >= 0 &&
 
-            (selGrid.y - elem.getPosition().y) <= elem.getSize().y &&
+            (selGrid.y - elem.getPosition().y) <= elem.getSize().y - 1 &&
             (selGrid.y - elem.getPosition().y) >= 0);
+}
+
+Object *Window::hoversWhat(sf::Vector2i mouse_pos) {
+    for (const auto& obj : objs)
+        if (isHovering(mouse_pos, *obj.first))
+            return obj.first;
+
+    return nullptr;
 }
 
 void Window::updatePosition(Object* obj) {
@@ -313,20 +332,32 @@ void Window::updatePositionAll() {
 }
 
 void Window::invokeBuildingInfo(Object &obj) {
-    sf::Vector2f pos = {objs.at(&obj).getPosition().x, objs.at(&obj).getPosition().y - 20};
-    sf::Vector2f dims = {100, 200};
+    if (auto iter = GUI.infos.find(&obj); iter != GUI.infos.end()) {
+        delete iter->second;
+        GUI.infos.erase(iter);
+        return;
+    }
+
+    sf::Vector2f pos = {objs.at(&obj).getPosition().x, objs.at(&obj).getPosition().y - 100};
+    sf::Vector2f dims = {200, 100};
 
     auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,100));
-//    infoWindow->pushChild();
-    auto& inventory = session.getBuildingInventory(&obj);
-    for (auto& material : *inventory) {
-        infoWindow->pushChild((new TextWidget({0, 0}, dims, {0, 0, 0, 100},
-                                              *GUI.fonts.begin(), {255, 255, 255},
-                                              "")));
+    auto inventory = session.getBuildingInventory(&obj);
+
+    float i = 0;
+    for (auto& material : inventory) {
+        std::string str = json_communicate::getNameById(material.getId().id) + std::string(": ") + std::to_string(material.get_quantity());
+        infoWindow->pushChild((new TextWidget(
+                {pos.x, pos.y + i}, dims, {0, 0, 0, 100},
+                *GUI_C::fonts.begin(), {255, 255, 255},str)
+                ));
+
+        i += 20;
     }
 //    infoWindow->pushChild();
+    InfoOpened = true;
 
-    GUI.attachWidget(infoWindow);
+    GUI.attachInfo(infoWindow, obj);
 }
 
 void Window::draw(Object *obj) {
@@ -335,11 +366,8 @@ void Window::draw(Object *obj) {
 }
 
 void Window::drawAll() {
-    for (auto x: objs)
+    for (const auto& x: objs)
         Window::draw(x.first);
-
-    if (currGhost)
-        Window::draw(currGhost);
 }
 
 void Window::placeGhost() {
@@ -361,10 +389,18 @@ bool Window::isGhost() {
 
 void Window::drawGUI() {
     for (GUI_ELEMENT* elem: GUI.buttons) {
-        if (elem->type == GUI_TYPE::CreateButton)
-            ((CreateGhostButton*)elem)->draw(window);
+        (elem)->draw(window);
 
     }
+
+    for (auto elem : GUI.widgets) {
+        elem->draw(window);
+    }
+
+    for (auto elem : GUI.infos) {
+        elem.second->draw(window);
+    }
+
 }
 
 
@@ -396,15 +432,16 @@ void Window::frame() {
             (const auto* mouseButtonPressed =
                     event->getIf<sf::Event::MouseButtonPressed>())
         {
-            // invoken only if not
+            auto selectedBuilding = hoversWhat(sf::Mouse::getPosition(window));
+            if (selectedBuilding && selectedBuilding!=currGhost)
+                invokeBuildingInfo(*selectedBuilding);
+
             if (mouseButtonPressed->button == sf::Mouse::Button::Left &&
                 !GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
                 isGhost())
             {
                 placeGhost();
             }
-
-
         }
 
         //

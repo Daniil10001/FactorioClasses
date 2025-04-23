@@ -42,6 +42,8 @@ public:
 
     GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color);
 
+    virtual ~GUI_ELEMENT();
+
     virtual void draw(sf::RenderWindow&);
 
     virtual void setPosition(sf::Vector2f);
@@ -113,6 +115,7 @@ class GUI_C {
 public:
     std::vector<GUI_ELEMENT*> buttons;
     std::vector<GUI_ELEMENT*> widgets;
+    std::map<Object*, GUI_ELEMENT*> infos;
 
     static std::vector<sf::Font> fonts;
 
@@ -133,6 +136,8 @@ public:
                                                std::string text, unsigned id);
 
     void attachWidget(GUI_ELEMENT*);
+
+    void attachInfo(GUI_ELEMENT*, Object&);
 
     // it is supposed that Button is fully initialized
     void createButton(Button *new_button);
@@ -166,6 +171,9 @@ private:
 
     Object* currGhost; // for the time being it's left single
     Directions ghostDirec;
+
+    bool InfoOpened = false;
+
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
@@ -207,6 +215,8 @@ public:
 
     bool isHovering(sf::Vector2i mouse_pos, Object &elem); // is hovering sprite
 
+    Object* hoversWhat(sf::Vector2i mouse_pos);
+
     void updatePosition(Object *obj);   // Position is calculated in session logic and written in Object
                                         // Here it is simply being transferred to sf::Sprite
                                         // obj key presence will not be checked
@@ -215,6 +225,8 @@ public:
 
 
     void invokeBuildingInfo(Object&);
+
+    void drawWidget(GUI_ELEMENT*);
 
     void draw(Object *obj); // includes updatePosition
 

@@ -7,6 +7,22 @@
       "url": "Air/"
     },
     {
+      "id": 1,
+      "type": "Material",
+      "url": "Iron_Ore/"
+    },
+    {
+      "id":2,
+      "type": "Material",
+      "url": "Coal/"
+    },
+    {
+      "id":3,
+      "type": "Material",
+      "url": "Iron/"
+    },
+    
+    {
       "id":1001,
       "type":"Factory",
       "url":"Miner/"
