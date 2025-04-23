@@ -74,7 +74,7 @@ TextWidget::TextWidget(sf::Font &font) : text(font) {
 
 TextWidget::TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
                sf::Font& font, sf::Color color, std::string textT) :
-               text(font), GUI_ELEMENT(pos, dims, bg_color)
+               GUI_ELEMENT(pos, dims, bg_color),text(font)
 {
     text.setString(textT);
     text.setFillColor(color);
@@ -203,8 +203,8 @@ void GUI_C::loadFont(std::string filepath) {
 
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
-    dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), pixels_per_tile(5),
-    window(dims, title, sf::Style::Resize)
+    window(dims, title, sf::Style::Resize),dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), 
+    pixels_per_tile(5)
 {
     window.setFramerateLimit(fps);
     currGhost = nullptr;

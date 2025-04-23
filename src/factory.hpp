@@ -30,6 +30,7 @@ public:
 
     bool isEnoughIngridients() const;
 
+    ActionResult changeRecipy(unsigned id);
     // produce materials
     void produce();
 };

@@ -68,6 +68,7 @@ private:
 public:
     int active = 0;
     void startHandling(bool onetime = false);
+    ~TimersHandler();
 
     ActionResult register_timer(Object *o)
     {

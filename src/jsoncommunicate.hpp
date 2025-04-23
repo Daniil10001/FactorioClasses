@@ -80,11 +80,6 @@ public:
 
     static std::string getUrlById(unsigned id);
 
-    // returns first recipe by default
-    static MaterialList* getRequirementsById(unsigned id) {
-        return getRequirementsById(id, 0);
-    }
-
     template<typename T,class For,std::size_t N,const char (&C)[N]>
     static inline typename std::enable_if<std::is_same<T, unsigned>::value, T>::type
     get_property(unsigned id){
@@ -120,8 +115,6 @@ public:
         return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetDouble();
     }*/// needed to be tested
 
-    static MaterialList* getRequirementsById(unsigned id, unsigned recipe_id);
-
     static sf::Texture& getTextureById (unsigned id);
 };
 
@@ -141,5 +134,12 @@ class TextureHandler
     static std::map<unsigned, std::shared_ptr<sf::Texture>> textures;
 };
 
+class RecipyHandler{
+    static std::map<unsigned, std::map<unsigned,std::shared_ptr<MaterialList>>> recepies;
+    static void addItem(unsigned id);
+    public:
+    static const std::map<unsigned,std::shared_ptr<MaterialList>>& getRequirementsList(ID<> BuildingId);
+    static MaterialList* getRequirementsById(ID<> BuildingId, unsigned recipy_id=0);
+};
 
 #endif //FACTORIO_JSON_COMMUNICATE_H
