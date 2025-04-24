@@ -3,7 +3,7 @@
   "name": "Fabricator",
 
   "level": 1,
-  "image": "fabricator.png",
+  "image_format": ".png",
   "recipes_count": 1,
   "size_x":2,
   "size_y":2,

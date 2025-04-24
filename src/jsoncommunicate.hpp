@@ -114,8 +114,6 @@ public:
         static_assert(Checking::Propeties.check<For>(C));
         return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))[C].GetDouble();
     }*/// needed to be tested
-
-    static sf::Texture& getTextureById (unsigned id);
 };
 
 class TypesHandler
@@ -130,8 +128,11 @@ class TypesHandler
 
 class TextureHandler
 {
-    public:
+    static inline std::map<Directions,std::string> suffix={{Directions::UP,"up"},{Directions::LEFT,"left"},{Directions::RIGHT,"right"},{Directions::DOWN,"down"}};
     static std::map<unsigned, std::shared_ptr<sf::Texture>> textures;
+    public:
+    static sf::Texture& getTextureById (unsigned id, Directions d);
+    static inline sf::Texture& getTextureById (unsigned id, Direction d=Direction(Directions::UP)){return getTextureById(id, d.dir());};
 };
 
 class RecipyHandler{
