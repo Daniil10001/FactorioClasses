@@ -188,16 +188,6 @@ std::string json_communicate::getNameById(unsigned id) {
     return (*json_handling::getJsonDocument("./resources/config/items/" + json_communicate::getUrlById(id) + "main.json"))["name"].GetString();
 }
 
-sf::Texture& json_communicate::getTextureById (unsigned id) {
-    if (TextureHandler::textures.count(id)) return *TextureHandler::textures.at(id);
-    auto ihandler = json_handling::getJsonDocument( // it's revolution, johny
-        "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
-    std::string path="./resources/includes/"+json_communicate::getUrlById(id)+(std::string)((*ihandler)["image"].GetString());
-    std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
-    TextureHandler::textures.emplace(id,texteure);
-    return *texteure;
-}
-
 std::map<unsigned,Types> TypesHandler::generate()
 {
     std::map<std::string, Types> String2Type = {{"Factory",Types::Factory},
@@ -288,4 +278,17 @@ const std::map<unsigned,std::shared_ptr<MaterialList>>& RecipyHandler::getRequir
 {
     if (recepies.count(BuildingId.id)==0) addItem(BuildingId.id);
     return recepies[BuildingId.id];
+}
+
+//-------------------------------------------------------------------------
+sf::Texture& TextureHandler::getTextureById (unsigned id, Directions d) {
+    if (TextureHandler::textures.count(id)) return *TextureHandler::textures.at(id);
+    auto ihandler = json_handling::getJsonDocument( // it's revolution, johny
+        "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
+    std::string path="./resources/includes/"+json_communicate::getNameById(id)+"/"+
+    json_communicate::getNameById(id)+"-"+suffix[d]
+    +(std::string)((*ihandler)["image_format"].GetString());
+    std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
+    TextureHandler::textures.emplace(id,texteure);
+    return *texteure;
 }

@@ -293,7 +293,7 @@ void Window::drawGroundTiles() {
 }
 
 sf::Sprite& Window::createSprite(Object* obj) {
-    objs.emplace(obj, json_communicate::getTextureById(obj->getId().id));
+    objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
     return objs.at(obj);
 }
 
