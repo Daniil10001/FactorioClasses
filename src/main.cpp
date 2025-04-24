@@ -26,7 +26,7 @@ int main()
                                                                       buttonsnames[i], desired_ids[i]);
     }
     objectButtons[5] = session_window.GUI.createButton({0,0}, {150,150}, {255, 0, 0}, {255,255,255}, "DELETE",
-                                                       [](Window* wind){wind->deletionInvoked = !(wind->deletionInvoked);});
+                                                       [](Window* wind){cout<<"lol"; wind->deletionInvoked = !(wind->deletionInvoked);});
 
     session_window.GUI.createButtonGrid(3,2, {session_window.getWidth() * (float)0.75, 0}, 2, (Button**)objectButtons);
 

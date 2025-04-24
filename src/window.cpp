@@ -298,22 +298,24 @@ void Window::drawGroundTiles() {
 }
 
 sf::Sprite& Window::createSprite(Object* obj) {
+//    if (json_communicate::get_property<(id))
     objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
     return objs.at(obj);
 }
 
-void Window::invokeDeletion() {
+bool Window::invokeDeletion() {
     auto beingDeleted = hoversWhat(sf::Mouse::getPosition(window));
 
     if (!beingDeleted)
-        return;
-    if (GUI.infos.count(beingDeleted)!=0)
-    {
+        return false;
+    if (GUI.infos.count(beingDeleted)!=0) {
         delete GUI.infos[beingDeleted];
         GUI.infos.erase(beingDeleted);
     }
     deleteSprite(beingDeleted);
     deletionInvoked= false;
+
+    return true;
 }
 
 void Window::deleteSprite(Object *obj) {
@@ -507,15 +509,17 @@ void Window::frame() {
 
             if (mouseButtonPressed->button == sf::Mouse::Button::Left)
             {
-                if (deletionInvoked)
-                    invokeDeletion();
+                if (deletionInvoked && invokeDeletion())
+                    void();
 
                 else if (!GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
-                    isGhost())
+                    isGhost()) {
                     placeGhost();
+                }
 
-                else if (selectedBuilding && selectedBuilding!=currGhost)
+                else if (selectedBuilding && selectedBuilding!=currGhost) {
                     invokeBuildingInfo(selectedBuilding);
+                }
             }
         }
 

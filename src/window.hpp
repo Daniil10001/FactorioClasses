@@ -217,7 +217,7 @@ public:
 
     sf::Sprite& createSprite(Object* obj);
 
-    void invokeDeletion();
+    bool invokeDeletion();
 
     void deleteSprite(Object *);
 
