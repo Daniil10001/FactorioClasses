@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 project( Factorio  LANGUAGES CXX)
+set (CMAKE_GENERATOR "Unix Makefiles" CACHE INTERNAL "" FORCE)
 
 if (NOT DLEVEL)
     set(DLEVEL 10)

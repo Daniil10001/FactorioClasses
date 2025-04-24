@@ -3,6 +3,6 @@
   "name": "Iron Ore",
 
   "level": 1,
-  "image": "iron_ore.png",
+  "image_format": ".png",
   "recipes_count": 0
 }

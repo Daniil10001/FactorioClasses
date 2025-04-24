@@ -3,6 +3,6 @@
   "name": "Coal",
 
   "level": 1,
-  "image": "coal.png",
+  "image_format": ".png",
   "recipes_count": 0
 }

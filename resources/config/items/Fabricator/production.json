@@ -3,7 +3,7 @@
     {
       "id":0,
       "Name":"Железо",
-      "count": 1,
+      "count": 3,
       "time": 0,
       "requirements": [1,2,3],
       "consumes": [1,1,-1]
@@ -11,7 +11,7 @@
     {
       "id":1,
       "Name":"Чугун",
-      "count": 1,
+      "count": 3,
       "time": 0,
       "requirements": [1,2,3],
       "consumes": [1,2,-1]

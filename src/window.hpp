@@ -170,16 +170,19 @@ private:
     std::map<sf::Keyboard::Scancode, bool> keysPressed;
 
     Object* currGhost; // for the time being it's left single
-    Directions ghostDirec;
+    Directions ghostDirec = Directions::UP;
 
     bool InfoOpened = false;
 
+    sf::Texture deleteIcon;
+    sf::Sprite deleteSpriton;
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
     sf::Texture tile_texture;
 
 public:
+    bool deletionInvoked = false;
 
     GUI_C GUI;
 
@@ -212,13 +215,17 @@ public:
 
     sf::Sprite& createSprite(Object* obj);
 
-    void deleteSprite(Object* obj);
+    void invokeDeletion();
+
+    void deleteSprite(Object *);
+
+    void rotateSprite(Building *);
 
     bool isHovering(sf::Vector2i mouse_pos, Object &elem); // is hovering sprite
 
     Object* hoversWhat(sf::Vector2i mouse_pos);
 
-    void updatePosition(Object *obj);   // Position is calculated in session logic and written in Object
+    void updatePosition(Object *);      // Position is calculated in session logic and written in Object
                                         // Here it is simply being transferred to sf::Sprite
                                         // obj key presence will not be checked
 

@@ -199,7 +199,7 @@ void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, 
     for (unsigned i = 0; i < rows * columns; i++) {
         max_row_height[i / columns] = std::max(max_row_height[i / columns], buttons[i]->getSize().y);
         max_col_width[i % rows] = std::max(max_col_width[i % columns], buttons[i]->getSize().x);
-        std::cout << buttons[i]->getSize().x << " " << buttons[i]->getSize().y << std::endl;
+//        std::cout << buttons[i]->getSize().x << " " << buttons[i]->getSize().y << std::endl;
     }
 
     for (unsigned i = 0; i < rows * columns; i++) {
@@ -210,7 +210,7 @@ void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, 
         float y = pos.y + margin;
         for (unsigned row_height_scan = 0; row_height_scan < i / columns; row_height_scan++)
             y += max_row_height[row_height_scan] + margin;
-        std::cout<< "Button at " << x <<" "<< y <<std::endl;
+//        std::cout<< "Button at " << x <<" "<< y <<std::endl;
 
         buttons[i]->setPosition({x, y});
     }
@@ -227,10 +227,15 @@ void GUI_C::loadFont(std::string filepath) {
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
     window(dims, title, sf::Style::Resize),dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), 
-    pixels_per_tile(5), tile_texture("resources/includes/Tile/Tile.jpg")
+    pixels_per_tile(5), tile_texture("resources/includes/Tile/Tile.jpg"),
+
+    deleteIcon("resources/includes/Delete/delete.png"), deleteSpriton(deleteIcon)
 {
     window.setFramerateLimit(fps);
     currGhost = nullptr;
+
+    deleteSpriton.setScale({20 / (float)deleteSpriton.getTextureRect().size.x,
+                            20 / (float)deleteSpriton.getTextureRect().size.y});
 }
 
 Window::Window(sf::VideoMode dims, int fps, bool isFullScreen) :
@@ -269,7 +274,7 @@ void Window::addGhost(Object *obj) {
     currGhost = obj;
     createSprite(obj);
 
-    objs.at(obj).setColor(sf::Color(0, 0, 255));
+    objs.at(obj).setColor(sf::Color(96, 96, 255));
 }
 
 void Window::drawGroundTiles() {
@@ -284,7 +289,7 @@ void Window::drawGroundTiles() {
     int64_t width = (int64_t)((float)window.getSize().x / (float)pixels_per_tile / upscale + 1.);
     int64_t height = (int64_t)((float)window.getSize().y / (float)pixels_per_tile / upscale + 1.);
 
-    std::cout<<width<<" "<<height<<std::endl;
+//    std::cout<<width<<" "<<height<<std::endl;
     for (int64_t i = -1; i <= width; i++)
         for (int64_t j = -1; j <= height; j++) {
             tile.setPosition(Grid2Window({left_top_corner.x + i, left_top_corner.y + j}));
@@ -297,9 +302,27 @@ sf::Sprite& Window::createSprite(Object* obj) {
     return objs.at(obj);
 }
 
+void Window::invokeDeletion() {
+    auto beingDeleted = hoversWhat(sf::Mouse::getPosition(window));
+
+    if (!beingDeleted)
+        return;
+
+    deleteSprite(beingDeleted);
+    deletionInvoked= false;
+}
+
 void Window::deleteSprite(Object *obj) {
+    session.delFromLayerB(obj);
     objs.erase(obj);
 }
+
+//void Window::rotateSprite(Building *obj) {
+//    switch (obj->getDirection().get()) {
+//        case Directions::UP:
+//            obj->getDirection().dir()
+//    }
+//}
 
 bool Window::isHovering(sf::Vector2i mouse_pos, Object &elem) {
     auto selGrid = Window2Grid((sf::Vector2f)mouse_pos);
@@ -393,14 +416,21 @@ void Window::drawAll() {
 void Window::placeGhost() {
     if (!currGhost)
         return;
+    if (deletionInvoked) return;
 
-    createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
-    /*
-     * Some behaviour here regarding placing a building
-     */
-    objs.erase(currGhost);
-    delete currGhost;
-    currGhost = nullptr;
+    try {
+        createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
+        objs.erase(currGhost);
+        delete currGhost;
+
+        currGhost = nullptr;
+        ghostDirec = Directions::UP;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr<<e.what()<<'\n';
+        return;
+    }
 }
 
 bool Window::isGhost() {
@@ -453,14 +483,18 @@ void Window::frame() {
                     event->getIf<sf::Event::MouseButtonPressed>())
         {
             auto selectedBuilding = hoversWhat(sf::Mouse::getPosition(window));
-            if (selectedBuilding && selectedBuilding!=currGhost)
-                invokeBuildingInfo(*selectedBuilding);
 
-            if (mouseButtonPressed->button == sf::Mouse::Button::Left &&
-                !GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
-                isGhost())
+            if (mouseButtonPressed->button == sf::Mouse::Button::Left)
             {
-                placeGhost();
+                if (deletionInvoked)
+                    invokeDeletion();
+
+                else if (!GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
+                    isGhost())
+                    placeGhost();
+
+                else if (selectedBuilding && selectedBuilding!=currGhost)
+                    invokeBuildingInfo(*selectedBuilding);
             }
         }
 
@@ -491,6 +525,11 @@ void Window::frame() {
 
     window.clear(sf::Color::Black);
 
+
+    if (deletionInvoked) {
+        deleteSpriton.setPosition((sf::Vector2f)sf::Mouse::getPosition(window) + sf::Vector2f{20,20});
+        window.draw(deleteSpriton);
+    }
     drawGroundTiles();
     drawAll();
     drawGUI();

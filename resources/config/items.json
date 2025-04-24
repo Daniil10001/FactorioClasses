@@ -35,12 +35,12 @@
     {
       "id":1003,
       "type":"Chest",
-      "url":"StandartChest/"
+      "url":"Chest/"
     },
     {
       "id":1004,
       "type":"Factory",
-      "url":"StandartConveyer/"
+      "url":"Conveyor/"
     },
     {
       "id":1005,

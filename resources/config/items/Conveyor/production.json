@@ -1,0 +1,12 @@
+{
+  "recipes": [
+    {
+      "id":0,
+      "Name":"Conveyor",
+      "count": 4,
+      "time": 0,
+      "requirements": [0,0,0,0],
+      "consumes": [0,0,0,0]
+    }
+  ]
+}

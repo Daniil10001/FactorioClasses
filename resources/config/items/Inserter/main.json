@@ -3,7 +3,7 @@
   "name": "Inserter",
 
   "level": 1,
-  "image": "robohand.png",
+  "image_format": ".png",
   "size_x":1,
   "size_y":1,
   "cooldown": 0.7

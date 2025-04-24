@@ -3,6 +3,6 @@
   "name": "Iron",
 
   "level": 1,
-  "image": "iron.png",
+  "image_format": ".png",
   "recipes_count": 0
 }
