@@ -2,7 +2,7 @@
   "recipes": [
     {
       "id":0,
-      "Name":"Железно",
+      "Name":"Железо",
       "count": 1,
       "time": 0,
       "requirements": [1,2,3],

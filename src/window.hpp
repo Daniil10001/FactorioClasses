@@ -42,6 +42,8 @@ public:
 
     GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color);
 
+    virtual ~GUI_ELEMENT();
+
     virtual void draw(sf::RenderWindow&);
 
     virtual void setPosition(sf::Vector2f);
@@ -59,6 +61,9 @@ public:
     sf::Vector2f getSize();
 
     sf::Color getBGColor();
+
+    void pushChild(GUI_ELEMENT*);
+
 };
 
 class TextWidget : public GUI_ELEMENT {
@@ -110,6 +115,7 @@ class GUI_C {
 public:
     std::vector<GUI_ELEMENT*> buttons;
     std::vector<GUI_ELEMENT*> widgets;
+    std::map<Object*, GUI_ELEMENT*> infos;
 
     static std::vector<sf::Font> fonts;
 
@@ -128,6 +134,10 @@ public:
     CreateGhostButton* createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims,
                                                sf::Color bg_color, sf::Color text_color,
                                                std::string text, unsigned id);
+
+    void attachWidget(GUI_ELEMENT*);
+
+    void attachInfo(GUI_ELEMENT*, Object&);
 
     // it is supposed that Button is fully initialized
     void createButton(Button *new_button);
@@ -154,16 +164,20 @@ private:
 
     // sfml = tile * pixels_per_tile + window_start
     sf::Vector2f window_start = {0,0};
-    const uint64_t pixels_per_tile=100;
+    const int64_t pixels_per_tile=100;
     float upscale=10;
 
     std::map<sf::Keyboard::Scancode, bool> keysPressed;
 
     Object* currGhost; // for the time being it's left single
+    Directions ghostDirec;
+
+    bool InfoOpened = false;
 
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
+    sf::Texture tile_texture;
 
 public:
 
@@ -193,29 +207,35 @@ public:
 
 
     // SPRITES HANDLING
-    void drawTiled(Object* obj, point<ll> position);
 
-    void createSprite(Object* obj);
+    void drawGroundTiles();
+
+    sf::Sprite& createSprite(Object* obj);
 
     void deleteSprite(Object* obj);
 
-    // Position is calculated in session logic and written in Object
-    // Here it is simply being transferred to sf::Sprite
-    // obj key presence will not be checked
-    void updatePosition(Object *obj);
+    bool isHovering(sf::Vector2i mouse_pos, Object &elem); // is hovering sprite
+
+    Object* hoversWhat(sf::Vector2i mouse_pos);
+
+    void updatePosition(Object *obj);   // Position is calculated in session logic and written in Object
+                                        // Here it is simply being transferred to sf::Sprite
+                                        // obj key presence will not be checked
 
     void updatePositionAll();
 
 
+    void invokeBuildingInfo(Object&);
 
-    // includes updatePosition
-    void draw(Object *obj);
+    void drawWidget(GUI_ELEMENT*);
+
+    void draw(Object *obj); // includes updatePosition
 
     void drawAll();
 
-    // Adds a single ghost leaving a pointer mark in currGhost
-    // Places previous ghost
-    void addGhost(Object* obj);
+
+    void addGhost(Object* obj); // Adds a single ghost leaving a pointer mark in currGhost
+                                // Places previous ghost
 
     void placeGhost();
 

@@ -20,19 +20,31 @@ GUI_ELEMENT::GUI_ELEMENT(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color
     rect.setPosition(pos);
     rect.setSize(dims);
     rect.setFillColor(bg_color);
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor({255,255,255});
 
     GUI_TYPE type = GUI_TYPE::DEFAULT;
 }
 
+GUI_ELEMENT::~GUI_ELEMENT() {
+    for (auto child : children)
+        delete child;
+}
+
 void GUI_ELEMENT::draw(sf::RenderWindow& window) {
+    for (auto child : children) {
+        child->draw(window);
+    }
+
     window.draw(rect);
 }
 
 void GUI_ELEMENT::setPosition(sf::Vector2f pos)
 {
-    rect.setPosition(pos);
     for (GUI_ELEMENT* child : children)
-        child->rect.setPosition(pos);
+        child->setPosition(pos + rect.getPosition() - child->getPosition());
+
+    rect.setPosition(pos);
 }
 
 void GUI_ELEMENT::setVisible() {
@@ -65,6 +77,10 @@ sf::Vector2f GUI_ELEMENT::getSize() {
 
 sf::Color GUI_ELEMENT::getBGColor() {
     return rect.getFillColor();
+}
+
+void GUI_ELEMENT::pushChild(GUI_ELEMENT *child) {
+    children.push_back(child);
 }
 
 
@@ -102,22 +118,21 @@ void TextWidget::setTextSize(unsigned int points) {
 }
 
 void TextWidget::draw(sf::RenderWindow &window) {
+    for (auto child : children)
+        child->draw(window);
+
     window.draw(rect);
     window.draw(text);
-
 }
 
 
 
 bool GUI_C::isHovering(sf::Vector2i mouse_pos, GUI_ELEMENT &elem) {
-    if (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
-        ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
+    return (((float)mouse_pos.x - elem.getPosition().x) <= elem.getSize().x &&
+            ((float)mouse_pos.x - elem.getPosition().x) >= 0 &&
 
-        ((float)mouse_pos.y - elem.getPosition().y) <= elem.getSize().y &&
-        ((float)mouse_pos.y - elem.getPosition().y) >= 0)
-            return true;
-
-    return false;
+            ((float)mouse_pos.y - elem.getPosition().y) <= elem.getSize().y &&
+            ((float)mouse_pos.y - elem.getPosition().y) >= 0);
 }
 
 bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
@@ -165,6 +180,14 @@ GUI_C::createCreateGhostButton(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg
     return newButton;
 }
 
+void GUI_C::attachWidget(GUI_ELEMENT *widg) {
+    widgets.push_back(widg);
+}
+
+void GUI_C::attachInfo(GUI_ELEMENT *elem, Object &obj) {
+    infos.insert_or_assign(&obj, elem);
+}
+
 void GUI_C::createButton(Button *new_button) {
     buttons.push_back(new_button);
 }
@@ -204,7 +227,7 @@ void GUI_C::loadFont(std::string filepath) {
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
     window(dims, title, sf::Style::Resize),dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), 
-    pixels_per_tile(5)
+    pixels_per_tile(5), tile_texture("resources/includes/Tile/Tile.jpg")
 {
     window.setFramerateLimit(fps);
     currGhost = nullptr;
@@ -249,12 +272,50 @@ void Window::addGhost(Object *obj) {
     objs.at(obj).setColor(sf::Color(0, 0, 255));
 }
 
-void Window::createSprite(Object* obj) {
+void Window::drawGroundTiles() {
+    sf::Sprite tile(tile_texture);
+
+    auto left_top_corner = Window2Grid({0,0});
+
+//    std::cout<<left_top_corner.x << left_top_corner.y <<std::endl;
+    tile.setScale({pixels_per_tile * upscale / tile.getTextureRect().size.x,
+                   pixels_per_tile * upscale / tile.getTextureRect().size.y});
+
+    int64_t width = (int64_t)((float)window.getSize().x / (float)pixels_per_tile / upscale + 1.);
+    int64_t height = (int64_t)((float)window.getSize().y / (float)pixels_per_tile / upscale + 1.);
+
+    std::cout<<width<<" "<<height<<std::endl;
+    for (int64_t i = -1; i <= width; i++)
+        for (int64_t j = -1; j <= height; j++) {
+            tile.setPosition(Grid2Window({left_top_corner.x + i, left_top_corner.y + j}));
+            window.draw(tile);
+        }
+}
+
+sf::Sprite& Window::createSprite(Object* obj) {
     objs.emplace(obj, json_communicate::getTextureById(obj->getId().id));
+    return objs.at(obj);
 }
 
 void Window::deleteSprite(Object *obj) {
     objs.erase(obj);
+}
+
+bool Window::isHovering(sf::Vector2i mouse_pos, Object &elem) {
+    auto selGrid = Window2Grid((sf::Vector2f)mouse_pos);
+    return ((selGrid.x - elem.getPosition().x) <= elem.getSize().x - 1 &&
+            (selGrid.x - elem.getPosition().x) >= 0 &&
+
+            (selGrid.y - elem.getPosition().y) <= elem.getSize().y - 1 &&
+            (selGrid.y - elem.getPosition().y) >= 0);
+}
+
+Object *Window::hoversWhat(sf::Vector2i mouse_pos) {
+    for (const auto& obj : objs)
+        if (isHovering(mouse_pos, *obj.first))
+            return obj.first;
+
+    return nullptr;
 }
 
 void Window::updatePosition(Object* obj) {
@@ -271,6 +332,7 @@ void Window::updatePosition(Object* obj) {
                                      ((float)obj->getSize().x * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.x,
                                      ((float)obj->getSize().y * pixels_per_tile * upscale) / (float)this_sprite.getTextureRect().size.y
                              });
+
 
         return;
     }
@@ -289,29 +351,54 @@ void Window::updatePositionAll() {
         updatePosition(x.first);
 }
 
+void Window::invokeBuildingInfo(Object &obj) {
+    if (auto iter = GUI.infos.find(&obj); iter != GUI.infos.end()) {
+        delete iter->second;
+        GUI.infos.erase(iter);
+        return;
+    }
+
+    sf::Vector2f pos = {objs.at(&obj).getPosition().x, objs.at(&obj).getPosition().y - 100};
+    sf::Vector2f dims = {200, 100};
+
+    auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,100));
+    auto inventory = session.getBuildingInventory(&obj);
+
+    float i = 0;
+    for (auto& material : inventory) {
+        std::string str = json_communicate::getNameById(material.getId().id) + std::string(": ") + std::to_string(material.get_quantity());
+        infoWindow->pushChild((new TextWidget(
+                {pos.x, pos.y + i}, dims, {0, 0, 0, 100},
+                *GUI_C::fonts.begin(), {255, 255, 255},str)
+                ));
+
+        i += 20;
+    }
+//    infoWindow->pushChild();
+    InfoOpened = true;
+
+    GUI.attachInfo(infoWindow, obj);
+}
+
 void Window::draw(Object *obj) {
     updatePosition(obj);
     window.draw(objs.at(obj));
 }
 
 void Window::drawAll() {
-    for (auto x: objs)
+    for (const auto& x: objs)
         Window::draw(x.first);
-
-    if (currGhost)
-        Window::draw(currGhost);
 }
 
 void Window::placeGhost() {
     if (!currGhost)
         return;
 
-    objs.erase(currGhost);
-
     createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
     /*
      * Some behaviour here regarding placing a building
      */
+    objs.erase(currGhost);
     delete currGhost;
     currGhost = nullptr;
 }
@@ -322,10 +409,18 @@ bool Window::isGhost() {
 
 void Window::drawGUI() {
     for (GUI_ELEMENT* elem: GUI.buttons) {
-        if (elem->type == GUI_TYPE::CreateButton)
-            ((CreateGhostButton*)elem)->draw(window);
+        (elem)->draw(window);
 
     }
+
+    for (auto elem : GUI.widgets) {
+        elem->draw(window);
+    }
+
+    for (auto elem : GUI.infos) {
+        elem.second->draw(window);
+    }
+
 }
 
 
@@ -357,15 +452,16 @@ void Window::frame() {
             (const auto* mouseButtonPressed =
                     event->getIf<sf::Event::MouseButtonPressed>())
         {
-            // invoken only if not
+            auto selectedBuilding = hoversWhat(sf::Mouse::getPosition(window));
+            if (selectedBuilding && selectedBuilding!=currGhost)
+                invokeBuildingInfo(*selectedBuilding);
+
             if (mouseButtonPressed->button == sf::Mouse::Button::Left &&
                 !GUI.MouseClick(sf::Mouse::getPosition(window), this) &&
                 isGhost())
             {
                 placeGhost();
             }
-
-
         }
 
         //
@@ -395,8 +491,10 @@ void Window::frame() {
 
     window.clear(sf::Color::Black);
 
+    drawGroundTiles();
     drawAll();
     drawGUI();
+
 
     window.display();
 }
