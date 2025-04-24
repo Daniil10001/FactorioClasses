@@ -9,7 +9,6 @@ Conveyer::Conveyer(unsigned id, point<ll> position, Direction d):Building(id,pos
     requirments=new MaterialList(4);
     BuildingInventory=new Material[4];
     for (unsigned cell=0; cell<4;cell++) BuildingInventory[cell].setCapacity(1);
-    requirments=nullptr;
     this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id);
 }
 

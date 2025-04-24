@@ -107,10 +107,11 @@ bool Building::isFull(unsigned ceil) {
     }
 #endif
 
-
+//#include<iostream>
 const std::vector<Material> Building::getInventory() const
 {
     std::vector<Material> v;
+    //std::cout<<this->BuildingInventory<<" "<<this<<" "<<requirments->count<<std::endl;
     for (unsigned i = 0; i < requirments->count; i++) v.push_back(BuildingInventory[i]);
     return v;
 }
