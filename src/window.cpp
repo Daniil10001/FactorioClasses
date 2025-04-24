@@ -310,9 +310,12 @@ void Window::drawGroundTiles() {
         }
 }
 
-static constexpr const char str[] = "rotatable";
+static constexpr const char rotatatable[] = "rotatable";
 sf::Sprite& Window::createSprite(Object* obj) {
-    if (json_communicate::get_property<bool, Conveyer, Checking::size_a(str), str>(obj->getId().id)){}
+    if (json_communicate::get_property<bool, Conveyer, Checking::size_a(rotatatable), rotatatable>(obj->getId().id)) {
+        objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id, ghostDirec));
+        return objs.at(obj);
+    }
     objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
     return objs.at(obj);
 }
@@ -337,12 +340,7 @@ void Window::deleteSprite(Object *obj) {
     objs.erase(obj);
 }
 
-//void Window::rotateSprite(Building *obj) {
-//    switch (obj->getDirection().get()) {
-//        case Directions::UP:
-//            obj->getDirection().dir()
-//    }
-//}
+
 
 bool Window::isHovering(sf::Vector2i mouse_pos, Object &elem) {
     auto selGrid = Window2Grid((sf::Vector2f)mouse_pos);
@@ -467,6 +465,28 @@ void Window::placeGhost() {
         std::cerr<<e.what()<<'\n';
         return;
     }
+}
+
+void Window::rotateGhost(Object *obj) {
+    if ()
+
+    switch (ghostDirec) {
+        case Directions::UP:
+            ghostDirec = Directions::RIGHT;
+            break;
+        case Directions::RIGHT:
+            ghostDirec = Directions::DOWN;
+            break;
+        case Directions::DOWN:
+            ghostDirec = Directions::LEFT;
+            break;
+        case Directions::LEFT:
+            ghostDirec = Directions::UP;
+            break;
+    }
+
+
+
 }
 
 bool Window::isGhost() {

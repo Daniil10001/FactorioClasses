@@ -224,7 +224,7 @@ public:
 
     void deleteSprite(Object *);
 
-    void rotateSprite(Building *);
+
 
     bool isHovering(sf::Vector2i mouse_pos, Object &elem); // is hovering sprite
 
@@ -250,6 +250,8 @@ public:
                                 // Places previous ghost
 
     void placeGhost();
+
+    void rotateGhost(Object *);
 
     bool isGhost(); // if ghost is present
 
