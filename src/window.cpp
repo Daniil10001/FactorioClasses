@@ -100,6 +100,19 @@ TextWidget::TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
     type = GUI_TYPE::TextWidget;
 }
 
+TextWidget::TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
+    sf::Font& font, sf::Color color, std::string textT, float scale) :
+    GUI_ELEMENT(pos, dims, bg_color),text(font)
+{
+text.setString(textT);
+text.setFillColor(color);
+text.setPosition(pos);
+text.setCharacterSize(10);
+text.setScale(sf::Vector2f(scale,scale));
+type = GUI_TYPE::TextWidget;
+}
+
+
 void TextWidget::setString(std::string& str) {
     text.setString(str);
 }
@@ -227,9 +240,9 @@ void GUI_C::loadFont(std::string filepath) {
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
     window(dims, title, sf::Style::Resize),dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), 
-    pixels_per_tile(5), tile_texture("resources/includes/Tile/Tile.jpg"),
-
-    deleteIcon("resources/includes/Delete/delete.png"), deleteSpriton(deleteIcon)
+    pixels_per_tile(5),
+    deleteIcon("resources/includes/Delete/delete.png"), deleteSpriton(deleteIcon),
+    tile_texture("resources/includes/Tile/Tile.jpg")
 {
     window.setFramerateLimit(fps);
     currGhost = nullptr;
@@ -384,10 +397,10 @@ void Window::updatePositionAll() {
 
 GUI_ELEMENT* Window::creteBuildingInfo(Object *obj)
 {
-    sf::Vector2f pos = {objs.at(obj).getPosition().x+pixels_per_tile*upscale, objs.at(obj).getPosition().y - 2*upscale};
+    sf::Vector2f pos = {objs.at(obj).getPosition().x+pixels_per_tile*upscale*(obj->getSize().x), objs.at(obj).getPosition().y - 2*upscale};
     sf::Vector2f dims = {7.5f*upscale, 2*upscale};
 
-    auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,100));
+    auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,0));
     auto inventory = session.getBuildingInventory(obj);
 
     float i = 0;
@@ -395,8 +408,7 @@ GUI_ELEMENT* Window::creteBuildingInfo(Object *obj)
         std::string str = json_communicate::getNameById(material.getId().id) + std::string(": ") + std::to_string(material.get_quantity());
         infoWindow->pushChild((new TextWidget(
                 {pos.x, pos.y + i}, dims, {0, 0, 0, 100},
-                *GUI_C::fonts.begin(), {255, 255, 255},str)
-                              ));
+                *GUI_C::fonts.begin(), {255, 255, 255},str, upscale/10)));
 
         i += 2*upscale;
     }
