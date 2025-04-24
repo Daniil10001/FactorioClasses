@@ -68,6 +68,9 @@ ActionResult Conveyer::put_material(short row, Material *m, Conveyer* prev)
 
 ActionResult Conveyer::action()
 {
+    for (int i=0;i<2;i++) 
+    if (BuildingInventory[i].getId().id!=0)
+        BuildingInventory[2+i]+BuildingInventory[i];
     return ActionResult::OK;
 }
 
@@ -79,7 +82,7 @@ ActionResult Conveyer::actionMove()
             if (dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin()))
                 dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin())->put_material(i,BuildingInventory+i+2,this);
     }
-    else
+    else if (get_Connection(Connections::Chain)->GetConnectionsTo().size()>1)
         throw std::runtime_error("Erorr in chaining conveyer to");
     return ActionResult::OK;
 }
