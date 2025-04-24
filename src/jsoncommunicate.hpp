@@ -122,6 +122,7 @@ class TypesHandler
     static std::map<unsigned,Types> generate();
     static std::map<unsigned,Types> tps;
     public:
+    static std::vector<unsigned> getBuildingsIds();
     static Types getTypeById(unsigned id);
     static Types getTypeById(ID<>& id);
 };

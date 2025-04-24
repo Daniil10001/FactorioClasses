@@ -221,6 +221,13 @@ std::map<unsigned,Types> TypesHandler::generate()
     return mp;
 }
 
+std::vector<unsigned> TypesHandler::getBuildingsIds()
+{
+    std::vector<unsigned> v;
+    for (auto pr:tps) v.push_back(pr.first);
+    return v;
+}
+
 Types TypesHandler::getTypeById(unsigned id)
 {
     if (TypesHandler::tps.count(id)!=0)
