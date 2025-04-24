@@ -248,8 +248,9 @@ void TimersHandler::startHandling(bool onetime)
         {
             break;
         }
-        busy = false;
+        doing = false;
     }
+    doing = false;
 }
 
 TimersHandler::~TimersHandler()

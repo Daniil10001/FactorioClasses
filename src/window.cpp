@@ -184,8 +184,8 @@ void GUI_C::attachWidget(GUI_ELEMENT *widg) {
     widgets.push_back(widg);
 }
 
-void GUI_C::attachInfo(GUI_ELEMENT *elem, Object &obj) {
-    infos.insert_or_assign(&obj, elem);
+void GUI_C::attachInfo(GUI_ELEMENT *elem, Object *obj) {
+    infos.insert_or_assign(obj, elem);
 }
 
 void GUI_C::createButton(Button *new_button) {
@@ -307,7 +307,11 @@ void Window::invokeDeletion() {
 
     if (!beingDeleted)
         return;
-
+    if (GUI.infos.count(beingDeleted)!=0)
+    {
+        delete GUI.infos[beingDeleted];
+        GUI.infos.erase(beingDeleted);
+    }
     deleteSprite(beingDeleted);
     deletionInvoked= false;
 }
@@ -374,18 +378,15 @@ void Window::updatePositionAll() {
         updatePosition(x.first);
 }
 
-void Window::invokeBuildingInfo(Object &obj) {
-    if (auto iter = GUI.infos.find(&obj); iter != GUI.infos.end()) {
-        delete iter->second;
-        GUI.infos.erase(iter);
-        return;
-    }
 
-    sf::Vector2f pos = {objs.at(&obj).getPosition().x, objs.at(&obj).getPosition().y - 100};
-    sf::Vector2f dims = {200, 100};
+
+GUI_ELEMENT* Window::creteBuildingInfo(Object *obj)
+{
+    sf::Vector2f pos = {objs.at(obj).getPosition().x+pixels_per_tile*upscale, objs.at(obj).getPosition().y - 2*upscale};
+    sf::Vector2f dims = {7.5f*upscale, 2*upscale};
 
     auto infoWindow = new GUI_ELEMENT(pos, dims, sf::Color(0,0,0,100));
-    auto inventory = session.getBuildingInventory(&obj);
+    auto inventory = session.getBuildingInventory(obj);
 
     float i = 0;
     for (auto& material : inventory) {
@@ -393,15 +394,35 @@ void Window::invokeBuildingInfo(Object &obj) {
         infoWindow->pushChild((new TextWidget(
                 {pos.x, pos.y + i}, dims, {0, 0, 0, 100},
                 *GUI_C::fonts.begin(), {255, 255, 255},str)
-                ));
+                              ));
 
-        i += 20;
+        i += 2*upscale;
     }
 //    infoWindow->pushChild();
     InfoOpened = true;
 
-    GUI.attachInfo(infoWindow, obj);
+    return infoWindow;
 }
+
+void Window::updateBuildingInfo()
+{
+    for (auto it=GUI.infos.begin();it!=GUI.infos.end();it++)
+    {
+        delete it->second;
+        it->second= creteBuildingInfo(it->first);
+    }
+}
+
+void Window::invokeBuildingInfo(Object *obj) {
+    if (auto iter = GUI.infos.find(obj); iter != GUI.infos.end()) {
+        delete iter->second;
+        GUI.infos.erase(iter);
+        return;
+    }
+    GUI.attachInfo(creteBuildingInfo(obj),obj);
+}
+
+
 
 void Window::draw(Object *obj) {
     updatePosition(obj);
@@ -457,8 +478,8 @@ void Window::drawGUI() {
 
 
 void Window::frame() {
-
-
+    session.getTims().startHandling(true);
+    updateBuildingInfo();
     while (const std::optional event = window.pollEvent())
     {
         if (event->is<sf::Event::Closed>())
@@ -494,7 +515,7 @@ void Window::frame() {
                     placeGhost();
 
                 else if (selectedBuilding && selectedBuilding!=currGhost)
-                    invokeBuildingInfo(*selectedBuilding);
+                    invokeBuildingInfo(selectedBuilding);
             }
         }
 

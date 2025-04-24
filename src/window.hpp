@@ -137,7 +137,7 @@ public:
 
     void attachWidget(GUI_ELEMENT*);
 
-    void attachInfo(GUI_ELEMENT*, Object&);
+    void attachInfo(GUI_ELEMENT*, Object*);
 
     // it is supposed that Button is fully initialized
     void createButton(Button *new_button);
@@ -181,6 +181,8 @@ private:
     std::map<Object*, sf::Sprite> objs;
     sf::Texture tile_texture;
 
+    GUI_ELEMENT* creteBuildingInfo(Object *obj);
+    void updateBuildingInfo();
 public:
     bool deletionInvoked = false;
 
@@ -232,7 +234,7 @@ public:
     void updatePositionAll();
 
 
-    void invokeBuildingInfo(Object&);
+    void invokeBuildingInfo(Object*);
 
     void drawWidget(GUI_ELEMENT*);
 
