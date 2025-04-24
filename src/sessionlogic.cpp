@@ -52,8 +52,8 @@ std::set<Object *> SessionHandler::findInters(point<ll> p, point<unsigned> sz, O
     {
         pb = obj->getPosition();
         szb = obj->getSize();
-        if (max(pb.x, p.x) >= min(pb.x + szb.x - 1, p.x + sz.x - 1) && p.x <= pb.x + szb.x - 1 && pb.x <= p.x + sz.x - 1)
-            if (max(pb.y, p.y) >= min(pb.y + szb.y - 1, p.y + sz.y - 1) && p.y <= pb.y + szb.y - 1 && pb.y <= p.y + sz.y - 1)
+        if (max(pb.x, p.x) <= min(pb.x + szb.x - 1, p.x + sz.x - 1) && p.x <= pb.x + szb.x - 1 && pb.x <= p.x + sz.x - 1)
+            if (max(pb.y, p.y) <= min(pb.y + szb.y - 1, p.y + sz.y - 1) && p.y <= pb.y + szb.y - 1 && pb.y <= p.y + sz.y - 1)
                 st.insert(obj);
     }
     return st;

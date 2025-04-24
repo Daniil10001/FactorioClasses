@@ -97,12 +97,14 @@ int main()
     //ins2.canDoAction();
     cout<<"Must be 0 1 2:"<<ins2.action()<<" "<<ins2.actionMove()<<" "<<d2.get_material()->get_quantity()<<endl;
     
-    point<ll> p1(2,2),p2(2,1),p3(2,0);
+    point<ll> p1(2,2),p2(2,1),p3(2,0),p4(3,2);
     Direction dr1(Directions::UP);
     SessionHandler s;
 
     cout<<"start adding"<<'\n';
     Factory* fs= dynamic_cast<Factory*>(s.addToLayerB(1001,p1,dr1));
+    //Factory* fs2= dynamic_cast<Factory*>(s.addToLayerB(1001,p4,dr1));
+    cout<<"start adding2"<<'\n';
     Inserter* is=dynamic_cast<Inserter*>(s.addToLayerB(1002,p2,dr1));
     //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsTo().size()<<"\n";
     //std::cout<<is->get_Connection(Connections::Standart)->GetConnectionsFrom().size()<<"\n";
