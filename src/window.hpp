@@ -78,6 +78,9 @@ public:
 
     TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
                sf::Font& font, sf::Color color, std::string text);
+    
+    TextWidget(sf::Vector2f pos, sf::Vector2f dims, sf::Color bg_color,
+                sf::Font& font, sf::Color color, std::string textT, float scale);
 
     void draw(sf::RenderWindow&) override;
 
