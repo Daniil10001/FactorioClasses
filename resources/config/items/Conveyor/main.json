@@ -3,6 +3,7 @@
   "name": "Conveyor",
 
   "level": 1,
+  "rotatable": true,
   "image_format": ".png",
   "size_x":1,
   "size_y":1,

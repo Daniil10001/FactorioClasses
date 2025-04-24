@@ -311,7 +311,8 @@ void Window::drawGroundTiles() {
 }
 
 sf::Sprite& Window::createSprite(Object* obj) {
-//    if (json_communicate::get_property<(id))
+    const char str[] = "rotatable";
+    if (json_communicate::get_property<bool, Conveyer, Checking::size_a(str), str>(obj->getId().id))
     objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
     return objs.at(obj);
 }
