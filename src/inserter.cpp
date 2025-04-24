@@ -27,6 +27,7 @@ ActionResult Inserter::action()
     if (BuildingInventory->get_quantity()!=0) return ActionResult::BAD;
     //std::cout<<con[Connections::Chain]->GetConnectionsFrom().size()<<std::endl;
     //std::cout<<" |id:"<<(*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material(ID<>(0))->getId().id<<"| ";
+    if (con[Connections::Chain]->GetConnectionsFrom().size()==0) return ActionResult::BAD;
     if (con[Connections::Chain]->GetConnectionsFrom().size()!=1) throw std::runtime_error("Erorr in chaining inserter from");
     Material *it = (*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material(idfilt);
     //fast check
@@ -38,7 +39,8 @@ ActionResult Inserter::action()
 ActionResult Inserter::actionMove()
 {
     if (BuildingInventory==nullptr) return ActionResult::BAD;
-    //std::cout<<" |id:"<<BuildingInventory->getId().id<<"| ";
+    //std::cout<<" |sz:"<<con[Connections::Chain]->GetConnectionsTo().size()<<"| "<<std::endl;
+    if (con[Connections::Chain]->GetConnectionsTo().size()==0) return ActionResult::BAD;
     if (con[Connections::Chain]->GetConnectionsTo().size()!=1) throw std::runtime_error("Erorr in chaining inserter to");
     (*con[Connections::Chain]->GetConnectionsTo().begin())->put_material(BuildingInventory);
     if (BuildingInventory->get_quantity()!=0) return ActionResult::BAD;

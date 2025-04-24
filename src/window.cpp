@@ -312,10 +312,10 @@ void Window::drawGroundTiles() {
 
 static constexpr const char rotatatable[] = "rotatable";
 sf::Sprite& Window::createSprite(Object* obj) {
-    if (json_communicate::get_property<bool, Conveyer, Checking::size_a(rotatatable), rotatatable>(obj->getId().id)) {
+    /*if (json_communicate::get_property<bool, Conveyer, Checking::size_a(rotatatable), rotatatable>(obj->getId().id)) {
         objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id, ghostDirec));
         return objs.at(obj);
-    }
+    }*/
     objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
     return objs.at(obj);
 }
@@ -467,8 +467,11 @@ void Window::placeGhost() {
     }
 }
 
-void Window::rotateGhost(Object *obj) {
-    if ()
+void Window::rotateGhost() {
+    auto obj = currGhost;
+    if (!json_communicate::get_property<bool, Conveyer, Checking::size_a(rotatatable), rotatatable>(obj->getId().id)) {
+        return;
+    }
 
     switch (ghostDirec) {
         case Directions::UP:
@@ -485,7 +488,7 @@ void Window::rotateGhost(Object *obj) {
             break;
     }
 
-
+    objs.at(obj).setTexture(TextureHandler::getTextureById(obj->getId().id, ghostDirec));
 
 }
 
@@ -526,6 +529,9 @@ void Window::frame() {
             if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
                 window.close();
 
+            if (keyPressed->scancode == sf::Keyboard::Scancode::R)
+                rotateGhost();
+            
             keysPressed.insert_or_assign(keyPressed->scancode, true);
         }
 

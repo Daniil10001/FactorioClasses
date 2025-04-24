@@ -251,7 +251,7 @@ public:
 
     void placeGhost();
 
-    void rotateGhost(Object *);
+    void rotateGhost();
 
     bool isGhost(); // if ghost is present
 
