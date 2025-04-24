@@ -92,7 +92,7 @@ public:
         while (doing || busy)
         {
         }
-        doing = true;
+        busy = true;
         Building *b = dynamic_cast<Building *>(o);
         if (Timers.count(b) != 0)
         {
