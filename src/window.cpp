@@ -227,7 +227,7 @@ void GUI_C::loadFont(std::string filepath) {
 
 Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen) :
     window(dims, title, sf::Style::Resize),dims(dims), title(title), fps(fps), isFullScreen(isFullScreen), 
-    pixels_per_tile(5)
+    pixels_per_tile(5), tile_texture("resources/includes/Tile/Tile.jpg")
 {
     window.setFramerateLimit(fps);
     currGhost = nullptr;
@@ -270,6 +270,26 @@ void Window::addGhost(Object *obj) {
     createSprite(obj);
 
     objs.at(obj).setColor(sf::Color(0, 0, 255));
+}
+
+void Window::drawGroundTiles() {
+    sf::Sprite tile(tile_texture);
+
+    auto left_top_corner = Window2Grid({0,0});
+
+//    std::cout<<left_top_corner.x << left_top_corner.y <<std::endl;
+    tile.setScale({pixels_per_tile * upscale / tile.getTextureRect().size.x,
+                   pixels_per_tile * upscale / tile.getTextureRect().size.y});
+
+    int64_t width = (int64_t)((float)window.getSize().x / (float)pixels_per_tile / upscale + 1.);
+    int64_t height = (int64_t)((float)window.getSize().y / (float)pixels_per_tile / upscale + 1.);
+
+    std::cout<<width<<" "<<height<<std::endl;
+    for (int64_t i = -1; i <= width; i++)
+        for (int64_t j = -1; j <= height; j++) {
+            tile.setPosition(Grid2Window({left_top_corner.x + i, left_top_corner.y + j}));
+            window.draw(tile);
+        }
 }
 
 sf::Sprite& Window::createSprite(Object* obj) {
@@ -471,8 +491,10 @@ void Window::frame() {
 
     window.clear(sf::Color::Black);
 
+    drawGroundTiles();
     drawAll();
     drawGUI();
+
 
     window.display();
 }

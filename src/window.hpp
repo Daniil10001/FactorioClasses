@@ -164,7 +164,7 @@ private:
 
     // sfml = tile * pixels_per_tile + window_start
     sf::Vector2f window_start = {0,0};
-    const uint64_t pixels_per_tile=100;
+    const int64_t pixels_per_tile=100;
     float upscale=10;
 
     std::map<sf::Keyboard::Scancode, bool> keysPressed;
@@ -177,6 +177,7 @@ private:
 
     // visualization stuff
     std::map<Object*, sf::Sprite> objs;
+    sf::Texture tile_texture;
 
 public:
 
@@ -207,7 +208,7 @@ public:
 
     // SPRITES HANDLING
 
-    void drawTiled(Object* obj, point<ll> position);
+    void drawGroundTiles();
 
     sf::Sprite& createSprite(Object* obj);
 
