@@ -27,9 +27,9 @@ class RunMachine
 public:
     enum StatesOfObj : short
     {
+        Wait,
         Action,
         ActionMove,
-        Wait,
         Count
     };
 
@@ -102,7 +102,11 @@ public:
             busy = false;
         }
         else
+        {
+            std::cerr<<"can not remove obj!";
+            busy = false;
             return ActionResult::BAD;
+        }
         busy = false;
         return ActionResult::OK;
     }

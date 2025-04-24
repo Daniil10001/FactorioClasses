@@ -230,14 +230,14 @@ void TimersHandler::startHandling(bool onetime)
         for (auto it = Timers.begin(); it != Timers.end(); it++)
         {
             r = Runner[it->first];
-            if (r->getCurr() == RunMachine::Count - 1)
+            if (r->getCurr() == RunMachine::Wait)
             {
                 if (get_delta_s(it->first) < it->first->get_cooldown())
                     continue;
                 else
                 {
                     r->Do();
-                    if (r->getCurr() != RunMachine::Count - 1)
+                    if (r->getCurr() != RunMachine::Wait)
                         restart_timer(it->first);
                 }
                 continue;
