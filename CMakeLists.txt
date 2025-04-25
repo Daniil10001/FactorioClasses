@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project( Factorio  LANGUAGES CXX)
+project( SIBIRIO  LANGUAGES CXX)
 set (CMAKE_GENERATOR "Unix Makefiles" CACHE INTERNAL "" FORCE)
 
 if (NOT DLEVEL)
@@ -35,5 +35,5 @@ include(./src/CMakeLists.txt)
 add_custom_target(copy_resourses ALL)
 add_custom_command(TARGET copy_resourses
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:main>/resources)
+        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:SIBIRIO>/resources)
 # ----------------------------------------------
