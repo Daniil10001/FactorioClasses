@@ -257,10 +257,10 @@ void RecipyHandler::addItem(unsigned id)
 
         auto reqList = new MaterialList(count);
         reqList->time = getValueById<float>(arr,recipe_id,"time");
-
+        reqList->name = getValueById<std::string>(arr,recipe_id,"Name");
         auto cons=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"consumes");
         auto req=getValueById<rapidjson::GenericArray<true,rapidjson::Value>>(arr,recipe_id,"requirements");
-
+        
         for (unsigned i = 0; i < count; i++) {
             reqList->consumes[i] = cons[i].GetInt();
             reqList->ids[i] = req[i].GetUint();

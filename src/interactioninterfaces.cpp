@@ -12,6 +12,7 @@ MaterialList::MaterialList(unsigned count)
     this->time = 0;
     this->ids=new ID<>[count];
     this->consumes=new int[count];
+    this->name="";
 }
 
 MaterialList::MaterialList(MaterialList& m)
@@ -20,6 +21,7 @@ MaterialList::MaterialList(MaterialList& m)
     this->time=m.time;
     this->ids=new ID<>[this->count];
     this->consumes=new int[this->count];
+    this->name=m.name;
     for (unsigned i=0;i<this->count;i++)
     {
         this->ids[i]=m.ids[i];

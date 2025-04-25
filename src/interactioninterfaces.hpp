@@ -168,6 +168,7 @@ public:
     unsigned count;
     ID<> *ids;
     int *consumes;
+    std::string name;
     float time; // may be crafting time
     MaterialList();
     MaterialList(unsigned count);
