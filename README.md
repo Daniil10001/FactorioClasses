@@ -6,8 +6,13 @@
 
 Сборка
 -------------------------------------
+Для Linux систем. MacOS сам подтягивает пакеты, вроде(если что просто сами доустановите).
 ```
 sudo apt-get update && sudo apt-get install -y libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
+```
+
+Сборка
+```
 mkdir build && cd build
 cmake ..
 make
