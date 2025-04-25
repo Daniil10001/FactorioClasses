@@ -14,7 +14,7 @@
 
 std::vector<loadingUnit> json_handling::items={};
 
-std::map<unsigned, std::shared_ptr<sf::Texture>> TextureHandler::textures;
+std::map<unsigned, std::map<Directions,std::shared_ptr<sf::Texture>>> TextureHandler::textures;
 
 std::map<unsigned, Types> TypesHandler::tps=TypesHandler::generate();
 
@@ -289,13 +289,15 @@ const std::map<unsigned,std::shared_ptr<MaterialList>>& RecipyHandler::getRequir
 
 //-------------------------------------------------------------------------
 sf::Texture& TextureHandler::getTextureById (unsigned id, Directions d) {
-    if (TextureHandler::textures.count(id)) return *TextureHandler::textures.at(id);
+    if (TextureHandler::textures.count(id))
+        if (TextureHandler::textures[id].count(d))return *TextureHandler::textures.at(id).at(d);
     auto ihandler = json_handling::getJsonDocument( // it's revolution, johny
         "./resources/config/items/" + json_communicate::getUrlById(id) + "main.json");
     std::string path="./resources/includes/"+json_communicate::getNameById(id)+"/"+
     json_communicate::getNameById(id)+"-"+suffix[d]
     +(std::string)((*ihandler)["image_format"].GetString());
+    std::cout<<path<<'\n';
     std::shared_ptr<sf::Texture> texteure(new sf::Texture(path));
-    TextureHandler::textures.emplace(id,texteure);
+    TextureHandler::textures[id].emplace(d,texteure);
     return *texteure;
 }

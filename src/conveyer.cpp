@@ -42,9 +42,10 @@ Material* Conveyer::get_material() {
     return true;
 }*/
 
+
 Directions rotate(Direction main, Direction d)
 {
-    while (main.dir()!=Directions::UP) 
+    while (main.dir()!=Directions::UP)
     {++d; ++main;}
     return d.dir();
 }
@@ -62,6 +63,7 @@ ActionResult Conveyer::put_material(short row, Material *m, Conveyer* prev)
         case Directions::RIGHT:
             return BuildingInventory[row*2+1]+*m;
         default:
+            break;
             throw std::runtime_error("Something went wrong with conveyer!");
     }
     return ActionResult::BAD;

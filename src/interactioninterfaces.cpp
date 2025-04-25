@@ -63,21 +63,21 @@ Direction::Direction(Directions d):d(d),direction(Direction::UD)
 
 Direction& Direction::operator++()
 {
-    d=(d+1)&4;
+    d=(d+1)&3;
     update();
     return *this; // return new value by reference
 }
 
 Direction& Direction::operator--()
 {
-    d=(d-1)&4;
+    d=(d-1)&3;
     update();
     return *this; // return new value by reference
 }
 
 void Direction::mirror()
 {
-    d=(d+2)&4;
+    d=(d+2)&3;
     update();
 }
 

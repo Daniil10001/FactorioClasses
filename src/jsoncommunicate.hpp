@@ -137,7 +137,7 @@ class TypesHandler
 class TextureHandler
 {
     static inline std::map<Directions,std::string> suffix={{Directions::UP,"up"},{Directions::LEFT,"left"},{Directions::RIGHT,"right"},{Directions::DOWN,"down"}};
-    static std::map<unsigned, std::shared_ptr<sf::Texture>> textures;
+    static std::map<unsigned, std::map<Directions,std::shared_ptr<sf::Texture>>> textures;
     public:
     static sf::Texture& getTextureById (unsigned id, Directions d);
     static inline sf::Texture& getTextureById (unsigned id, Direction d=Direction(Directions::UP)){return getTextureById(id, d.dir());};
