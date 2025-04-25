@@ -10,12 +10,14 @@
 
 class Factory: public Building {
 private:
+    unsigned int recipy_id;
     unsigned int level;
     State state=State::OK;
     unsigned factoryMaterialsStart;
 public:
     virtual Types type() const {return Types::Factory;}
     Factory(unsigned id, point<ll> position,  Direction d);
+    Factory(unsigned id, point<ll> position,  Direction d, unsigned recipy_id);
 
     State get_state() final;
 
@@ -29,6 +31,8 @@ public:
     //bool canDoAction() final;
 
     bool isEnoughIngridients() const;
+
+    unsigned getRecipyId() const;
 
     ActionResult changeRecipy(unsigned id);
     // produce materials

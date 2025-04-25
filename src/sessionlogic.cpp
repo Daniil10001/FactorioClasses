@@ -199,6 +199,37 @@ const std::vector<Material> SessionHandler::getBuildingInventory(Object *obj) co
     throw std::invalid_argument("You can't get inventory not from ICarryObj child!");
 }
 
+
+ActionResult SessionHandler::SaveFactory(std::string path)
+{
+    try {
+        this->tims.active=1;
+        std::fstream save(path,std::ios::out | std::ios::trunc | std::ios::out | std::ios::binary);
+        for (auto obj: this->objs[ObjectTypes::Buildings])
+            switch (obj->type())
+            {
+            case Types::Inserter:
+                save<<"Inserter"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
+                dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
+            case Types::Chest:
+                save<<"Chest"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<"\n";
+            case Types::Conveyer:
+                save<<"Conveyer"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
+                dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
+            case Types::Factory:
+            save<<"Conveyer"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
+            dynamic_cast<Building*>(obj)->getDirection().dir()<<"|"<<dynamic_cast<Factory*>(obj)->getRecipyId()<<"\n";
+            default:
+                break;
+            }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr<<"Error occured "<<e.what();
+    }
+}
+
+
 //------------------------------------------------------------------------------------------------------
 
 RunMachine::RunMachine(Building *obj) : _curr(Wait)
@@ -225,8 +256,9 @@ void TimersHandler::startHandling(bool onetime)
     RunMachine *r;
     while (!(active & 0x2))
     {
-        while (busy)
+        while (busy && active)
         {
+            if (active & 0x2) return;
         }
         doing = true;
         for (auto it = Timers.begin(); it != Timers.end(); it++)

@@ -142,6 +142,9 @@ public:
 
     ActionResult delFromLayerB(Object *obj);
 
+    ActionResult SaveFactory(std::string path);
+    ActionResult LoadFactory(std::string path);
+
     TimersHandler &getTims()
     {
         return tims;

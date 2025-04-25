@@ -13,7 +13,7 @@
 constexpr const char lvl[]="level";
 constexpr const char cldn[]="cooldown";
 
-Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, position,d) {
+Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, position,d),recipy_id(0) {
     this->level =json_communicate::get_property<unsigned,Factory,Checking::size_a(lvl),lvl>(id);//get from json
 
     this->requirments = RecipyHandler::getRequirementsById(this->id);
@@ -26,19 +26,37 @@ Factory::Factory(unsigned id, point<ll> position, Direction d):Building(id, posi
     this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
 
-ActionResult Factory::changeRecipy(unsigned id)
-{
-    char buf[1000];
-    sprintf(buf,"Object with id %i do not have recipy with id %i",this->id.id,id);
-    if (RecipyHandler::getRequirementsList(this->id).count(id)==0) throw std::invalid_argument((const char *)buf);
-    delete [] BuildingInventory;
-    delete requirments;
-    this->requirments = RecipyHandler::getRequirementsById(this->id);
+Factory::Factory(unsigned id, point<ll> position, Direction d, unsigned recipy_id):Building(id, position,d),recipy_id(recipy_id) {
+    this->level =json_communicate::get_property<unsigned,Factory,Checking::size_a(lvl),lvl>(id);//get from json
+
+    this->requirments = RecipyHandler::getRequirementsById(this->id, recipy_id);
     this->BuildingInventory = new Material[this->requirments->count];
     
     for(unsigned i=0;i<this->requirments->count;i++)
         (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
+
+    this->cooldpown=json_communicate::get_property<float,Factory,Checking::size_a(cldn),cldn>(id)+requirments->time;
+    this->factoryMaterialsStart = 2; //Needed to be grabbed from json by id of factory type
 }
+
+ActionResult Factory::changeRecipy(unsigned id)
+{
+    MaterialList* ml=RecipyHandler::getRequirementsById(this->id);
+    delete [] BuildingInventory;
+    delete requirments;
+    recipy_id=id;
+    this->requirments =ml;
+    this->BuildingInventory = new Material[this->requirments->count];
+    
+    for(unsigned i=0;i<this->requirments->count;i++)
+        (BuildingInventory+i)->ChangeId(this->requirments->ids[i]);
+    return ActionResult::OK;
+}
+
+unsigned Factory::getRecipyId() const
+{
+    return recipy_id;
+};
 
 State Factory::get_state() {
     if (!isEnoughIngridients()) {
