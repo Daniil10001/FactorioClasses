@@ -218,7 +218,7 @@ public:
 
     void drawGroundTiles();
 
-    sf::Sprite& createSprite(Object* obj);
+    sf::Sprite& createSprite(Object* obj, Directions d = Directions::UP);
 
     bool invokeDeletion();
 

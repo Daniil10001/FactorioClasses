@@ -247,8 +247,8 @@ Window::Window(sf::VideoMode dims, std::string title, int fps, bool isFullScreen
     window.setFramerateLimit(fps);
     currGhost = nullptr;
 
-    deleteSpriton.setScale({20 / (float)deleteSpriton.getTextureRect().size.x,
-                            20 / (float)deleteSpriton.getTextureRect().size.y});
+    deleteSpriton.setScale({980.f / 640.f * 20.f / (float)deleteSpriton.getTextureRect().size.x,
+                            20.f / (float)deleteSpriton.getTextureRect().size.y});
 }
 
 Window::Window(sf::VideoMode dims, int fps, bool isFullScreen) :
@@ -311,12 +311,12 @@ void Window::drawGroundTiles() {
 }
 
 static constexpr const char rotatatable[] = "rotatable";
-sf::Sprite& Window::createSprite(Object* obj) {
+sf::Sprite& Window::createSprite(Object* obj, Directions d) {
     /*if (json_communicate::get_property<bool, Conveyer, Checking::size_a(rotatatable), rotatatable>(obj->getId().id)) {
         objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id, ghostDirec));
         return objs.at(obj);
     }*/
-    objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id));
+    objs.emplace(obj, TextureHandler::getTextureById(obj->getId().id, d));
     return objs.at(obj);
 }
 
@@ -411,6 +411,8 @@ GUI_ELEMENT* Window::creteBuildingInfo(Object *obj)
 
         i += 2*upscale;
     }
+
+    auto changeRecipe = new Button()
 //    infoWindow->pushChild();
     InfoOpened = true;
 
@@ -427,7 +429,8 @@ void Window::updateBuildingInfo()
 }
 
 void Window::invokeBuildingInfo(Object *obj) {
-    if (auto iter = GUI.infos.find(obj); iter != GUI.infos.end()) {
+    // if Info already exists, it is persumed user wants to close it
+    if (auto iter = GUI.infos.find(obj); iter != GUI.infos.end() && iter->second->) {
         delete iter->second;
         GUI.infos.erase(iter);
         return;
@@ -453,7 +456,7 @@ void Window::placeGhost() {
     if (deletionInvoked) return;
 
     try {
-        createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), Directions::UP));
+        createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), ghostDirec), ghostDirec);
         objs.erase(currGhost);
         delete currGhost;
 
@@ -487,7 +490,7 @@ void Window::rotateGhost() {
             ghostDirec = Directions::UP;
             break;
     }
-
+    std::cout<<ghostDirec<<'\n';
     objs.at(obj).setTexture(TextureHandler::getTextureById(obj->getId().id, ghostDirec));
 
 }
@@ -590,14 +593,15 @@ void Window::frame() {
     window.clear(sf::Color::Black);
 
 
-    if (deletionInvoked) {
-        deleteSpriton.setPosition((sf::Vector2f)sf::Mouse::getPosition(window) + sf::Vector2f{20,20});
-        window.draw(deleteSpriton);
-    }
+
     drawGroundTiles();
     drawAll();
     drawGUI();
 
+    if (deletionInvoked) {
+        deleteSpriton.setPosition((sf::Vector2f)sf::Mouse::getPosition(window) + sf::Vector2f(5,5));
+        window.draw(deleteSpriton);
+    }
 
     window.display();
 }
