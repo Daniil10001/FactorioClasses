@@ -137,6 +137,7 @@ int main()
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     i++;
    }
+   s.SaveFactory("my.fc");
    print_class<Object>();
    print_class<ICarryObj>();
    print_class<Dummy>();

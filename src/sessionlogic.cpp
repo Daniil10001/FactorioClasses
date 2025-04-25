@@ -144,7 +144,7 @@ void SessionHandler::ClearDummies(const std::set<Object *> &setobj)
     }
 }
 
-Object *SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir)
+Object *SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir, unsigned reciepy_id)
 {
     Types T = TypesHandler::getTypeById(id);
     Object *o;
@@ -154,7 +154,7 @@ Object *SessionHandler::addToLayerB(unsigned id, point<ll> p, Direction dir)
         o = new Conveyer(id, p, dir);
         break;
     case Types::Factory:
-        o = new Factory(id, p, dir); // o = new Factory(id, p, dir);
+        o = new Factory(id, p, dir,reciepy_id); // o = new Factory(id, p, dir);
         break;
     case Types::Inserter:
         o = new Inserter(id, p, dir); // o = new Inserter(id, p, dir);
@@ -211,14 +211,18 @@ ActionResult SessionHandler::SaveFactory(std::string path)
             case Types::Inserter:
                 save<<"Inserter"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
                 dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
+                break;
             case Types::Chest:
                 save<<"Chest"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<"\n";
+                break;
             case Types::Conveyer:
                 save<<"Conveyer"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
                 dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
+                break;
             case Types::Factory:
-            save<<"Conveyer"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
+            save<<"Factory"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
             dynamic_cast<Building*>(obj)->getDirection().dir()<<"|"<<dynamic_cast<Factory*>(obj)->getRecipyId()<<"\n";
+            break;
             default:
                 break;
             }
