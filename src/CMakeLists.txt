@@ -44,6 +44,8 @@ target_link_libraries(SESLOGIC PUBLIC CONVEYER INSERTER FACTORY OBJ INIF MATERIA
 add_executable( test ${CMAKE_CURRENT_SOURCE_DIR}/testl.cpp)
 target_link_libraries(test SESLOGIC)
 
+add_executable( test2 ${CMAKE_CURRENT_SOURCE_DIR}/testld.cpp)
+target_link_libraries(test2 SESLOGIC)
 
 add_library(WINDOW STATIC ${CMAKE_CURRENT_SOURCE_DIR}/window.cpp)
 target_compile_definitions(WINDOW PUBLIC WINDOW)

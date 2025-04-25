@@ -213,15 +213,15 @@ ActionResult SessionHandler::SaveFactory(std::string path)
                 dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
                 break;
             case Types::Chest:
-                save<<"Chest"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<"\n";
+                save<<"Chest___"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|\n";
                 break;
             case Types::Conveyer:
                 save<<"Conveyer"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
                 dynamic_cast<Building*>(obj)->getDirection().dir()<<"|\n";
                 break;
             case Types::Factory:
-            save<<"Factory"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
-            dynamic_cast<Building*>(obj)->getDirection().dir()<<"|"<<dynamic_cast<Factory*>(obj)->getRecipyId()<<"\n";
+            save<<"Factory_"<<"|"<<obj->getId().id<<"|"<<obj->getPosition().x<<"|"<<obj->getPosition().y<<"|"<<
+            dynamic_cast<Building*>(obj)->getDirection().dir()<<"|"<<dynamic_cast<Factory*>(obj)->getRecipyId()<<"|\n";
             break;
             default:
                 break;
@@ -229,8 +229,68 @@ ActionResult SessionHandler::SaveFactory(std::string path)
     }
     catch (const std::exception &e)
     {
-        std::cerr<<"Error occured "<<e.what();
+        std::cerr<<"Error occured when saving: "<<e.what();
+        return ActionResult::BAD;
     }
+    return ActionResult::OK;
+}
+
+ActionResult SessionHandler::LoadFactory(std::string path)
+{
+    std::map<std::string, Types> String2Type = {{"Factory_",Types::Factory},
+            {"Inserter",Types::Inserter}, {"Conveyer",Types::Conveyer}, {"Chest___",Types::Chest}};
+    if (objs[ObjectTypes::Buildings].size()!=0) std::cerr<<"Can not load save in not clear map\n";
+    try 
+    {
+        this->tims.active=1;
+        std::fstream save(path,std::ios::in | std::ios::binary);
+        std::string s;
+        std::vector<std::string> v;
+        std::vector<ll> vl;
+        while (std::getline(save,s))
+        {
+            std::cout<<"read line: "<<s<<" "<<s.substr(0,8)<<" "<<String2Type.count(s.substr(0,8))<<'\n';
+            if (String2Type.count(s.substr(0,8))!=0)
+            {
+                v.clear();
+                v.push_back("");
+                for (auto c: s)
+                {
+                    if (c=='|') v.push_back("");
+                    else v[v.size()-1]+=c;
+                }
+                vl.resize(v.size()-1);
+                for (unsigned long i=1;i<v.size()-1;i++) 
+                {
+                    std::cout<<v[i]<<'\n';
+                    vl[i-1]=std::stoll(v[i]);
+                }
+                
+                if (String2Type[v[0]]==TypesHandler::getTypeById(vl[0]))
+                switch (String2Type[v[0]])
+                {
+                case Types::Chest:
+                    addToLayerB((unsigned)vl[0],point<ll>(vl[1],vl[2]),Directions::UP);
+                    break;
+                case Types::Conveyer:
+                case Types::Inserter:
+                    addToLayerB((unsigned)vl[0],point<ll>(vl[1],vl[2]),(Directions)vl[3]);
+                    break;
+                case Types::Factory:
+                    addToLayerB((unsigned)vl[0],point<ll>(vl[1],vl[2]),(Directions)vl[3], (unsigned)vl[4]);
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr<<"Error occured when loading: "<<e.what();
+        return ActionResult::BAD;
+    }
+    return ActionResult::OK;
 }
 
 
