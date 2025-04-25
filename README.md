@@ -4,6 +4,16 @@
 
 Сейчас доступны только базовые постройки и стандартный интерфейс для взаимодействия с ними, но планируется в дальнейшем расширить его, чтобы увеличить гибкость внешней добавления внешних модификаций.
 
+Сборка
+-------------------------------------
+```
+sudo apt-get update && sudo apt-get install -y libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
+mkdir build && cd build
+cmake ..
+make
+```
+
+
 Управление
 ---------------------------------------
 W,A,S,D и стрелочки - перемещение
