@@ -235,7 +235,7 @@ Types TypesHandler::getTypeById(unsigned id)
     return Types::Count;
 }
 
-Types TypesHandler::getTypeById(ID<>& id)
+Types TypesHandler::getTypeById(const ID<>& id)
 {
     return TypesHandler::getTypeById(id.id);
 }

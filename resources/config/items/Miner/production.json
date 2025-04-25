@@ -2,7 +2,7 @@
   "recipes": [
     {
       "id":0,
-      "Name":"Железная руда",
+      "Name":"Iron Ore",
       "count": 1,
       "time": 0,
       "requirements": [1],
@@ -10,7 +10,7 @@
     },
     {
       "id":1,
-      "Name":"Уголь",
+      "Name":"Coal",
       "count": 1,
       "time": 0,
       "requirements": [2],

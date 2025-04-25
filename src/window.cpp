@@ -154,6 +154,15 @@ bool GUI_C::MouseClick(sf::Vector2i mouse_pos, Window *window_ptr) {
             ((Button *) elem)->call(window_ptr);
             return true;
         }
+
+    if (BuildingConfigure)
+        for (const auto& elem : BuildingConfigure->getChildren()) {
+            if (isHovering(mouse_pos, *elem)) {
+                ((Button *) elem)->call(window_ptr);
+                return true;
+            }
+        }
+
     return false;
 }
 
@@ -231,24 +240,88 @@ void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, 
 }
 
 void GUI_C::invokeBuildingConfigure(Object *obj) {
+    if (BuildingConfigure)
+        delete BuildingConfigure;
+
+    if (TypesHandler::getTypeById(obj->getId()) != Types::Factory)
+        return;
+
+    const static unsigned lineHeight = 20;
+    const static unsigned initWidth = 150;
+    const static unsigned fontSize = 12;
+
     // Note : make grid of buttons
-    auto container = new TextWidget({0,0}, {100,200}, {0,0,0,128},
+    auto container = new TextWidget({0,0}, {initWidth,200}, {0,0,0,128},
                                     *fonts.begin(), {255,255,255},
                                     "Recipe for " + json_communicate::getNameById(obj->getId().id));
 
+    container->setTextSize(fontSize);
     const auto& recipeList = RecipyHandler::getRequirementsList(obj->getId().id);
     unsigned recipeCount = recipeList.size();
 
-    for (auto iter : recipeList) {
-        auto recButton = new Button(*fonts.begin());
-        recButton->setPosition({0, (float)iter.first * 50});
-        recButton->setSize({100, 50});
+    float lastButtonHeight = 0;
+    float buttonsHeight = 0; // summary height of buttons
 
-        auto str =
+    bool b=0;
+    for (const auto& iter : recipeList) {
+
+        auto recButton = new Button(*fonts.begin());
+        recButton->setTextSize(fontSize);
+        recButton->setBGColor({0,0,0,0});
+//        recButton->setColor({255,255,255});
+
+        if (b==0)
+        {
+            recButton->setColor({128,255,128});
+            b=1;
+        }
+
+
+
+        /////////////////////////////////////
+        recButton->call = [iter, recButton, container](Window* wind) {
+            wind->ghostProductionId = iter.first;
+
+            for (auto& otherButtons : container->getChildren())
+                dynamic_cast<Button*>(otherButtons)->setColor({255,255,255});
+
+            recButton->setColor({128, 255, 128});
+        };
+
+        recButton->setPosition({0, lineHeight + lastButtonHeight});
+
+
+        // setting up recipe's description
+        auto str = iter.second->name + "\n";
+
+        // id, count
+        std::map<unsigned, unsigned> consumes, products;
+        for (unsigned i = 0; i < iter.second->count; i++) {
+            if (iter.second->consumes[i] > 0)
+                consumes.emplace(iter.second->ids[i].id, (unsigned)iter.second->consumes[i]);
+            else
+                products.emplace(iter.second->ids[i].id, (unsigned)(-iter.second->consumes[i]));
+        }
+
+        if (!consumes.empty()) str += "Consumes:\n";
+        for (auto consumeIter : consumes)
+            str += json_communicate::getNameById(consumeIter.first) + " x" + std::to_string(consumeIter.second) + "\n";
+
+        if (!products.empty()) str += "Products:\n";
+        for (auto prodIter : products)
+            str += json_communicate::getNameById(prodIter.first) + " x" + std::to_string(prodIter.second) + "\n";
+
+        recButton->setSize({initWidth, lineHeight * (2.f + (float)consumes.size() + (float)products.size())});
+
         recButton->setString(str);
 
-        container->pushChild();
+        container->pushChild(recButton);
+
+        lastButtonHeight = lineHeight * (2.f + (float)consumes.size() + (float)products.size());
+        buttonsHeight += lastButtonHeight;
     }
+    container->setSize({container->getSize().x, buttonsHeight + lineHeight});
+    BuildingConfigure = container;
 }
 
 void GUI_C::loadFont(std::string filepath) {
@@ -310,6 +383,7 @@ void Window::addGhost(Object *obj) {
 
     objs.at(obj).setColor(sf::Color(96, 96, 255));
 
+    GUI.invokeBuildingConfigure(obj);
 
 }
 
@@ -476,19 +550,31 @@ void Window::placeGhost() {
         return;
     if (deletionInvoked) return;
 
+    // Mostly because if overlapped error is thrown
     try {
-        createSprite(session.addToLayerB(currGhost->getId().id, currGhost->getPosition(), ghostDirec), ghostDirec);
+        createSprite(session.addToLayerB(
+                        currGhost->getId().id,
+                        currGhost->getPosition(),
+                        ghostDirec,
+                        ghostProductionId),
+                     ghostDirec);
+
         objs.erase(currGhost);
         delete currGhost;
 
         currGhost = nullptr;
         ghostDirec = Directions::UP;
+        ghostProductionId = 0;
+
+        delete GUI.BuildingConfigure;
+        GUI.BuildingConfigure = nullptr;
     }
     catch(const std::exception& e)
     {
         std::cerr<<e.what()<<'\n';
         return;
     }
+
 }
 
 void Window::rotateGhost() {
@@ -533,6 +619,9 @@ void Window::drawGUI() {
     for (auto elem : GUI.infos) {
         elem.second->draw(window);
     }
+
+    if (GUI.BuildingConfigure)
+        GUI.BuildingConfigure->draw(window);
 
 }
 
