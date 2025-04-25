@@ -21,6 +21,21 @@
       "type": "Material",
       "url": "Iron/"
     },
+    {
+      "id":4,
+      "type": "Material",
+      "url": "Pig_Iron/"
+    },
+    {
+      "id":5,
+      "type": "Material",
+      "url": "Iron_Plate/"
+    },
+    {
+      "id":6,
+      "type": "Material",
+      "url": "Iron_Shaft/"
+    },
     
     {
       "id":1001,
