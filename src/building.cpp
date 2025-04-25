@@ -69,6 +69,8 @@ Material* Building::get_material(ID<> id) {
 Material* Building::get_material() {
     //std::cout<<"get_mater\n";
     for (unsigned cell=0;cell<this->requirments->count;cell++)
+        if (this->BuildingInventory[cell].get_quantity()>0 && this->requirments->consumes[cell]<0) return this->BuildingInventory+cell;
+    for (unsigned cell=0;cell<this->requirments->count;cell++)
         if (this->BuildingInventory[cell].get_quantity()>0) return this->BuildingInventory+cell;
     return nullptr;
 }
