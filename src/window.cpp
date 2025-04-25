@@ -531,7 +531,7 @@ void Window::frame() {
 
             if (keyPressed->scancode == sf::Keyboard::Scancode::R)
                 rotateGhost();
-            
+
             keysPressed.insert_or_assign(keyPressed->scancode, true);
         }
 
