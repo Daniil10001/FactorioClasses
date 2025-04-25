@@ -2,7 +2,7 @@
   "recipes": [
     {
       "id":0,
-      "Name":"Железо",
+      "Name":"Iron",
       "count": 3,
       "time": 0,
       "requirements": [1,2,3],
@@ -10,7 +10,7 @@
     },
     {
       "id":1,
-      "Name":"Чугун",
+      "Name":"Pig Iron",
       "count": 3,
       "time": 0,
       "requirements": [1,2,3],

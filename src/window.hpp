@@ -64,6 +64,8 @@ public:
 
     void pushChild(GUI_ELEMENT*);
 
+    std::vector<GUI_ELEMENT*>& getChildren() {return children;}
+
 };
 
 class TextWidget : public GUI_ELEMENT {
@@ -115,6 +117,7 @@ public:
     std::vector<GUI_ELEMENT*> buttons;
     std::vector<GUI_ELEMENT*> widgets;
     std::map<Object*, GUI_ELEMENT*> infos;
+    GUI_ELEMENT* BuildingConfigure;
 
     static std::vector<sf::Font> fonts;
 
@@ -172,8 +175,8 @@ private:
 
     std::map<sf::Keyboard::Scancode, bool> keysPressed;
 
-    Object* currGhost; // for the time being it's left single
-    Directions ghostDirec = Directions::UP;
+
+
 
     bool InfoOpened = false;
 
@@ -187,6 +190,11 @@ private:
     GUI_ELEMENT* creteBuildingInfo(Object *obj);
     void updateBuildingInfo();
 public:
+    // ghost handling stuff
+    Object* currGhost; // for the time being it's left single
+    Directions ghostDirec = Directions::UP;
+    unsigned ghostProductionId = 0;
+
     bool deletionInvoked = false;
 
     GUI_C GUI;

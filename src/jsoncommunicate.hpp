@@ -131,7 +131,7 @@ class TypesHandler
     public:
     static std::vector<unsigned> getBuildingsIds();
     static Types getTypeById(unsigned id);
-    static Types getTypeById(ID<>& id);
+    static Types getTypeById(const ID<>& id);
 };
 
 class TextureHandler
