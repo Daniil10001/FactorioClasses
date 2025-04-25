@@ -468,7 +468,7 @@ void Window::placeGhost() {
 }
 
 void Window::rotateGhost(Object *obj) {
-    if ()
+    //if ()
 
     switch (ghostDirec) {
         case Directions::UP:
