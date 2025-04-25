@@ -13,6 +13,13 @@ void printInv(const std::vector<Material>& v)
     cout<<" | "<<endl;
 }
 
+
+template<class T>
+void print_class()
+{
+    std::cout<<typeid(T).name()<<" "<<typeid(T).hash_code()<<std::endl;
+}
+
 int main()
 {
     cout<<"test Materials\n";
@@ -120,7 +127,7 @@ int main()
     cout<<"move "<<(is->actionMove()==ActionResult::OK)<<'\n';
     */
    int i=0;
-   while (i<100)
+   while (i<10)
    {
     auto& a=fs->getInventory();
     s.getTims().startHandling(true);
@@ -130,5 +137,15 @@ int main()
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     i++;
    }
+   print_class<Object>();
+   print_class<ICarryObj>();
+   print_class<Dummy>();
+   print_class<Building>();
+   print_class<Inserter>();
+   print_class<Chest>();
+   print_class<Conveyer>();
+   print_class<Factory>();
+   print_class<SessionHandler>();
+   print_class<TimersHandler>();
     return 0;
 }
