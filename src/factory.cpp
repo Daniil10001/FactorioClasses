@@ -44,7 +44,7 @@ ActionResult Factory::changeRecipy(unsigned id)
     MaterialList* ml=RecipyHandler::getRequirementsById(this->id);
     delete [] BuildingInventory;
     delete requirments;
-    recipy_id=id;
+    this->recipy_id=id;
     this->requirments =ml;
     this->BuildingInventory = new Material[this->requirments->count];
     
@@ -55,7 +55,7 @@ ActionResult Factory::changeRecipy(unsigned id)
 
 unsigned Factory::getRecipyId() const
 {
-    return recipy_id;
+    return this->recipy_id;
 };
 
 State Factory::get_state() {

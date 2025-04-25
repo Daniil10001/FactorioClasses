@@ -136,7 +136,7 @@ public:
 
     std::set<Object *> const get_layer(ObjectTypes lr) const;
 
-    Object *addToLayerB(unsigned id, point<ll> p, Direction dir);
+    Object *addToLayerB(unsigned id, point<ll> p, Direction dir, unsigned reciepy_id=0);
 
     const std::vector<Material> getBuildingInventory(Object *) const;
 
