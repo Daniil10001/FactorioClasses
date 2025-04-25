@@ -147,7 +147,9 @@ class RecipyHandler{
     static std::map<unsigned, std::map<unsigned,std::shared_ptr<MaterialList>>> recepies;
     static void addItem(unsigned id);
     public:
+
     static const std::map<unsigned,std::shared_ptr<MaterialList>>& getRequirementsList(ID<> BuildingId);
+
     static MaterialList* getRequirementsById(ID<> BuildingId, unsigned recipy_id=0);
 };
 

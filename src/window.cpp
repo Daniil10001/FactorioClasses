@@ -230,6 +230,27 @@ void GUI_C::createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, 
 
 }
 
+void GUI_C::invokeBuildingConfigure(Object *obj) {
+    // Note : make grid of buttons
+    auto container = new TextWidget({0,0}, {100,200}, {0,0,0,128},
+                                    *fonts.begin(), {255,255,255},
+                                    "Recipe for " + json_communicate::getNameById(obj->getId().id));
+
+    const auto& recipeList = RecipyHandler::getRequirementsList(obj->getId().id);
+    unsigned recipeCount = recipeList.size();
+
+    for (auto iter : recipeList) {
+        auto recButton = new Button(*fonts.begin());
+        recButton->setPosition({0, (float)iter.first * 50});
+        recButton->setSize({100, 50});
+
+        auto str =
+        recButton->setString(str);
+
+        container->pushChild();
+    }
+}
+
 void GUI_C::loadFont(std::string filepath) {
     fonts.emplace_back(filepath);
 }
@@ -288,6 +309,8 @@ void Window::addGhost(Object *obj) {
     createSprite(obj);
 
     objs.at(obj).setColor(sf::Color(96, 96, 255));
+
+
 }
 
 void Window::drawGroundTiles() {
@@ -412,8 +435,6 @@ GUI_ELEMENT* Window::creteBuildingInfo(Object *obj)
         i += 2*upscale;
     }
 
-    auto changeRecipe = new Button()
-//    infoWindow->pushChild();
     InfoOpened = true;
 
     return infoWindow;
@@ -430,7 +451,7 @@ void Window::updateBuildingInfo()
 
 void Window::invokeBuildingInfo(Object *obj) {
     // if Info already exists, it is persumed user wants to close it
-    if (auto iter = GUI.infos.find(obj); iter != GUI.infos.end() && iter->second->) {
+    if (auto iter = GUI.infos.find(obj); iter != GUI.infos.end()) {
         delete iter->second;
         GUI.infos.erase(iter);
         return;

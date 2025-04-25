@@ -101,10 +101,6 @@ struct Button : public TextWidget {
         type = GUI_TYPE::Button;
     };
 
-
-
-    sf::Color color; // color of the text
-
     std::function<void(Window*)> call; // return is void, but may be extended
 
 
@@ -148,7 +144,11 @@ public:
     // Buttons given in a form of an array, initialized positions will be overwritten
     static void createButtonGrid(unsigned rows, unsigned columns, sf::Vector2f pos, float margin, Button **buttons);
 
+    void invokeBuildingConfigure(Object *);
+
     static void loadFont(std::string filepath);
+
+
 };
 
 
