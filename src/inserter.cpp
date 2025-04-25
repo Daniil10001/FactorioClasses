@@ -31,6 +31,7 @@ ActionResult Inserter::action()
     if (con[Connections::Chain]->GetConnectionsFrom().size()!=1) throw std::runtime_error("Erorr in chaining inserter from");
     
     Material *it = (*con[Connections::Chain]->GetConnectionsFrom().begin())->get_material(idfilt);
+    BuildingInventory->ChangeId(idfilt);
     //fast check
     //std::cout<<" |itc"<<(it!=nullptr)<<"| "<<it<<" ";
     //std::cout<<" |id "<<BuildingInventory->getId().id<<" "<<it->getId().id<<"| ";

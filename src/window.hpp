@@ -117,7 +117,7 @@ public:
     std::vector<GUI_ELEMENT*> buttons;
     std::vector<GUI_ELEMENT*> widgets;
     std::map<Object*, GUI_ELEMENT*> infos;
-    GUI_ELEMENT* BuildingConfigure;
+    GUI_ELEMENT* BuildingConfigure=nullptr;
 
     static std::vector<sf::Font> fonts;
 
