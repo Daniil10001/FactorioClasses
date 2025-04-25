@@ -15,14 +15,16 @@ ActionResult SessionHandler::delFromLayerB(Object *obj)
     std::vector<ICarryObj *> stack;
     for (auto builds : ((Building *)obj)->get_Connection(Connections::Standart)->GetConnectionsTo())
         stack.push_back(builds);
-    for (auto builds : ((Building *)obj)->get_Connection(Connections::Standart)->GetConnectionsTo())
+    for (auto builds : ((Building *)obj)->get_Connection(Connections::Standart)->GetConnectionsFrom())
         stack.push_back(builds);
     delete obj;
     for (ICarryObj *build : stack)
     {
-        if (dynamic_cast<Object *>(build) != nullptr)
+        std::cout<<build<<" "<<dynamic_cast<Dummy *>(build)<<" "<<dynamic_cast<Object *>(build)<<" "<<obj<<std::endl;
+        if (dynamic_cast<Object *>(build) == nullptr)
             throw std::runtime_error("Something went wrong in navigating building tree!");
-        MakeConnections(dynamic_cast<Building *>(build));
+        if (dynamic_cast<Dummy *>(build) == nullptr)MakeConnections(dynamic_cast<Building *>(build));
+        else ClearDummies({dynamic_cast<Dummy *>(build)});
     }
     tims.active = 0;
     return ActionResult::OK;
@@ -95,7 +97,7 @@ void SessionHandler::MakeConnections(Object *b)
             objs[ObjectTypes::SpecialPoints].insert(o);
         }
         std::cout << (MakeConnFull(dynamic_cast<ICarryObj *>(b), dynamic_cast<ICarryObj *>(o), Connections::Standart) == ActionResult::OK) << " mc\n";
-        if (!dynamic_cast<Inserter *>(o))
+        if (!dynamic_cast<Inserter *>(o) && !dynamic_cast<Dummy *>(o))
             MakeConnStrait(dynamic_cast<ICarryObj *>(b), dynamic_cast<ICarryObj *>(o), Connections::Chain);
 
         p = b->getPosition() - dynamic_cast<Building *>(b)->getDirection().get();
@@ -107,8 +109,8 @@ void SessionHandler::MakeConnections(Object *b)
             o = new Dummy(p);
             objs[ObjectTypes::SpecialPoints].insert(o);
         }
-        MakeConnFull(dynamic_cast<ICarryObj *>(o), dynamic_cast<ICarryObj *>(b), Connections::Standart);
-        if (!dynamic_cast<Inserter *>(o))
+        std::cout << (MakeConnFull(dynamic_cast<ICarryObj *>(o), dynamic_cast<ICarryObj *>(b), Connections::Standart)== ActionResult::OK) << " mc2\n";
+        if (!dynamic_cast<Inserter *>(o) && !dynamic_cast<Dummy *>(o))
             MakeConnForward(dynamic_cast<ICarryObj *>(o), dynamic_cast<ICarryObj *>(b), Connections::Chain);
         break;
     default:

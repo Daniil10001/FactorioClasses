@@ -14,7 +14,8 @@ Conveyer::Conveyer(unsigned id, point<ll> position, Direction d):Building(id,pos
 
 ActionResult Conveyer::put_material(Material *m) {
     for (unsigned i = 0; i < 4; i++) {
-        if (BuildingInventory[i].getId() == m->getId() || BuildingInventory[i].getId()==0) {
+        if ((BuildingInventory[i].getId() == m->getId() || BuildingInventory[i].getId()==0) &&
+    BuildingInventory[i].get_quantity()<BuildingInventory->get_maxquantity()) {
             return BuildingInventory[i] + *m;
         }
     }
@@ -43,7 +44,8 @@ Material* Conveyer::get_material() {
 
 Directions rotate(Direction main, Direction d)
 {
-    while ((++main).dir()!=Directions::UP) ++d;
+    while (main.dir()!=Directions::UP) 
+    {++d; ++main;}
     return d.dir();
 }
 
@@ -78,6 +80,7 @@ ActionResult Conveyer::actionMove()
     if (get_Connection(Connections::Chain)->GetConnectionsTo().size()==1)
     {
         for (int i=0;i<2;i++)
+            if (BuildingInventory[i+2].getId().id!=0)
             if (dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin()))
                 dynamic_cast<Conveyer*>(*get_Connection(Connections::Chain)->GetConnectionsTo().begin())->put_material(i,BuildingInventory+i+2,this);
     }
