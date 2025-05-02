@@ -14,9 +14,12 @@ Conveyer::Conveyer(unsigned id, point<ll> position, Direction d):Building(id,pos
 
 ActionResult Conveyer::put_material(Material *m) {
     for (unsigned i = 0; i < 4; i++) {
+        {
+            if (BuildingInventory[i].get_quantity()==0) BuildingInventory[i].ChangeId(m->getId());
         if ((BuildingInventory[i].getId() == m->getId() || BuildingInventory[i].getId()==0) &&
     BuildingInventory[i].get_quantity()<BuildingInventory->get_maxquantity()) {
             return BuildingInventory[i] + *m;
+            }
         }
     }
     return ActionResult::BAD;
@@ -57,10 +60,13 @@ ActionResult Conveyer::put_material(short row, Material *m, Conveyer* prev)
     switch (rotate(this->direction, prev->direction))
     {
         case Directions::UP:
+            if (BuildingInventory[row].get_quantity()==0) BuildingInventory[row].ChangeId(m->getId());
             return BuildingInventory[row]+*m;
         case Directions::LEFT:
+            if (BuildingInventory[row*2].get_quantity()==0) BuildingInventory[row*2].ChangeId(m->getId());
             return BuildingInventory[row*2]+*m;
         case Directions::RIGHT:
+            if (BuildingInventory[row*2+1].get_quantity()==0) BuildingInventory[row*2+1].ChangeId(m->getId());
             return BuildingInventory[row*2+1]+*m;
         default:
             break;
@@ -73,7 +79,10 @@ ActionResult Conveyer::action()
 {
     for (int i=0;i<2;i++) 
     if (BuildingInventory[i].getId().id!=0)
+    {
+        if (BuildingInventory[i+2].get_quantity()==0) BuildingInventory[i+2].ChangeId(0);
         BuildingInventory[2+i]+BuildingInventory[i];
+    }
     return ActionResult::OK;
 }
 
