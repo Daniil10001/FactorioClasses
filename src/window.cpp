@@ -317,7 +317,7 @@ void GUI_C::invokeBuildingConfigure(Object *obj) {
 
         container->pushChild(recButton);
 
-        lastButtonHeight = lineHeight * (2.f + (float)consumes.size() + (float)products.size());
+        lastButtonHeight += lineHeight * (2.f + (float)consumes.size() + (float)products.size());
         buttonsHeight += lastButtonHeight;
     }
     container->setSize({container->getSize().x, buttonsHeight + lineHeight});
